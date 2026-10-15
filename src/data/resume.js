@@ -86,7 +86,17 @@ export const earlierRoles = [
   { role: 'Business Development Manager', org: 'Svyaznoy', when: '2009 – 2011' }
 ];
 
+// Ordered so each 2-up row pairs quotes of near-equal length — the section
+// tapers smoothly instead of jumping between tall and short rows.
 export const recommendations = [
+  {
+    quote: `As a true professional, Aliaksei made our cooperation in software development not only effective, clear and fast but also smooth and pleasant. He is extremely attentive to detail, passionate about the quality of each project, focused on the clients' needs and able to estimate most of the risks at the very first stage of planning. He's open to new information, constantly improves his skills and is eager to master new spheres and to become an even better professional. It has always been a pleasure to work with him on different projects, and I hope our cooperation will continue in future. I would definitely recommend Aliaksei for any position he is interested in, since he will be a valuable asset for every company in game or business software development.`,
+    author: 'Vera Gavryushina'
+  },
+  {
+    quote: `Aliaksei is an educated and inspiring pro who works with several software development teams. I've had the pleasure of knowing him for about a year now, as we have worked together on several corporate initiatives. He has shown significant knowledge about methodological (e.g. Scrum or Kanban), HR-related, and UX-specific aspects in a broad sense. Above all, I was impressed with his abilities to focus on results and keep everybody informed. And, of course, his open nature and hard working habits, which helped us stay healthy as a team and deliver on time. Aliaksei would be a true asset for any positions requiring a development management jedi. :-)`,
+    author: 'Elizabeth Nova'
+  },
   {
     quote: `Working with Aliaksei was genuinely a great experience. He jumped straight into a huge amount of responsibility and managed it all with a calm and steady attitude. No matter how complex or unexpected the situation was, he kept his cool and solved problems across a really wide spectrum of operational challenges. What makes him stand out is how adaptable he is. Big systems, lots of moving parts, constant changes and challenges — he was able to quickly find his way, connect the dots, and keep things running smoothly. Aliaksei is the kind of teammate you want around: adaptable, reliable, constructive, and a pleasure to work with.`,
     author: 'Aleksandar Đokić'
@@ -96,12 +106,20 @@ export const recommendations = [
     author: 'Alex Petukh'
   },
   {
-    quote: `What always stood out to me about Aliaksei was his dedication and precision. Every detail mattered to him, and he consistently delivered work of the highest quality. At the same time, he brought a touch of humour and lightness that made even the most intense projects enjoyable to be part of. I truly valued our collaboration and would happily work with Aliaksei again in the future.`,
-    author: 'Paulina Swiatkowska'
+    quote: `Aliaksei is one of the smartest, nicest, and most capable people that I've ever worked with. He has the perfect balance of business knowledge, technical capability, and product development experience and skill to manage and drive every project that he's been involved in to great success. He is hard-nosed when he has to be, knows when to be flexible, and is able to mentor both product and technical staff very effectively. I'd recommend Aliaksei in a heartbeat and look forward to working together with him whenever we can.`,
+    author: 'Mike Lindelsee'
   },
   {
-    quote: `Aliaksei is an exceptionally versatile and talented game development specialist who also stands out for his clarity, honesty, and thoughtful feedback. He creates a comfortable and friendly work environment, always focusing on results. He is also a kind, positive, and inspiring person. I highly recommend him and look forward to working with him in the future.`,
-    author: 'Tatiana Sehen'
+    quote: `Aliaksei is the best producer I have ever worked with. He forms an excellent vision of the project very quickly, knows how to correctly set and prioritize tasks. He has excellent long-term and short-term planning skills. He is perfectly organized and does not miss even the smallest details. He has good technical knowledge and excellent understanding of the technical aspects of processes. Last but not the least, Aliaksei is a wonderful, kind, sympathetic person, with high emotional intelligence and great soft skills.`,
+    author: 'Anna Ivanova'
+  },
+  {
+    quote: `I have been working with Aliaksei for several years, and those were full of inspiration. He is the mentor in my career and professional growth, working with him is a pleasure and challenge. He is always ready to provide guidance to his colleagues, give a chance to join even with less skills than required in a particular area, be a support for them, unite them, and well ... "kick asses" to get things done. It is a great opportunity to work in Aliaksei's team and deliver great products together!`,
+    author: 'Sergei Lebedzev'
+  },
+  {
+    quote: `Aliaksei is the most client-oriented person I've ever known. Working with him was an absolute pleasure. He is extremely reliable — if he gives a promise he not only has respect for it, he always surpasses expectations both in timing and in quality. I can definitely recommend Aliaksei as a highly-qualified specialist in a very broad range of fields and especially as a person who makes you eager to get up earlier and rush to the office in order to conform to his unparalleled working standards.`,
+    author: 'Irina Gusinskaya'
   },
   {
     quote: `I have had the pleasure of working with Aliaksei for the last couple of years. He is a true leader. He has built a loyal, hard-working team. He's inquisitive, willing to learn and is relentless to get the facts. He has an enormous amount of integrity when it comes to his commitments and will not stop until he's successful. We have thrown a huge variety of challenges at him, and he always comes through. Aliaksei comes with my highest recommendation.`,
@@ -112,27 +130,11 @@ export const recommendations = [
     author: 'Olga Truhina'
   },
   {
-    quote: `As a true professional, Aliaksei made our cooperation in software development not only effective, clear and fast but also smooth and pleasant. He is extremely attentive to detail, passionate about the quality of each project, focused on the clients' needs and able to estimate most of the risks at the very first stage of planning. He's open to new information, constantly improves his skills and is eager to master new spheres and to become an even better professional. It has always been a pleasure to work with him on different projects, and I hope our cooperation will continue in future. I would definitely recommend Aliaksei for any position he is interested in, since he will be a valuable asset for every company in game or business software development.`,
-    author: 'Vera Gavryushina'
+    quote: `What always stood out to me about Aliaksei was his dedication and precision. Every detail mattered to him, and he consistently delivered work of the highest quality. At the same time, he brought a touch of humour and lightness that made even the most intense projects enjoyable to be part of. I truly valued our collaboration and would happily work with Aliaksei again in the future.`,
+    author: 'Paulina Swiatkowska'
   },
   {
-    quote: `Aliaksei is an educated and inspiring pro who works with several software development teams. I've had the pleasure of knowing him for about a year now, as we have worked together on several corporate initiatives. He has shown significant knowledge about methodological (e.g. Scrum or Kanban), HR-related, and UX-specific aspects in a broad sense. Above all, I was impressed with his abilities to focus on results and keep everybody informed. And, of course, his open nature and hard working habits, which helped us stay healthy as a team and deliver on time. Aliaksei would be a true asset for any positions requiring a development management jedi. :-)`,
-    author: 'Elizabeth Nova'
-  },
-  {
-    quote: `Aliaksei is the best producer I have ever worked with. He forms an excellent vision of the project very quickly, knows how to correctly set and prioritize tasks. He has excellent long-term and short-term planning skills. He is perfectly organized and does not miss even the smallest details. He has good technical knowledge and excellent understanding of the technical aspects of processes. Last but not the least, Aliaksei is a wonderful, kind, sympathetic person, with high emotional intelligence and great soft skills.`,
-    author: 'Anna Ivanova'
-  },
-  {
-    quote: `Aliaksei is one of the smartest, nicest, and most capable people that I've ever worked with. He has the perfect balance of business knowledge, technical capability, and product development experience and skill to manage and drive every project that he's been involved in to great success. He is hard-nosed when he has to be, knows when to be flexible, and is able to mentor both product and technical staff very effectively. I'd recommend Aliaksei in a heartbeat and look forward to working together with him whenever we can.`,
-    author: 'Mike Lindelsee'
-  },
-  {
-    quote: `Aliaksei is the most client-oriented person I've ever known. Working with him was an absolute pleasure. He is extremely reliable — if he gives a promise he not only has respect for it, he always surpasses expectations both in timing and in quality. I can definitely recommend Aliaksei as a highly-qualified specialist in a very broad range of fields and especially as a person who makes you eager to get up earlier and rush to the office in order to conform to his unparalleled working standards.`,
-    author: 'Irina Gusinskaya'
-  },
-  {
-    quote: `I have been working with Aliaksei for several years, and those were full of inspiration. He is the mentor in my career and professional growth, working with him is a pleasure and challenge. He is always ready to provide guidance to his colleagues, give a chance to join even with less skills than required in a particular area, be a support for them, unite them, and well ... "kick asses" to get things done. It is a great opportunity to work in Aliaksei's team and deliver great products together!`,
-    author: 'Sergei Lebedzev'
+    quote: `Aliaksei is an exceptionally versatile and talented game development specialist who also stands out for his clarity, honesty, and thoughtful feedback. He creates a comfortable and friendly work environment, always focusing on results. He is also a kind, positive, and inspiring person. I highly recommend him and look forward to working with him in the future.`,
+    author: 'Tatiana Sehen'
   }
 ];
