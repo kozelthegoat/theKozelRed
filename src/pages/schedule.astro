@@ -109,7 +109,7 @@ import { sessionTypes, availability } from '../data/sessions.js';
   <section class="hair-b hair-soft">
     <div class="px-[var(--pad)] py-14">
       <p class="mono text-brand">In detail</p>
-      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3rem)] font-medium">What you walk away with</h2>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what you take away</h2>
     </div>
     <div class="grid gap-10 px-[var(--pad)] pb-16 md:grid-cols-3">
       {
@@ -121,11 +121,18 @@ import { sessionTypes, availability } from '../data/sessions.js';
             </div>
             <p class="text-secondary">{t.description}</p>
             <div>
-              <p class="mono text-muted">What I bring</p>
-              <p class="mt-2 text-secondary">{t.bring}</p>
+              <p class="mono text-muted">What you can bring</p>
+              <ul class="mt-2 grid gap-1 text-secondary">
+                {t.bring.map((item) => (
+                  <li class="flex gap-3">
+                    <span class="text-brand">—</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
             <div>
-              <p class="mono text-muted">What you leave with</p>
+              <p class="mono text-muted">You leave with</p>
               <ul class="mt-2 grid gap-1 text-secondary">
                 {t.leave.map((item) => (
                   <li class="flex gap-3">
