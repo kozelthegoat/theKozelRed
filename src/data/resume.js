@@ -192,3 +192,19 @@ export const earlierOrgUrls = {
   Artezio: 'http://www.artezio.com',
   Svyaznoy: 'https://en.wikipedia.org/wiki/Svyaznoy'
 };
+
+// Recommenders' LinkedIn profiles, from the résumé PDF's hyperlinks.
+export const recommenderUrls = {
+  'Aleksandar Đokić': 'https://www.linkedin.com/in/aleksdj/',
+  'Alex Petukh': 'https://www.linkedin.com/in/alexpetukh/',
+  'Anna Ivanova': 'https://www.linkedin.com/in/anna-ivanova-3b065a67/',
+  'Elizabeth Nova': 'https://www.linkedin.com/in/elizabethnova000',
+  'Irina Gusinskaya': 'https://www.linkedin.com/in/irgus',
+  'Mike Lindelsee': 'https://www.linkedin.com/in/mikelindelsee/',
+  'Mitzi McGilvray': 'https://www.linkedin.com/in/mitzimcgilvray',
+  'Olga Truhina': 'https://www.linkedin.com/in/olga-truhina/',
+  'Paulina Swiatkowska': 'https://www.linkedin.com/in/paulina-swiatkowska/',
+  'Sergei Lebedzev': 'https://www.linkedin.com/in/sergei-lebedzev-00a361134',
+  'Tatiana Sehen': 'https://www.linkedin.com/in/tatsiana-sehen',
+  'Vera Gavryushina': 'https://www.linkedin.com/in/vera-gavryushina'
+};
