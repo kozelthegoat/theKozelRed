@@ -46,6 +46,10 @@
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 /* Mono micro-label */
