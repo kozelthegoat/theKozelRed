@@ -1,12 +1,14 @@
 // Résumé content — sourced from kozel-resume-2026-10-15.pdf. Edit freely.
 
 export const helpWith = [
-  'Building and running operations across teams and entities',
-  'Production — scope, pipelines, and shipping on time',
-  'Structuring teams and staffing for the work at hand',
-  'Forecasting risk and steering through a crisis',
-  'Process and tooling — workflows, automation, and Jira',
-  'Keeping spend honest — P&L, budgets, and “misc” spend'
+  'Running operations across distributed, multi-entity teams',
+  'Putting AI and automation to work in real delivery — not slide decks',
+  'Turning strategy into scope, priorities, and shipped product',
+  'Structuring and staffing teams for the work at hand',
+  'Forecasting risk and steering teams through a crisis',
+  'Keeping spend honest — P&L, budgets, and “misc” spend',
+  'Building process and tooling people actually adopt',
+  'Aligning product, design, engineering, and art around one plan'
 ];
 
 export const experience = [
