@@ -10,6 +10,9 @@ export const site = {
   location: 'Minsk, Belarus — right now\nwhere next is your call',
   email: 'aliaksei.pashkel@gmail.com',
   resume: '/kozel-resume-2026-10-15.pdf',
+  languages: 'English (C2) · Belarusian (native)',
+  education: 'BA, English Literature — Minsk State Linguistic University',
+  offClock: 'Meditation · Mind–body discipline · Reading',
   // Floating "Donate" button target (external). Empty = button hidden.
   donateUrl: '',
   socials: [
