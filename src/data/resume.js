@@ -60,12 +60,18 @@ export const experience = [
       'Developed 5+ mobile & web games powered by the latest NFC and smart chip technologies.'
     ],
     released: [
-      'a PC game in the Horror genre inspired by P.T. on Steam',
-      '“Best PC Game” & “Best Art” @ Games Gathering',
-      '“True Indie” @ BelGameDev (nominated by WarHorse Studios)',
-      '“People’s Choice” & “Best Game” @ WebCon',
-      'a PC game in the Adventure / Horror genres on Steam',
-      '“The Finalist” @ Unreal Engine Dev Contest',
+      {
+        title: 'a PC game in the Horror genre inspired by P.T. on Steam',
+        notes: [
+          '“Best PC Game” & “Best Art” @ Games Gathering',
+          '“True Indie” @ BelGameDev (nominated by WarHorse Studios)',
+          '“People’s Choice” & “Best Game” @ WebCon'
+        ]
+      },
+      {
+        title: 'a PC game in the Adventure / Horror genres on Steam',
+        notes: ['“The Finalist” @ Unreal Engine Dev Contest']
+      },
       '5 mobile & web games in the Charitable Gaming / Lottery / Casino genres powered by NFC'
     ]
   },

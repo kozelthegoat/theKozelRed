@@ -104,13 +104,29 @@ const pad = (n) => String(n).padStart(2, '0');
               job.released && (
                 <div class="mt-5">
                   <p class="mono text-muted">Released</p>
-                  <ul class="mt-2 grid gap-1.5 text-[0.92rem] text-secondary">
-                    {job.released.map((item) => (
-                      <li class="flex gap-3">
-                        <span class="text-brand">✔</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
+                  <ul class="mt-2 grid gap-2 text-[0.92rem] text-secondary">
+                    {job.released.map((item) => {
+                      const title = typeof item === 'string' ? item : item.title;
+                      const notes = typeof item === 'string' ? [] : item.notes || [];
+                      return (
+                        <li class="flex flex-col gap-1">
+                          <span class="flex gap-3">
+                            <span class="text-brand">✔</span>
+                            <span>{title}</span>
+                          </span>
+                          {notes.length > 0 && (
+                            <ul class="ml-6 grid gap-1 text-muted">
+                              {notes.map((note) => (
+                                <li class="flex gap-2">
+                                  <span class="text-brand">–</span>
+                                  <span>{note}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )
