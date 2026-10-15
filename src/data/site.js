@@ -9,7 +9,7 @@ export const site = {
   role: 'Strategy / Operations / Production',
   location: 'Minsk, Belarus — right now\nwhere next is your call',
   email: 'aliaksei.pashkel@gmail.com',
-  resume: '/kozel-resume.pdf',
+  resume: '/kozel-resume-2026-10-15.pdf',
   // Floating "Donate" button target (external). Empty = button hidden.
   donateUrl: '',
   socials: [
