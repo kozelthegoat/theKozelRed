@@ -25,6 +25,25 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#fa3600" />
+    <script is:inline>
+      (() => {
+        // One accent per weekday (Mon → Sun); Tuesday keeps the brand orange.
+        const hues = ['#dc2626', '#fa3600', '#d97706', '#16a34a', '#2563eb', '#4f46e5', '#7c3aed'];
+        const day = hues[(new Date().getDay() + 6) % 7];
+        document.documentElement.style.setProperty('--brand', day);
+        const theme = document.querySelector('meta[name="theme-color"]');
+        if (theme) theme.setAttribute('content', day);
+        const link = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
+        if (link) {
+          const svg =
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="10,4 16,10 10,16 4,10" fill="' +
+            day +
+            '"/></svg>';
+          link.setAttribute('href', 'data:image/svg+xml,' + encodeURIComponent(svg));
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="mx-auto min-h-screen max-w-[1680px] hair-l hair-r">

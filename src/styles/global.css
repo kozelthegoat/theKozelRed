@@ -22,7 +22,7 @@
   --muted: #72726f;
   --border: #d9d9d5;
   --brand: #fa3600;
-  --brand-deep: #d92f00;
+  --brand-deep: color-mix(in srgb, var(--brand) 80%, #000);
   --on-brand: #ffffff;
   --hair: max(1px, 0.0625rem);
   --pad: clamp(1rem, 3vw, 2.5rem);

@@ -230,6 +230,7 @@ if (cfgEl && root) {
         at: zonedWallClockToUtc(slot.date, slot.time, cfg.timezone).toISOString()
       }));
       groupSlots();
+      if (!state.localDate) state.localDate = [...state.byDate.keys()].sort()[0] || null;
       render();
       if (state.localDate && state.byDate.get(state.localDate)?.length) showTimes(state.localDate);
     } catch (e) {
