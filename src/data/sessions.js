@@ -10,7 +10,12 @@ export const sessionTypes = [
       'A question you want a straight answer to',
       'A hunch that something in the process is off'
     ],
-    leave: ['An honest read on whether I can help', 'A clear next step — with me or without']
+    build: [
+      'An honest read on whether I can help',
+      'A name for the thing that’s been bugging you',
+      'A clear next step — with me or without',
+      'Confidence that you’re not missing something obvious'
+    ]
   },
   {
     id: 'deep',
@@ -23,7 +28,13 @@ export const sessionTypes = [
       'A team that’s busy but not shipping',
       'A plan that doesn’t survive contact with reality'
     ],
-    leave: ['A concrete plan you can act on Monday', 'The trade-offs spelled out, not hidden', 'Short written notes afterwards']
+    build: [
+      'A concrete plan you can act on Monday',
+      'The trade-offs spelled out, not hidden',
+      'Decision points, and what to do at each',
+      'The first three moves, in order',
+      'Short written notes afterwards'
+    ]
   },
   {
     id: 'career',
@@ -35,7 +46,13 @@ export const sessionTypes = [
       'A portfolio that undersells the work',
       'A fork in the road — stay, switch, or go it alone'
     ],
-    leave: ['A sharper story and positioning', 'A set of concrete steps for the next chapter']
+    build: [
+      'A sharper story and positioning',
+      'A résumé and portfolio that read the way you mean them to',
+      'Language for talking about your work',
+      'A set of concrete steps for the next chapter',
+      'The confidence to ask for more'
+    ]
   }
 ];
 
