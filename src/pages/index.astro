@@ -41,7 +41,16 @@ const pad = (n) => String(n).padStart(2, '0');
               </ul>
             </dd>
           </div>
-          <div><dt>Education</dt><dd class="mt-2 text-foreground">{site.education}</dd></div>
+          <div>
+            <dt>Education</dt>
+            <dd class="mt-2 text-foreground">
+              <ul class="grid gap-1">
+                {site.education.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
           <div>
             <dt>Off the clock</dt>
             <dd class="mt-2 text-foreground">
@@ -150,7 +159,16 @@ const pad = (n) => String(n).padStart(2, '0');
                       return (
                         <li class="flex flex-col gap-1">
                           <span class="flex gap-3">
-                            <span class="text-brand">✔</span>
+                            <svg
+                              class="mt-[0.2rem] h-3.5 w-3.5 shrink-0 text-brand"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2.5"
+                              aria-hidden="true"
+                            >
+                              <path d="M4 10.5l4 4 8-9.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
                             <span>{title}</span>
                           </span>
                           {notes.length > 0 && (

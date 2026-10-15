@@ -11,7 +11,7 @@ export const site = {
   email: 'aliaksei.pashkel@gmail.com',
   resume: '/kozel-resume-2026-10-15.pdf',
   languages: ['English (C2)', 'Belarusian (native)', 'Russian (native)'],
-  education: 'BA, English Literature — Minsk State Linguistic University',
+  education: ['BA, English Literature', 'Minsk State Linguistic University'],
   offClock: ['Meditation', 'Mind–body discipline', 'Volunteering', 'Coding'],
   // Floating "Donate" button target (external). Empty = button hidden.
   donateUrl: '',
