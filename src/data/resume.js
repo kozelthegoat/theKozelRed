@@ -30,7 +30,7 @@ export const experience = [
     org: 'Fracture Labs',
     where: 'Singapore',
     when: 'Jun 2022 – Feb 2024',
-    intro: 'Worked on Decimated, AA+, an MMO TPS for PC and Console.',
+    intro: 'Worked on Decimated, AA+, an MMO FPS for PC.',
     points: [
       'Reworked & phased out product scope (multiple iterations).',
       'Streamlined team structure to re-define responsibilities and pipelines.',
