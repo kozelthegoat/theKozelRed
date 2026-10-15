@@ -20,7 +20,12 @@ if (cfgEl && root) {
   const stepDone = $('[data-step="done"]');
   const formError = $('[data-form-error]');
   const form = $('[data-step="form"]');
-  const tzSelect = $('[data-tz]');
+  const tzTrigger = $('[data-tz-trigger]');
+  const tzPanel = $('[data-tz-panel]');
+  const tzOptionsEl = $('[data-tz-options]');
+  const tzSearch = $('[data-tz-search]');
+  const tzLabel = $('[data-tz-label]');
+  const tzPicker = $('[data-tz-picker]');
   const tzNote = $('[data-tz-note]');
   const layoutSwitch = $('[data-layout-switch]');
   const monthNav = $('[data-month-nav]');
@@ -43,10 +48,8 @@ if (cfgEl && root) {
   const detected = isValidZone(detectedRaw) ? detectedRaw : cfg.timezone;
   const zones = ((typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || []).filter(isValidZone);
   if (zones.length && !zones.includes(detected)) zones.unshift(detected);
-  tzSelect.innerHTML = (zones.length ? zones : [detected])
-    .map((z) => `<option value="${z}">${z.replace(/_/g, ' ')}</option>`)
-    .join('');
-  tzSelect.value = detected;
+  if (!zones.length) zones.push(detected);
+  tzLabel.textContent = detected.replace(/_/g, ' ');
 
   const dateInTz = (tz, at) =>
     new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(at);
@@ -105,14 +108,52 @@ if (cfgEl && root) {
     load();
   });
 
-  tzSelect.addEventListener('change', () => {
-    if (!isValidZone(tzSelect.value)) {
-      tzSelect.value = state.tz;
-      return;
-    }
-    state.tz = tzSelect.value;
+  function renderTimezoneOptions(filter = '') {
+    const f = filter.trim().toLowerCase();
+    const list = f ? zones.filter((z) => z.toLowerCase().includes(f)) : zones;
+    tzOptionsEl.innerHTML = list.length
+      ? list
+          .map(
+            (z) =>
+              `<li role="option" tabindex="-1" data-tz-value="${z}" class="cursor-pointer px-3 py-2 text-sm transition-colors hover:bg-brand/5 ${z === state.tz ? 'bg-brand/10 text-brand' : ''}">${z.replace(/_/g, ' ')}</li>`
+          )
+          .join('')
+      : '<li class="px-3 py-2 text-sm text-muted">No match.</li>';
+  }
+  function openPanel() {
+    renderTimezoneOptions('');
+    tzSearch.value = '';
+    tzPanel.classList.remove('hidden');
+    tzTrigger.setAttribute('aria-expanded', 'true');
+    tzSearch.focus();
+  }
+  function closePanel() {
+    tzPanel.classList.add('hidden');
+    tzTrigger.setAttribute('aria-expanded', 'false');
+  }
+  function pickZone(tz) {
+    if (!isValidZone(tz)) return;
+    state.tz = tz;
+    tzLabel.textContent = tz.replace(/_/g, ' ');
+    closePanel();
     goToCurrentMonth(state.tz);
     load();
+  }
+  tzTrigger.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (tzPanel.classList.contains('hidden')) openPanel();
+    else closePanel();
+  });
+  tzSearch.addEventListener('input', () => renderTimezoneOptions(tzSearch.value));
+  tzOptionsEl.addEventListener('click', (event) => {
+    const opt = event.target.closest('[data-tz-value]');
+    if (opt) pickZone(opt.dataset.tzValue);
+  });
+  document.addEventListener('click', (event) => {
+    if (!tzPicker.contains(event.target)) closePanel();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closePanel();
   });
 
   prevBtn.addEventListener('click', () => shift(-1));

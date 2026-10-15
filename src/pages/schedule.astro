@@ -88,20 +88,31 @@ import { sessionTypes, availability } from '../data/sessions.js';
           </div>
           <div class="mt-4 flex flex-wrap items-center gap-2">
             <span class="mono text-muted">Times in</span>
-            <div class="relative">
-              <select data-tz class="hair appearance-none bg-transparent py-1.5 pr-8 pl-3 text-sm" aria-label="Timezone"></select>
-              <svg
-                class="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 text-muted"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                aria-hidden="true"
+            <div class="relative" data-tz-picker>
+              <button
+                type="button"
+                class="hair flex items-center gap-2 bg-transparent py-1.5 pr-2 pl-3 text-sm"
+                data-tz-trigger
+                aria-haspopup="listbox"
+                aria-expanded="false"
               >
-                <path d="M6 9l6 6 6-6"></path>
-              </svg>
+                <span data-tz-label></span>
+                <svg class="text-muted" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6"></path>
+                </svg>
+              </button>
+              <div class="hair absolute z-20 mt-1 hidden w-72 bg-background" data-tz-panel>
+                <div class="sticky top-0 bg-background p-2">
+                  <input
+                    type="text"
+                    class="hair w-full bg-transparent px-3 py-1.5 text-sm"
+                    placeholder="Search a city…"
+                    data-tz-search
+                    aria-label="Search timezones"
+                  />
+                </div>
+                <ul class="max-h-64 overflow-auto" data-tz-options role="listbox" aria-label="Timezones"></ul>
+              </div>
             </div>
             <span class="mono text-muted" data-tz-note></span>
           </div>
