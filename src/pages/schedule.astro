@@ -13,9 +13,13 @@ import { sessionTypes, availability } from '../data/sessions.js';
       <p class="mt-6 max-w-[52ch] text-secondary">
         Pick a session and a time — I’ll confirm by reply.
       </p>
-      <p class="mt-4 max-w-[40ch] text-[clamp(1.1rem,2.6vw,1.7rem)] font-medium leading-snug">
-        <span class="box-decoration-clone bg-brand px-2 py-0.5 text-white">Free</span> · donation-based — volunteering, no payment, no strings.
-      </p>
+      <ul class="mt-5 flex flex-wrap gap-2">
+        {
+          ['Free', 'Volunteering', 'No payments', 'No strings', 'Donations'].map((tag) => (
+            <li class="bg-brand px-3 py-1.5 font-medium text-white">{tag}</li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
