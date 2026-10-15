@@ -15,7 +15,6 @@ if (cfgEl && root) {
   const timesWrap = $('[data-times-wrap]');
   const timesEl = $('[data-times]');
   const timesLabel = $('[data-times-label]');
-  const summary = $('[data-schedule-summary]');
   const stepSlots = $('[data-step="slots"]');
   const stepForm = $('[data-step="form"]');
   const stepDone = $('[data-step="done"]');
@@ -79,8 +78,6 @@ if (cfgEl && root) {
     return cfg.types.find((t) => t.id === id);
   }
   function updateSummary() {
-    const t = typeById(state.type);
-    summary.textContent = t ? `${t.name} · ${t.minutes} min` : '';
     tzNote.textContent = `· ${cfg.label}`;
   }
   function hideTimes() {
