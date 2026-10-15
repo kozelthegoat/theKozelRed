@@ -120,7 +120,8 @@ if (cfgEl && root) {
     if (state.layout === 'month') {
       shiftMonth(delta);
     } else {
-      state.days = Math.max(0, state.days + delta * 7);
+      const step = state.layout === 'list' ? 14 : 7;
+      state.days = Math.max(0, state.days + delta * step);
       render();
     }
   }
@@ -194,7 +195,7 @@ if (cfgEl && root) {
   function render() {
     monthView.classList.toggle('hidden', state.layout !== 'month');
     listView.classList.toggle('hidden', state.layout === 'month');
-    monthNav.classList.toggle('hidden', state.layout === 'list');
+    monthNav.classList.remove('hidden');
     if (state.layout === 'month') {
       renderMonth();
     } else {
