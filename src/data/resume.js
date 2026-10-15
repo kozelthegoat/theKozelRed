@@ -7,7 +7,7 @@ export const helpWith = [
   'Structuring and staffing teams for the work at hand',
   'Forecasting risk and steering teams through a crisis',
   'Keeping the numbers honest — P&L, budgets, and “misc” spend',
-  'Building process and tooling people actually adopt',
+  'Building processes and tooling people actually adopt',
   'Aligning product, design, engineering, and art around one plan'
 ];
 
