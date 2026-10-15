@@ -91,13 +91,13 @@ import { sessionTypes, availability } from '../data/sessions.js';
             <div class="relative" data-tz-picker>
               <button
                 type="button"
-                class="hair flex items-center gap-2 bg-transparent py-1.5 pr-2 pl-3 text-sm"
+                class="hair flex w-64 items-center justify-between gap-2 bg-transparent py-1.5 pr-2 pl-3 text-sm"
                 data-tz-trigger
                 aria-haspopup="listbox"
                 aria-expanded="false"
               >
-                <span data-tz-label></span>
-                <svg class="text-muted" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <span class="min-w-0 flex-1 truncate text-left" data-tz-label></span>
+                <svg class="shrink-0 text-muted" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                   <path d="M6 9l6 6 6-6"></path>
                 </svg>
               </button>

@@ -174,7 +174,7 @@ if (cfgEl && root) {
     if (state.layout === 'month') {
       shiftMonth(delta);
     } else {
-      const step = state.layout === 'list' ? 14 : 7;
+      const step = 7;
       state.days = Math.max(0, state.days + delta * step);
       render();
     }
@@ -265,7 +265,7 @@ if (cfgEl && root) {
     const days = [...state.byDate.keys()]
       .filter((d) => d >= from)
       .sort()
-      .slice(0, state.layout === 'week' ? 7 : 14);
+      .slice(0, 7);
     listEl.innerHTML = days.map(dayBlock).join('') || '<p class="mono text-muted">No times yet.</p>';
     monthLabel.textContent = days.length ? rangeLabel(days) : 'No times yet';
     updateNav();
