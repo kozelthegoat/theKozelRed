@@ -83,7 +83,7 @@ if (cfgEl && root) {
     return cfg.types.find((t) => t.id === id);
   }
   function updateSummary() {
-    tzNote.textContent = `· ${cfg.label}`;
+    tzNote.textContent = `· sessions in ${cfg.label}`;
   }
   function hideTimes() {
     state.localDate = null;
@@ -199,7 +199,9 @@ if (cfgEl && root) {
 
   async function load() {
     if (!state.type) return;
-    hideTimes();
+    state.slot = null;
+    timesWrap.hidden = true;
+    timesEl.innerHTML = '';
     updateSummary();
     monthLabel.textContent = monthName(state.year, state.month);
     daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Loading…</span>';
@@ -216,6 +218,7 @@ if (cfgEl && root) {
         state.byDate.get(local).push(slot);
       }
       render();
+      if (state.localDate && state.byDate.get(state.localDate)?.length) showTimes(state.localDate);
     } catch (e) {
       console.error('schedule: failed to load slots', e);
       daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Couldn’t load times — try again.</span>';
