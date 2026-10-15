@@ -116,6 +116,17 @@
 
 /* Hairline frame */
 .hair { border-color: var(--border); border-width: var(--hair); }
+
+/* Form field — hairline, brand border on focus */
+.field {
+  border: var(--hair) solid var(--border);
+  background: transparent;
+  transition: border-color 0.15s ease;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--brand);
+}
 .hair-t { border-top: var(--hair) solid var(--border); }
 .hair-b { border-bottom: var(--hair) solid var(--border); }
 .hair-l { border-left: var(--hair) solid var(--border); }
