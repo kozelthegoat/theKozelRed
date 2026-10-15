@@ -55,7 +55,7 @@ if (cfgEl && root) {
   const state = {
     type: null,
     tz: startTz,
-    layout: localStorage.getItem('layout') || 'month',
+    layout: sessionStorage.getItem('layout') || 'month',
     year: start[0],
     month: start[1],
     byDate: new Map(),
@@ -156,11 +156,15 @@ if (cfgEl && root) {
     for (let day = 1; day <= daysInMonth; day++) {
       const local = `${state.year}-${pad(state.month)}-${pad(day)}`;
       const slots = state.byDate.get(local) || [];
+      const dot =
+        local === today
+          ? '<span class="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-brand"></span>'
+          : '';
       if (slots.length) {
-        const isToday = local === today ? ' text-brand' : '';
-        html += `<button type="button" class="hair rounded-lg py-2 text-sm transition hover:border-brand${isToday}" data-day="${local}">${day}</button>`;
+        html += `<button type="button" class="relative hair rounded-lg py-2 text-sm transition hover:border-brand" data-day="${local}">${day}${dot}</button>`;
       } else {
-        html += `<span class="pointer-events-none rounded-lg py-2 text-sm text-muted opacity-40">${day}</span>`;
+        const dim = local === today ? '' : ' opacity-40';
+        html += `<span class="relative pointer-events-none rounded-lg py-2 text-sm text-muted${dim}">${day}${dot}</span>`;
       }
     }
     daysEl.innerHTML = html;
@@ -212,7 +216,7 @@ if (cfgEl && root) {
     const btn = event.target.closest('[data-layout]');
     if (!btn) return;
     state.layout = btn.dataset.layout;
-    localStorage.setItem('layout', state.layout);
+    sessionStorage.setItem('layout', state.layout);
     layoutSwitch.querySelectorAll('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.layout === state.layout ? 'true' : 'false'));
     render();
   });
