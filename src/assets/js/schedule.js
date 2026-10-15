@@ -108,9 +108,10 @@ if (cfgEl && root) {
     load();
   });
 
+  const normTz = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
   function renderTimezoneOptions(filter = '') {
-    const f = filter.trim().toLowerCase();
-    const list = f ? zones.filter((z) => z.toLowerCase().includes(f)) : zones;
+    const f = normTz(filter);
+    const list = f ? zones.filter((z) => normTz(z).includes(f)) : zones;
     tzOptionsEl.innerHTML = list.length
       ? list
           .map(
