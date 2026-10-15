@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="404 — Aliaksei Kozel" description="That page isn’t here.">
+  <section class="hair-b hair-soft">
+    <div class="px-[var(--pad)] py-14">
+      <p class="mono text-brand">404</p>
+      <h1 class="mt-5 max-w-[18ch] text-[clamp(2.2rem,6vw,4.5rem)] font-medium">
+        This page isn’t here
+      </h1>
+      <p class="mt-6 max-w-[52ch] text-secondary">
+        The link may be broken, or the page has moved. Everything worth reading lives on the home page — or catch me for a 1:1.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a class="btn btn--solid mono" href="/">
+          <span>Back home</span>
+        </a>
+        <a class="btn mono" href="/schedule/">
+          <span>Schedule 1:1</span>
+          <svg class="arrow" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M11.875 14.375L16.25 9.93818L11.875 5.625M16.25 9.93818H2.5" stroke="currentColor" stroke-width="1.5"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="hair-b hair-soft">
+    <p class="max-w-[54rem] px-[var(--pad)] py-10 text-[1rem] leading-relaxed">
+      <span class="box-decoration-clone bg-brand px-2 py-1 text-white">“A product is a mirror. Paint it honestly, and it will find its people.”</span>
+    </p>
+  </section>
+</Base>
