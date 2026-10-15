@@ -1,0 +1,51 @@
+---
+import { site } from '../data/site.js';
+import '../styles/global.css';
+
+const {
+  title = `${site.name} — ${site.role}`,
+  description = `${site.name} — ${site.role}.`
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={Astro.site?.href ?? 'https://kozel.red/'} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav">
+      <a class="nav__brand" href="/">{site.name}</a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="/#help">What I Can Help</a>
+        <a href="/#experience">Experience</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav__cta" href="/schedule/">Schedule a 1:1</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <p>© {new Date().getFullYear()} {site.name}. {site.altName}.</p>
+      <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    </footer>
+
+    {site.donateUrl && (
+      <a class="donate" href={site.donateUrl} target="_blank" rel="noopener noreferrer">
+        Donate
+      </a>
+    )}
+  </body>
+</html>

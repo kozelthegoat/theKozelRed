@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site.js';
+import { helpWith, experience, earlierRoles, recommendations } from '../data/resume.js';
+---
+<Base>
+  <section class="hero">
+    <div class="container hero__inner">
+      <div>
+        <h1 class="hero__name">{site.name}</h1>
+        <p class="hero__role">{site.role}</p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="/schedule/">Schedule a 1:1</a>
+          <a class="button" href={site.resume}>Download résumé</a>
+        </div>
+      </div>
+      <div class="hero__portrait" aria-hidden="true">AK</div>
+    </div>
+  </section>
+
+  <section class="section" id="help">
+    <div class="container">
+      <p class="section__kicker">What I Can Help</p>
+      <h2 class="section__title">Where I make a difference</h2>
+      <ul class="list">
+        {helpWith.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="experience">
+    <div class="container">
+      <p class="section__kicker">Experience</p>
+      <h2 class="section__title">Selected work</h2>
+      <div class="jobs">
+        {experience.map((job) => (
+          <article class="job">
+            <div class="job__head">
+              <span class="job__role">{job.role}</span>
+              <span class="job__org">· {job.org}</span>
+              <span class="job__meta">{job.where} · {job.when}</span>
+            </div>
+            <ul>
+              {job.points.map((point) => <li>{point}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <p class="earlier">
+        Earlier:{' '}
+        {earlierRoles.map((r, i) => (
+          <span><b>{r.role}</b>, {r.org} ({r.when}){i < earlierRoles.length - 1 ? ' · ' : ''}</span>
+        ))}
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="recommendations">
+    <div class="container">
+      <p class="section__kicker">Recommendations</p>
+      <h2 class="section__title">What colleagues say</h2>
+      <div class="quotes">
+        {recommendations.map((r) => (
+          <blockquote class="quote">
+            <p>“{r.quote}”</p>
+            <cite>— {r.author}</cite>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="resume">
+    <div class="container">
+      <p class="section__kicker">Résumé</p>
+      <h2 class="section__title">The full story, on one page</h2>
+      <p class="lede">Download the PDF — experience, skills, and recommendations.</p>
+      <div class="hero__actions">
+        <a class="button button--primary" href={site.resume}>Download résumé (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="container">
+      <p class="section__kicker">Contact</p>
+      <h2 class="section__title">Let’s talk</h2>
+      <p class="lede">The fastest way to reach me — or book a 1:1.</p>
+      <div class="contact">
+        <a class="button button--primary" href="/schedule/">Schedule a 1:1</a>
+        <a class="button" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div>
+  </section>
+</Base>
