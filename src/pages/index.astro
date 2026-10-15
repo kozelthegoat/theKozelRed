@@ -96,9 +96,16 @@ const pad = (n) => String(n).padStart(2, '0');
       <ul class="mt-10 grid gap-5 md:mt-1">
         {
           helpWith.map((item, i) => (
-            <li class="grid grid-cols-[2.5rem_1fr] items-baseline gap-3">
-              <span class="mono text-brand">{String(i + 1).padStart(2, '0')}</span>
-              <span class="text-[clamp(1.3rem,2.4vw,1.9rem)] font-medium leading-[1.12] tracking-tight text-foreground">
+            <li
+              class="reveal group grid grid-cols-[2.5rem_1fr] items-baseline gap-3"
+              style={`transition-delay: ${i * 45}ms`}
+            >
+              <span class="mono text-muted transition-colors group-hover:text-brand">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span
+                class="inline-block text-[clamp(1.3rem,2.4vw,1.9rem)] font-medium leading-[1.12] tracking-tight text-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-brand"
+              >
                 {item}
               </span>
             </li>
