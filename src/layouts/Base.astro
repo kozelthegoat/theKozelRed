@@ -17,6 +17,9 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png" />
+    <link rel="icon" href="/icon-512.png" sizes="512x512" type="image/png" />
     <link rel="canonical" href={Astro.site?.href ?? 'https://kozel.red/'} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -108,8 +111,12 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
         </div>
 
         <div class="hair-t mono flex flex-col gap-1 px-[var(--pad)] py-5 text-muted">
-          <span>© {site.name}&nbsp;&nbsp;| {site.renameYear} …</span>
-          <span>© {site.previousName} | {site.bornYear} – {site.renameYear}</span>
+          <div class="grid w-fit grid-cols-[auto_auto] gap-x-3 gap-y-1">
+            <span>© {site.name}</span>
+            <span>| {site.renameYear} …</span>
+            <span>© {site.previousName}</span>
+            <span>| {site.bornYear} – {site.renameYear}</span>
+          </div>
         </div>
       </footer>
     </div>
