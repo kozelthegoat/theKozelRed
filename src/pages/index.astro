@@ -36,12 +36,18 @@ const pad = (n) => String(n).padStart(2, '0');
     </div>
     <div class="hair-t">
       <picture>
-        <source type="image/webp" srcset="/kozel-photo.webp" />
+        <source
+          type="image/webp"
+          srcset="/kozel-photo-1280.webp 1280w, /kozel-photo.webp 1920w"
+          sizes="100vw"
+        />
         <img
-          src="/kozel-photo.jpg"
+          src="/kozel-photo-1280.jpg"
+          srcset="/kozel-photo-1280.jpg 1280w, /kozel-photo.jpg 1920w"
+          sizes="100vw"
+          width="1920"
+          height="1080"
           alt="Aliaksei Kozel"
-          width="1600"
-          height="900"
           class="block max-h-[68vh] w-full object-cover"
         />
       </picture>
