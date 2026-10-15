@@ -29,14 +29,23 @@ if (cfgEl && root) {
   const listView = $('[data-view="list"]');
   const listEl = $('[data-list]');
 
-  const detected = Intl.DateTimeFormat().resolvedOptions().timeZone || cfg.timezone;
-  const zones = (typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || [];
+  const isValidZone = (tz) => {
+    if (!tz) return false;
+    try {
+      new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(new Date());
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const detectedRaw = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const detected = isValidZone(detectedRaw) ? detectedRaw : cfg.timezone;
+  const zones = ((typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || []).filter(isValidZone);
   if (zones.length && !zones.includes(detected)) zones.unshift(detected);
-  const startTz = detected;
   tzSelect.innerHTML = (zones.length ? zones : [detected])
     .map((z) => `<option value="${z}">${z.replace(/_/g, ' ')}</option>`)
     .join('');
-  tzSelect.value = startTz;
+  tzSelect.value = detected;
 
   const dateInTz = (tz, at) =>
     new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(at);
@@ -51,10 +60,10 @@ if (cfgEl && root) {
     return dt.toISOString().slice(0, 10);
   };
 
-  const start = dateInTz(startTz, new Date()).split('-').map(Number);
+  const start = dateInTz(detected, new Date()).split('-').map(Number);
   const state = {
     type: null,
-    tz: startTz,
+    tz: detected,
     layout: 'month',
     year: start[0],
     month: start[1],
@@ -97,6 +106,10 @@ if (cfgEl && root) {
   });
 
   tzSelect.addEventListener('change', () => {
+    if (!isValidZone(tzSelect.value)) {
+      tzSelect.value = state.tz;
+      return;
+    }
     state.tz = tzSelect.value;
     goToCurrentMonth(state.tz);
     load();
@@ -139,7 +152,8 @@ if (cfgEl && root) {
         state.byDate.get(local).push(slot);
       }
       render();
-    } catch {
+    } catch (e) {
+      console.error('schedule: failed to load slots', e);
       daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Couldn’t load times — try again.</span>';
     }
   }
