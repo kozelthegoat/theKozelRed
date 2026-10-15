@@ -21,7 +21,7 @@ export const sessionTypes = [
     id: 'career',
     name: 'Career Review',
     minutes: 45,
-    description: 'A focused review of your résumé, portfolio, or next move.',
+    description: 'For you: your résumé, portfolio, and where you’re headed.',
     bring: [
       'A résumé that isn’t landing interviews',
       'A portfolio that undersells the work',
@@ -36,10 +36,10 @@ export const sessionTypes = [
     ]
   },
   {
-    id: 'deep',
-    name: 'Deep Dive',
+    id: 'work',
+    name: 'Working Session',
     minutes: 60,
-    description: 'A working session on one specific challenge.',
+    description: 'For your work: one specific problem, worked through together.',
     bring: [
       'A launch that keeps slipping',
       'A scope that’s grown out of control',
@@ -51,7 +51,8 @@ export const sessionTypes = [
       'The trade-offs spelled out, not hidden',
       'Decision points, and what to do at each',
       'The first three moves, in order',
-      'Short written notes afterwards'
+      'Short written notes afterwards',
+      'Confidence that the plan holds when it meets reality'
     ]
   }
 ];

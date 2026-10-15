@@ -27,6 +27,7 @@ if (cfgEl && root) {
   const tzOptionsEl = $('[data-tz-options]');
   const tzSearch = $('[data-tz-search]');
   const tzLabel = $('[data-tz-label]');
+  const tzOffsetEl = $('[data-tz-offset]');
   const tzPicker = $('[data-tz-picker]');
   const layoutSwitch = $('[data-layout-switch]');
   const monthNav = $('[data-month-nav]');
@@ -50,7 +51,7 @@ if (cfgEl && root) {
   const zones = ((typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || []).filter(isValidZone);
   if (zones.length && !zones.includes(detected)) zones.unshift(detected);
   if (!zones.length) zones.push(detected);
-  tzLabel.textContent = detected.replace(/_/g, ' ');
+  setTzDisplay(detected);
 
   const dateFormatters = new Map();
   const dateInTz = (tz, at) => {
@@ -62,6 +63,26 @@ if (cfgEl && root) {
     return f.format(at);
   };
   const shortTz = () => state.tz.replace(/_/g, ' ');
+  const offsetCache = new Map();
+  const tzOffset = (tz) => {
+    let o = offsetCache.get(tz);
+    if (o === undefined) {
+      try {
+        o =
+          new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' })
+            .formatToParts(new Date())
+            .find((p) => p.type === 'timeZoneName')?.value || '';
+      } catch {
+        o = '';
+      }
+      offsetCache.set(tz, o);
+    }
+    return o;
+  };
+  const setTzDisplay = (tz) => {
+    tzLabel.textContent = tz.replace(/_/g, ' ');
+    tzOffsetEl.textContent = tzOffset(tz);
+  };
   const monthName = (y, m) => new Date(y, m - 1, 1).toLocaleString(undefined, { month: 'long', year: 'numeric' });
   const dayName = (y, m, d) =>
     new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
@@ -116,7 +137,7 @@ if (cfgEl && root) {
       ? list
           .map(
             (z) =>
-              `<li role="option" tabindex="-1" data-tz-value="${z}" class="cursor-pointer px-3 py-2 text-sm transition-colors hover:bg-brand/5 ${z === state.tz ? 'bg-brand/10 text-brand' : ''}">${z.replace(/_/g, ' ')}</li>`
+              `<li role="option" tabindex="-1" data-tz-value="${z}" class="flex cursor-pointer items-center justify-between gap-3 px-3 py-2 text-sm transition-colors hover:bg-brand/5 ${z === state.tz ? 'bg-brand/10 text-brand' : ''}"><span class="truncate">${z.replace(/_/g, ' ')}</span><span class="shrink-0 text-muted">${tzOffset(z)}</span></li>`
           )
           .join('')
       : '<li class="px-3 py-2 text-sm text-muted">No match.</li>';
@@ -135,7 +156,7 @@ if (cfgEl && root) {
   function pickZone(tz) {
     if (!isValidZone(tz)) return;
     state.tz = tz;
-    tzLabel.textContent = tz.replace(/_/g, ' ');
+    setTzDisplay(tz);
     closePanel();
     goToCurrentMonth(state.tz);
     groupSlots();
