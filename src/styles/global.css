@@ -151,8 +151,8 @@
 .btn:hover { color: #fff; border-color: var(--brand); }
 .btn:hover::after { transform: translateY(0); }
 .btn--solid { background: var(--brand); border-color: var(--brand); color: #fff; }
-.btn--solid::after { background: var(--brand-deep); }
-.btn--solid:hover { border-color: var(--brand-deep); }
+.btn--solid::after { background: var(--background); }
+.btn--solid:hover { color: var(--brand); border-color: var(--brand); }
 
 .arrow { transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1); }
 .btn:hover .arrow { transform: translateX(0.25rem); }
