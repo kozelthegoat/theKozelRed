@@ -90,6 +90,13 @@
   background: color-mix(in srgb, var(--brand) 10%, transparent);
 }
 
+/* Tags — light brand chip (mirrors the selected session tile) */
+.tag {
+  border: var(--hair) solid var(--brand);
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  color: var(--brand);
+}
+
 /* Segmented control */
 .seg-btn {
   color: var(--muted);
