@@ -16,7 +16,7 @@ export const sessionTypes = [
     id: 'deep',
     name: 'Deep Dive',
     minutes: 60,
-    description: 'A working session on one specific problem.',
+    description: 'A working session on one specific challenge.',
     bring: [
       'A launch that keeps slipping',
       'Scope that’s grown out of control',
