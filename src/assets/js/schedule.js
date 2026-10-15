@@ -317,14 +317,22 @@ if (cfgEl && root) {
     event.preventDefault();
     formError.hidden = true;
     const data = new FormData(form);
-    const payload = {
-      type: state.type,
-      date: state.slot.date,
-      time: state.slot.time,
-      name: String(data.get('name') || '').trim(),
-      email: String(data.get('email') || '').trim(),
-      note: String(data.get('note') || '').trim()
-    };
+    const name = String(data.get('name') || '').trim();
+    const email = String(data.get('email') || '').trim();
+    const note = String(data.get('note') || '').trim();
+    if (name.length < 2) {
+      formError.textContent = 'Please add your name.';
+      formError.hidden = false;
+      form.querySelector('[name="name"]').focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      formError.textContent = 'Please add a valid email.';
+      formError.hidden = false;
+      form.querySelector('[name="email"]').focus();
+      return;
+    }
+    const payload = { type: state.type, date: state.slot.date, time: state.slot.time, name, email, note };
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;
     submit.textContent = 'Sending…';

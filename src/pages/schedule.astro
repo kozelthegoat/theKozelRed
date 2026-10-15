@@ -108,13 +108,13 @@ import { sessionTypes, availability } from '../data/sessions.js';
         </div>
 
         <form data-step="form" class="hidden grid gap-4" novalidate>
-          <p class="mono text-muted">Your details</p>
+          <p class="mono text-muted">Your details — <span class="text-brand">*</span> required</p>
           <input
             name="name"
             type="text"
             required
             autocomplete="name"
-            placeholder="Name"
+            placeholder="Name *"
             class="hair w-full bg-transparent px-4 py-3"
           />
           <input
@@ -122,7 +122,7 @@ import { sessionTypes, availability } from '../data/sessions.js';
             type="email"
             required
             autocomplete="email"
-            placeholder="Email"
+            placeholder="Email *"
             class="hair w-full bg-transparent px-4 py-3"
           />
           <textarea
