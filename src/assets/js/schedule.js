@@ -26,7 +26,6 @@ if (cfgEl && root) {
   const tzSearch = $('[data-tz-search]');
   const tzLabel = $('[data-tz-label]');
   const tzPicker = $('[data-tz-picker]');
-  const tzNote = $('[data-tz-note]');
   const layoutSwitch = $('[data-layout-switch]');
   const monthNav = $('[data-month-nav]');
   const prevBtn = $('[data-month-prev]');
@@ -81,15 +80,6 @@ if (cfgEl && root) {
 
   function typeById(id) {
     return cfg.types.find((t) => t.id === id);
-  }
-  function updateSummary() {
-    tzNote.textContent = `· sessions in ${cfg.label}`;
-  }
-  function hideTimes() {
-    state.localDate = null;
-    state.slot = null;
-    timesWrap.hidden = true;
-    timesEl.innerHTML = '';
   }
   function selectType(id) {
     state.type = id;
@@ -202,7 +192,6 @@ if (cfgEl && root) {
     state.slot = null;
     timesWrap.hidden = true;
     timesEl.innerHTML = '';
-    updateSummary();
     monthLabel.textContent = monthName(state.year, state.month);
     daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Loading…</span>';
     const from = dateInTz(cfg.timezone, new Date());
@@ -341,14 +330,7 @@ if (cfgEl && root) {
       hour: '2-digit',
       minute: '2-digit'
     }).format(at);
-    const minsk = new Intl.DateTimeFormat(undefined, {
-      timeZone: cfg.timezone,
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(at);
-    return `${local} (${shortTz()}) — ${cfg.label}: ${minsk}`;
+    return `${local} (${shortTz()})`;
   }
 
   function showForm() {
