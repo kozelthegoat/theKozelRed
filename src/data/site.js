@@ -7,7 +7,7 @@ export const site = {
   bornYear: 1987,
   renameYear: 2026,
   role: 'Strategy / Operations / Production',
-  location: 'Minsk right now — where next is your call',
+  location: 'Minsk, Belarus — right now\nwhere next is your call',
   email: 'aliaksei.pashkel@gmail.com',
   resume: '/kozel-resume.pdf',
   // Floating "Donate" button target (external). Empty = button hidden.
