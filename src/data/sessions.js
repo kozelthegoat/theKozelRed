@@ -4,7 +4,7 @@ export const sessionTypes = [
     id: 'intro',
     name: 'Intro Call',
     minutes: 30,
-    description: 'A short, no-agenda hello — to see where you are and where you want to be.',
+    description: 'A short, no-agenda hello — to see where you are and where you’re headed.',
     bring: [
       'A problem you can’t quite name yet',
       'A question you want a straight answer to',
