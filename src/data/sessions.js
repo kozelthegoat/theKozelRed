@@ -19,7 +19,7 @@ export const sessionTypes = [
     description: 'A working session on one specific challenge.',
     bring: [
       'A launch that keeps slipping',
-      'Scope that’s grown out of control',
+      'A scope that’s grown out of control',
       'A team that’s busy but not shipping',
       'A plan that doesn’t survive contact with reality'
     ],
@@ -35,7 +35,7 @@ export const sessionTypes = [
       'A portfolio that undersells the work',
       'A fork in the road — stay, switch, or go it alone'
     ],
-    leave: ['A sharper story and positioning', 'Concrete steps for the next few weeks']
+    leave: ['A sharper story and positioning', 'A set of concrete steps for the next chapter']
   }
 ];
 
