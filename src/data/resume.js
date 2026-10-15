@@ -181,9 +181,7 @@ export const orgUrls = {
   'Magic Media': 'https://magicmedia.studio',
   'Fracture Labs': 'https://decimated.net',
   'CM Games': 'https://cm.games',
-  'Payara Games': 'https://payara.games',
-  'Abelana VR Productions, Inc.': 'http://abelanavr.com',
-  'Iridescent Studio, Ltd.': 'http://iridescent.studio'
+  'Abelana VR Productions, Inc.': 'http://abelanavr.com'
 };
 
 export const earlierOrgUrls = {
