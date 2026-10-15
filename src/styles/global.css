@@ -10,6 +10,7 @@
   --color-brand: var(--brand);
   --color-secondary: var(--secondary);
   --color-muted: var(--muted);
+  --color-on-brand: var(--on-brand);
 }
 
 :root {
@@ -22,6 +23,7 @@
   --border: #d9d9d5;
   --brand: #fa3600;
   --brand-deep: #d92f00;
+  --on-brand: #ffffff;
   --hair: max(1px, 0.0625rem);
   --pad: clamp(1rem, 3vw, 2.5rem);
 }
@@ -39,7 +41,7 @@
   }
   ::selection {
     background: var(--brand);
-    color: #fff;
+    color: var(--on-brand);
   }
   h1, h2, h3 {
     @apply uppercase;
@@ -141,7 +143,7 @@
 .hair-l { border-left: var(--hair) solid var(--border); }
 .hair-r { border-right: var(--hair) solid var(--border); }
 /* Lighter rule for section boundaries */
-.hair-soft { border-color: #d9d9d5; }
+.hair-soft { border-color: var(--border); }
 /* Left rule only from md up (for grid renderers that can't do custom md: variants) */
 @media (min-width: 768px) {
   .hair-l-md { border-left: var(--hair) solid var(--border); }
@@ -183,9 +185,9 @@
   transform: translateY(101%);
   transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.btn:hover { color: #fff; border-color: var(--brand); }
+.btn:hover { color: var(--on-brand); border-color: var(--brand); }
 .btn:hover::after { transform: translateY(0); }
-.btn--solid { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn--solid { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
 .btn--solid::after { background: var(--background); }
 .btn--solid:hover { color: var(--brand); border-color: var(--brand); }
 
