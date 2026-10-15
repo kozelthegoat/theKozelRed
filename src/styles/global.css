@@ -33,6 +33,7 @@
     @apply font-sans;
     font-size: 87%;
     scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
     -webkit-text-size-adjust: 100%;
   }
   body {
