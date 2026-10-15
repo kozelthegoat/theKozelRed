@@ -77,7 +77,9 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.7rem;
+  min-width: 12rem;
   padding: 0.85rem 1.15rem;
   border: var(--hair) solid var(--border);
   color: var(--foreground);
