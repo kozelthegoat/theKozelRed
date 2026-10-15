@@ -25,11 +25,12 @@ import { sessionTypes, availability } from '../data/sessions.js';
             sessionTypes.map((t) => (
               <button
                 type="button"
-                class="hair rounded-lg p-5 text-left transition hover:border-brand"
+                class="type-btn rounded-lg p-5 text-left"
                 data-type={t.id}
+                aria-pressed="false"
               >
                 <span class="flex items-baseline justify-between gap-4">
-                  <span class="text-lg font-medium">{t.name}</span>
+                  <span class="text-lg font-medium" data-type-name>{t.name}</span>
                   <span class="mono text-muted">{t.minutes} min</span>
                 </span>
                 <span class="mt-2 block text-sm text-secondary">{t.description}</span>

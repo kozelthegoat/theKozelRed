@@ -57,6 +57,23 @@
   line-height: 1;
 }
 
+/* Session type selector */
+.type-btn {
+  border: var(--hair) solid var(--border);
+  background: transparent;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.type-btn:hover {
+  border-color: var(--brand);
+}
+.type-btn[aria-pressed="true"] {
+  border-color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+}
+.type-btn[aria-pressed="true"] [data-type-name] {
+  color: var(--brand);
+}
+
 /* Hairline frame */
 .hair { border-color: var(--border); border-width: var(--hair); }
 .hair-t { border-top: var(--hair) solid var(--border); }

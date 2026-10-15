@@ -39,11 +39,17 @@ if (cfgEl && root) {
     timesEl.innerHTML = '';
   }
 
+  function selectType(id) {
+    state.type = id;
+    typesEl.querySelectorAll('[data-type]').forEach((b) => {
+      b.setAttribute('aria-pressed', b.dataset.type === id ? 'true' : 'false');
+    });
+  }
+
   typesEl.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-type]');
     if (!btn) return;
-    state.type = btn.dataset.type;
-    typesEl.querySelectorAll('[data-type]').forEach((b) => b.classList.toggle('border-brand', b === btn));
+    selectType(btn.dataset.type);
     loadMonth();
   });
 
@@ -183,8 +189,7 @@ if (cfgEl && root) {
 
   const firstType = typesEl.querySelector('[data-type]');
   if (firstType) {
-    state.type = firstType.dataset.type;
-    firstType.classList.add('border-brand');
+    selectType(firstType.dataset.type);
     loadMonth();
   }
 }
