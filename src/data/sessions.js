@@ -18,6 +18,24 @@ export const sessionTypes = [
     ]
   },
   {
+    id: 'career',
+    name: 'Career Review',
+    minutes: 45,
+    description: 'A focused review of your résumé, portfolio, or next move.',
+    bring: [
+      'A résumé that isn’t landing interviews',
+      'A portfolio that undersells the work',
+      'A fork in the road — stay, switch, or go it alone'
+    ],
+    build: [
+      'A sharper story and positioning',
+      'A résumé and portfolio that read the way you mean them to',
+      'Language for talking about your work',
+      'A set of concrete steps for the next chapter',
+      'The confidence to ask for more'
+    ]
+  },
+  {
     id: 'deep',
     name: 'Deep Dive',
     minutes: 60,
@@ -34,24 +52,6 @@ export const sessionTypes = [
       'Decision points, and what to do at each',
       'The first three moves, in order',
       'Short written notes afterwards'
-    ]
-  },
-  {
-    id: 'career',
-    name: 'Career Review',
-    minutes: 45,
-    description: 'A focused review of your résumé, portfolio, or next move.',
-    bring: [
-      'A résumé that isn’t landing interviews',
-      'A portfolio that undersells the work',
-      'A fork in the road — stay, switch, or go it alone'
-    ],
-    build: [
-      'A sharper story and positioning',
-      'A résumé and portfolio that read the way you mean them to',
-      'Language for talking about your work',
-      'A set of concrete steps for the next chapter',
-      'The confidence to ask for more'
     ]
   }
 ];
