@@ -183,10 +183,10 @@ import { sessionTypes, availability } from '../data/sessions.js';
       <p class="mono text-brand">In detail</p>
       <h2 class="mt-4 text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what we build</h2>
     </div>
-    <div class="grid gap-10 px-[var(--pad)] pb-16 md:grid-cols-3">
+    <div class="grid gap-10 px-[var(--pad)] pb-16 md:grid-cols-3 md:gap-y-5">
       {
         sessionTypes.map((t) => (
-          <div class="grid content-start gap-5">
+          <div class="grid content-start gap-5 md:row-span-4 md:grid-rows-subgrid">
             <div class="flex items-baseline justify-between gap-4">
               <h3 class="text-xl font-medium">{t.name}</h3>
               <span class="mono text-muted">{t.minutes} min</span>
