@@ -45,8 +45,7 @@ export const experience = [
     when: 'Mar 2022 – Jul 2022',
     points: [
       'Revamped LiveOps leading global updates optimizing live events, car economies & balancing, IAP pricing, etc.',
-      'Reduced rollout delays from 3 weeks to healthy “2 days” with kill-switch feature enabled (multi-platform updates).',
-      'Partnered with Huawei and Microsoft to expand distribution, adding 250K+ new users in untapped markets.'
+      'Reduced rollout delays from 3 weeks to healthy “2 days” with kill-switch feature enabled (multi-platform updates).'
     ],
     released: ['a number of updates to Nitro Nation, a popular game in the Racing genre']
   },
@@ -82,9 +81,7 @@ export const experience = [
     when: 'Mar 2018 – Mar 2022',
     points: [
       'Pioneered & developed educational VR experiences and tools.',
-      'Launched platform + 5 games/apps blending science, education, and latest visionary technologies.',
-      'Partnered with Columbia University to ensure scientific grounds.',
-      'Partnered with Verizon to distribute VR apps globally.'
+      'Launched platform + 5 games/apps blending science, education, and latest visionary technologies.'
     ],
     released: [
       'a VR game featuring Atoms and Orbitals + mobile companion app',
