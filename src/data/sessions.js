@@ -4,19 +4,25 @@ export const sessionTypes = [
     id: 'intro',
     name: 'Intro Call',
     minutes: 30,
-    description: 'A short, no-agenda hello — to see if we’re a fit.'
+    description: 'A short, no-agenda hello — to see if we’re a fit.',
+    bring: 'A straight read on your situation, and an honest answer on whether I can help.',
+    leave: ['A clear next step', 'A useful pointer either way']
   },
   {
     id: 'deep',
     name: 'Deep Dive',
     minutes: 60,
-    description: 'A working session on a specific problem.'
+    description: 'A working session on a specific problem.',
+    bring: 'Structure and prioritisation for one stuck problem, shaped around your real constraints.',
+    leave: ['A plan you can act on Monday', 'The trade-offs, spelled out', 'Short written notes afterwards']
   },
   {
     id: 'career',
     name: 'Career Review',
     minutes: 45,
-    description: 'A focused review of your résumé, portfolio, or next move — fresh eyes and concrete steps.'
+    description: 'A focused review of your résumé, portfolio, or next move.',
+    bring: 'Candid eyes on how you come across — and where the market really is.',
+    leave: ['A sharper story and positioning', 'Concrete steps for the next few weeks']
   }
 ];
 

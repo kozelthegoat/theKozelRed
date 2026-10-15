@@ -106,6 +106,41 @@ import { sessionTypes, availability } from '../data/sessions.js';
     </div>
   </section>
 
+  <section class="hair-b hair-soft">
+    <div class="px-[var(--pad)] py-14">
+      <p class="mono text-brand">In detail</p>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3rem)] font-medium">What you walk away with</h2>
+    </div>
+    <div class="grid gap-10 px-[var(--pad)] pb-16 md:grid-cols-3">
+      {
+        sessionTypes.map((t) => (
+          <div class="grid content-start gap-5">
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="text-xl font-medium">{t.name}</h3>
+              <span class="mono text-muted">{t.minutes} min</span>
+            </div>
+            <p class="text-secondary">{t.description}</p>
+            <div>
+              <p class="mono text-muted">What I bring</p>
+              <p class="mt-2 text-secondary">{t.bring}</p>
+            </div>
+            <div>
+              <p class="mono text-muted">What you leave with</p>
+              <ul class="mt-2 grid gap-1 text-secondary">
+                {t.leave.map((item) => (
+                  <li class="flex gap-3">
+                    <span class="text-brand">—</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
   <script
     type="application/json"
     data-schedule-config
