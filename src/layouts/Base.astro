@@ -6,6 +6,7 @@ const {
   title = `${site.name} — ${site.role}`,
   description = `${site.name} — ${site.role}.`
 } = Astro.props;
+const year = new Date().getFullYear();
 ---
 <!doctype html>
 <html lang="en">
@@ -20,32 +21,52 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
   </head>
-  <body>
-    <a class="skip" href="#main">Skip to content</a>
+  <body class="min-h-screen bg-background text-foreground">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
+      >Skip to content</a
+    >
 
-    <header class="nav">
-      <a class="nav__brand" href="/">{site.name}</a>
-      <nav class="nav__links" aria-label="Primary">
-        <a href="/#help">What I Can Help</a>
-        <a href="/#experience">Experience</a>
-        <a href="/#contact">Contact</a>
-        <a class="nav__cta" href="/schedule/">Schedule a 1:1</a>
-      </nav>
+    <header class="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
+      <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
+        <a href="/" class="font-serif text-lg tracking-tight">{site.name}</a>
+        <nav class="flex items-center gap-5 text-sm text-muted-foreground" aria-label="Primary">
+          <a class="hidden transition hover:text-foreground sm:inline" href="/#help">What I Can Help</a>
+          <a class="hidden transition hover:text-foreground sm:inline" href="/#experience">Experience</a>
+          <a class="hidden transition hover:text-foreground sm:inline" href="/#contact">Contact</a>
+          <a
+            class="rounded-full bg-primary px-4 py-1.5 text-primary-foreground transition hover:opacity-90"
+            href="/schedule/">Schedule a 1:1</a
+          >
+        </nav>
+      </div>
     </header>
 
     <main id="main">
       <slot />
     </main>
 
-    <footer class="footer">
-      <p>© {new Date().getFullYear()} {site.name}. {site.altName}.</p>
-      <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    <footer class="mt-24 border-t border-border">
+      <div
+        class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-10 text-sm text-muted-foreground"
+      >
+        <p>© {year} {site.name}. {site.altName}.</p>
+        <a class="transition hover:text-foreground" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
     </footer>
 
-    {site.donateUrl && (
-      <a class="donate" href={site.donateUrl} target="_blank" rel="noopener noreferrer">
-        Donate
-      </a>
-    )}
+    {
+      site.donateUrl && (
+        <a
+          class="fixed bottom-6 right-6 z-30 rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground shadow-lg transition hover:opacity-90"
+          href={site.donateUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Donate
+        </a>
+      )
+    }
   </body>
 </html>

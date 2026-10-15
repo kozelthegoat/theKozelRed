@@ -4,91 +4,109 @@ import { site } from '../data/site.js';
 import { helpWith, experience, earlierRoles, recommendations } from '../data/resume.js';
 ---
 <Base>
-  <section class="hero">
-    <div class="container hero__inner">
-      <div>
-        <h1 class="hero__name">{site.name}</h1>
-        <p class="hero__role">{site.role}</p>
-        <div class="hero__actions">
-          <a class="button button--primary" href="/schedule/">Schedule a 1:1</a>
-          <a class="button" href={site.resume}>Download résumé</a>
-        </div>
-      </div>
-      <div class="hero__portrait" aria-hidden="true">AK</div>
+  <section class="mx-auto max-w-5xl px-6 pt-20 pb-16 sm:pt-28">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">{site.location}</p>
+    <h1 class="mt-4 text-5xl leading-[1.05] tracking-tight sm:text-6xl">{site.name}</h1>
+    <p class="mt-5 max-w-2xl text-xl text-muted-foreground">{site.role}</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a
+        class="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+        href="/schedule/">Schedule a 1:1</a
+      >
+      <a
+        class="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition hover:border-ring"
+        href={site.resume}>Download résumé</a
+      >
     </div>
   </section>
 
-  <section class="section" id="help">
-    <div class="container">
-      <p class="section__kicker">What I Can Help</p>
-      <h2 class="section__title">Where I make a difference</h2>
-      <ul class="list">
-        {helpWith.map((item) => <li>{item}</li>)}
+  <section id="help" class="border-t border-border">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+      <h2 class="text-3xl tracking-tight">What I Can Help</h2>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+        {helpWith.map((item) => (
+          <li class="flex gap-3 text-muted-foreground">
+            <span class="text-accent">→</span>
+            <span>{item}</span>
+          </li>
+        ))}
       </ul>
     </div>
   </section>
 
-  <section class="section" id="experience">
-    <div class="container">
-      <p class="section__kicker">Experience</p>
-      <h2 class="section__title">Selected work</h2>
-      <div class="jobs">
+  <section id="experience" class="border-t border-border">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+      <h2 class="text-3xl tracking-tight">Experience</h2>
+      <div class="mt-8 grid gap-6">
         {experience.map((job) => (
-          <article class="job">
-            <div class="job__head">
-              <span class="job__role">{job.role}</span>
-              <span class="job__org">· {job.org}</span>
-              <span class="job__meta">{job.where} · {job.when}</span>
+          <article class="rounded-lg border border-border bg-card p-6">
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 class="font-serif text-lg">{job.role}</h3>
+              <span class="text-foreground">{job.org}</span>
+              <span class="ml-auto font-mono text-xs text-muted-foreground">{job.where} · {job.when}</span>
             </div>
-            <ul>
-              {job.points.map((point) => <li>{point}</li>)}
+            <ul class="mt-4 grid gap-1.5 text-sm text-muted-foreground">
+              {job.points.map((point) => (
+                <li class="flex gap-2">
+                  <span class="text-accent">–</span>
+                  <span>{point}</span>
+                </li>
+              ))}
             </ul>
           </article>
         ))}
       </div>
-      <p class="earlier">
+      <p class="mt-6 text-sm text-muted-foreground">
         Earlier:{' '}
         {earlierRoles.map((r, i) => (
-          <span><b>{r.role}</b>, {r.org} ({r.when}){i < earlierRoles.length - 1 ? ' · ' : ''}</span>
+          <span>
+            <span class="text-foreground">{r.role}</span>, {r.org} ({r.when}){i < earlierRoles.length - 1 ? ' · ' : ''}
+          </span>
         ))}
       </p>
     </div>
   </section>
 
-  <section class="section" id="recommendations">
-    <div class="container">
-      <p class="section__kicker">Recommendations</p>
-      <h2 class="section__title">What colleagues say</h2>
-      <div class="quotes">
+  <section id="recommendations" class="border-t border-border">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+      <h2 class="text-3xl tracking-tight">Recommendations</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2">
         {recommendations.map((r) => (
-          <blockquote class="quote">
-            <p>“{r.quote}”</p>
-            <cite>— {r.author}</cite>
+          <blockquote class="rounded-lg border border-border bg-card p-6">
+            <p class="font-serif text-lg leading-snug">“{r.quote}”</p>
+            <cite class="mt-4 block text-sm not-italic text-muted-foreground">— {r.author}</cite>
           </blockquote>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section" id="resume">
-    <div class="container">
-      <p class="section__kicker">Résumé</p>
-      <h2 class="section__title">The full story, on one page</h2>
-      <p class="lede">Download the PDF — experience, skills, and recommendations.</p>
-      <div class="hero__actions">
-        <a class="button button--primary" href={site.resume}>Download résumé (PDF)</a>
-      </div>
+  <section id="resume" class="border-t border-border">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+      <h2 class="text-3xl tracking-tight">Résumé</h2>
+      <p class="mt-3 max-w-2xl text-muted-foreground">
+        Experience, skills, and recommendations — on one page.
+      </p>
+      <a
+        class="mt-6 inline-block rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+        href={site.resume}>Download résumé (PDF)</a
+      >
     </div>
   </section>
 
-  <section class="section" id="contact">
-    <div class="container">
-      <p class="section__kicker">Contact</p>
-      <h2 class="section__title">Let’s talk</h2>
-      <p class="lede">The fastest way to reach me — or book a 1:1.</p>
-      <div class="contact">
-        <a class="button button--primary" href="/schedule/">Schedule a 1:1</a>
-        <a class="button" href={`mailto:${site.email}`}>{site.email}</a>
+  <section id="contact" class="border-t border-border">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+      <h2 class="text-3xl tracking-tight">Let’s talk</h2>
+      <p class="mt-3 max-w-2xl text-muted-foreground">The fastest way to reach me — or book a 1:1.</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          class="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+          href="/schedule/">Schedule a 1:1</a
+        >
+        <a
+          class="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition hover:border-ring"
+          href={`mailto:${site.email}`}>{site.email}</a
+        >
       </div>
     </div>
   </section>

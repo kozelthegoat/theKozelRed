@@ -2,14 +2,15 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Schedule a 1:1 — Aliaksei Kozel" description="Book a 30- or 60-minute 1:1.">
-  <section class="section" style="border-top: 0">
-    <div class="container">
-      <p class="section__kicker">1:1</p>
-      <h1 class="section__title">Schedule a 1:1</h1>
-      <p class="lede">Pick a session type and an open time. The booking flow lands next.</p>
-      <div class="hero__actions">
-        <a class="button" href="/">← Back</a>
-      </div>
-    </div>
+  <section class="mx-auto max-w-5xl px-6 pt-20 pb-16 sm:pt-28">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">1:1</p>
+    <h1 class="mt-4 text-4xl tracking-tight sm:text-5xl">Schedule a 1:1</h1>
+    <p class="mt-4 max-w-2xl text-lg text-muted-foreground">
+      Pick a session type and an open time. The booking flow lands next.
+    </p>
+    <a
+      class="mt-8 inline-block rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition hover:border-ring"
+      href="/">← Back</a
+    >
   </section>
 </Base>
