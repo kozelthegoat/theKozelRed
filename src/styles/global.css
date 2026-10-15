@@ -82,7 +82,6 @@
 
 /* Icon button (calendar nav) */
 .icon-btn {
-  border-radius: 0.5rem;
   color: var(--muted);
   transition: color 0.15s ease, background-color 0.15s ease;
 }

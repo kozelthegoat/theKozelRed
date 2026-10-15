@@ -185,10 +185,10 @@ if (cfgEl && root) {
           : '';
       if (slots.length) {
         const pressed = local === state.localDate ? 'true' : 'false';
-        html += `<button type="button" class="pick-btn relative rounded-lg py-2 text-sm" data-day="${local}" aria-pressed="${pressed}">${day}${dot}</button>`;
+        html += `<button type="button" class="pick-btn relative py-2 text-sm" data-day="${local}" aria-pressed="${pressed}">${day}${dot}</button>`;
       } else {
         const dim = local === today ? '' : ' opacity-40';
-        html += `<span class="relative pointer-events-none rounded-lg py-2 text-sm text-muted${dim}">${day}${dot}</span>`;
+        html += `<span class="relative pointer-events-none py-2 text-sm text-muted${dim}">${day}${dot}</span>`;
       }
     }
     daysEl.innerHTML = html;
@@ -234,7 +234,7 @@ if (cfgEl && root) {
 
   function timeChip(s) {
     const label = new Intl.DateTimeFormat(undefined, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at));
-    return `<button type="button" class="hair rounded-lg px-2.5 py-1.5 text-sm whitespace-nowrap tabular-nums transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${label}</button>`;
+    return `<button type="button" class="hair px-2.5 py-1.5 text-sm whitespace-nowrap tabular-nums transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${label}</button>`;
   }
 
   function onTimeClick(event) {
