@@ -7,7 +7,7 @@ export const sessionTypes = [
     description: 'A short, no-agenda hello — to see if we’re a fit.',
     bring: [
       'A problem you can’t quite name yet',
-      'One question you want a straight answer to',
+      'A question you want a straight answer to',
       'A hunch that something in the process is off'
     ],
     leave: ['An honest read on whether I can help', 'A clear next step — with me or without']
