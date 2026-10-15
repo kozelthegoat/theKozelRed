@@ -93,12 +93,14 @@ const pad = (n) => String(n).padStart(2, '0');
           What I can help with
         </h2>
       </div>
-      <ul class="mt-10 grid max-w-[52ch] gap-4 md:mt-1">
+      <ul class="mt-10 grid gap-5 md:mt-1">
         {
-          helpWith.map((item) => (
-            <li class="flex gap-3 text-[1.15rem] font-medium leading-snug tracking-tight text-foreground">
-              <span class="text-brand">—</span>
-              <span>{item}</span>
+          helpWith.map((item, i) => (
+            <li class="grid grid-cols-[2.5rem_1fr] items-baseline gap-3">
+              <span class="mono text-brand">{String(i + 1).padStart(2, '0')}</span>
+              <span class="text-[clamp(1.3rem,2.4vw,1.9rem)] font-medium leading-[1.12] tracking-tight text-foreground">
+                {item}
+              </span>
             </li>
           ))
         }
