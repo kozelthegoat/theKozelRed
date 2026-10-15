@@ -115,6 +115,11 @@
 @media (min-width: 768px) {
   .hair-l-md { border-left: var(--hair) solid var(--border); }
 }
+/* Top rule only below md (1-column mobile layout inside an md grid) */
+.hair-t-mobile { border-top: var(--hair) solid var(--border); }
+@media (min-width: 768px) {
+  .hair-t-mobile { border-top-color: transparent; }
+}
 
 /* Dotted vertical guide */
 .dash-v {
