@@ -24,6 +24,8 @@ if (cfgEl && root) {
   const tzNote = $('[data-tz-note]');
   const layoutSwitch = $('[data-layout-switch]');
   const monthNav = $('[data-month-nav]');
+  const prevBtn = $('[data-month-prev]');
+  const nextBtn = $('[data-month-next]');
   const monthView = $('[data-view="month"]');
   const listView = $('[data-view="list"]');
   const listEl = $('[data-list]');
@@ -113,8 +115,19 @@ if (cfgEl && root) {
     load();
   });
 
-  $('[data-month-prev]').addEventListener('click', () => shift(-1));
-  $('[data-month-next]').addEventListener('click', () => shift(1));
+  prevBtn.addEventListener('click', () => shift(-1));
+  nextBtn.addEventListener('click', () => shift(1));
+
+  function atEarliest() {
+    if (state.layout === 'month') {
+      const [y, m] = dateInTz(state.tz, new Date()).split('-').map(Number);
+      return state.year < y || (state.year === y && state.month <= m);
+    }
+    return state.days <= 0;
+  }
+  function updateNav() {
+    prevBtn.disabled = atEarliest();
+  }
 
   function shift(delta) {
     if (state.layout === 'month') {
@@ -191,6 +204,7 @@ if (cfgEl && root) {
       }
     }
     daysEl.innerHTML = html;
+    updateNav();
   }
 
   function render() {
@@ -213,6 +227,7 @@ if (cfgEl && root) {
       .slice(0, state.layout === 'week' ? 7 : 14);
     listEl.innerHTML = days.map(dayBlock).join('') || '<p class="mono text-muted">No times yet.</p>';
     monthLabel.textContent = days.length ? rangeLabel(days) : 'No times yet';
+    updateNav();
   }
 
   function rangeLabel(list) {
