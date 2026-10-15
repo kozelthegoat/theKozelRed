@@ -3,7 +3,7 @@
 export const site = {
   name: 'Aliaksei Kozel',
   altName: 'formerly Aliaksei Pashkel',
-  role: 'Operations & production leader',
+  role: 'Strategy / Operations / Production',
   location: 'Minsk · working worldwide',
   email: 'aliaksei.pashkel@gmail.com',
   resume: '/kozel-resume.pdf',
