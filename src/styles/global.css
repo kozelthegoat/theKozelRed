@@ -28,7 +28,7 @@
 @layer base {
   html {
     @apply font-sans;
-    font-size: 90%;
+    font-size: 87%;
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
