@@ -25,6 +25,9 @@ const pad = (n) => String(n).padStart(2, '0');
             <span>Download Résumé</span>
           </a>
         </div>
+        <p class="mt-10 max-w-[42ch] text-[0.95rem] leading-relaxed text-secondary">
+          A product is a mirror. Paint it honestly, and it will find its people.
+        </p>
       </div>
       <div class="hidden w-[22rem] hair-l px-[var(--pad)] pt-20 pb-14 md:block">
         <dl class="mono grid gap-6 text-muted">
@@ -86,33 +89,31 @@ const pad = (n) => String(n).padStart(2, '0');
 
   <!-- what I can help -->
   <section id="help" class="hair-b hair-soft">
-    <div class="px-[var(--pad)] py-16 md:grid md:grid-cols-[1fr_1.3fr] md:gap-16">
-      <div>
-        <p class="mono text-brand">Expertise</p>
-        <h2 class="mt-4 max-w-[16ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
-          What I can help with
-        </h2>
-      </div>
-      <ul class="mt-10 grid gap-5 md:mt-1">
-        {
-          helpWith.map((item, i) => (
-            <li
-              class="reveal group grid grid-cols-[2.5rem_1fr] items-baseline gap-3"
-              style={`transition-delay: ${i * 45}ms`}
-            >
-              <span class="mono text-muted transition-colors group-hover:text-brand">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span
-                class="inline-block text-[clamp(1.3rem,2.4vw,1.9rem)] font-medium leading-[1.12] tracking-tight text-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-brand"
-              >
-                {item}
-              </span>
-            </li>
-          ))
-        }
-      </ul>
+    <div class="px-[var(--pad)] py-14">
+      <p class="mono text-brand">Expertise</p>
+      <h2 class="mt-4 max-w-[16ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+        What I can help with
+      </h2>
     </div>
+    <ul class="grid gap-x-12 gap-y-6 px-[var(--pad)] pb-16 md:grid-cols-2">
+      {
+        helpWith.map((item, i) => (
+          <li
+            class="reveal group grid grid-cols-[2.5rem_1fr] items-baseline gap-3"
+            style={`transition-delay: ${i * 45}ms`}
+          >
+            <span class="mono text-muted transition-colors group-hover:text-brand">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span
+              class="inline-block text-[clamp(1.2rem,1.9vw,1.6rem)] font-medium leading-[1.15] tracking-tight text-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-brand"
+            >
+              {item}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <!-- experience -->
