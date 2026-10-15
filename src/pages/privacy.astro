@@ -17,7 +17,7 @@ import Base from '../layouts/Base.astro';
       <div>
         <p class="mono text-muted">What I collect</p>
         <p class="mt-3 text-secondary">Your name. Your email address. Your notes (if any).</p>
-        <p class="mono mt-2 text-muted">(when you schedule the 1:1 session)</p>
+        <p class="text-secondary">(when you schedule the 1:1 session)</p>
       </div>
       <div>
         <p class="mono text-muted">Why</p>
@@ -25,10 +25,16 @@ import Base from '../layouts/Base.astro';
       </div>
       <div>
         <p class="mono text-muted">Where it goes</p>
-        <p class="mt-3 text-secondary">
-          Stored on Cloudflare and emailed through Resend — our host and our email provider — acting on
-          my behalf. No one else sees it.
-        </p>
+        <ul class="mt-3 grid gap-1 text-secondary">
+          <li class="flex gap-3">
+            <span class="text-brand">—</span>
+            <span><span class="text-foreground">Cloudflare</span>: hosts this site and stores your request.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="text-brand">—</span>
+            <span><span class="text-foreground">Resend</span>: delivers the emails.</span>
+          </li>
+        </ul>
       </div>
       <div>
         <p class="mono text-muted">Cookies &amp; tracking</p>
