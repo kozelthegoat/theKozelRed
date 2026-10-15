@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site.js';
-import { helpWith, experience, earlierRoles, recommendations } from '../data/resume.js';
+import { helpWith, experience, earlierRoles, recommendations, orgUrls, earlierOrgUrls } from '../data/resume.js';
 
 const pad = (n) => String(n).padStart(2, '0');
 ---
@@ -90,7 +90,22 @@ const pad = (n) => String(n).padStart(2, '0');
         <article class={`grid gap-6 ${i > 0 ? 'hair-t' : ''} px-[var(--pad)] py-10 md:grid-cols-[1fr_2fr]`}>
           <div>
             <h3 class="text-2xl font-medium tracking-tight">{job.role}</h3>
-            <p class="mono mt-3 text-muted">{job.org}</p>
+            <p class="mono mt-3 text-muted">
+              {
+                orgUrls[job.org] ? (
+                  <a
+                    class="transition-colors hover:text-brand"
+                    href={orgUrls[job.org]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {job.org}
+                  </a>
+                ) : (
+                  job.org
+                )
+              }
+            </p>
             <p class="mono mt-1 text-muted">{job.where} · {job.when}</p>
           </div>
           <div>
@@ -143,7 +158,22 @@ const pad = (n) => String(n).padStart(2, '0');
       <ul class="mono mt-4 grid gap-2 text-muted">
         {earlierRoles.map((r) => (
           <li>
-            {r.role}, {r.org} <span class="text-secondary">({r.when})</span>
+            {r.role},{' '}
+            {
+              earlierOrgUrls[r.org] ? (
+                <a
+                  class="transition-colors hover:text-brand"
+                  href={earlierOrgUrls[r.org]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {r.org}
+                </a>
+              ) : (
+                r.org
+              )
+            }{' '}
+            <span class="text-secondary">({r.when})</span>
           </li>
         ))}
       </ul>

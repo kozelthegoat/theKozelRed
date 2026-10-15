@@ -175,3 +175,20 @@ export const recommendations = [
     author: 'Tatiana Sehen'
   }
 ];
+
+// Company sites, from the résumé PDF's hyperlinks.
+export const orgUrls = {
+  'Magic Media': 'https://magicmedia.studio',
+  'Fracture Labs': 'https://decimated.net',
+  'CM Games': 'https://cm.games',
+  'Payara Games': 'https://payara.games',
+  'Abelana VR Productions, Inc.': 'http://abelanavr.com',
+  'Iridescent Studio, Ltd.': 'http://iridescent.studio'
+};
+
+export const earlierOrgUrls = {
+  Omertex: 'http://www.omertex.com',
+  Cactus: 'https://cactus-now.com',
+  Artezio: 'http://www.artezio.com',
+  Svyaznoy: 'https://en.wikipedia.org/wiki/Svyaznoy'
+};
