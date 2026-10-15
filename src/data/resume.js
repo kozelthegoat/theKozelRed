@@ -131,7 +131,7 @@ export const recommendations = [
     author: 'Vera Gavryushina'
   },
   {
-    quote: `Aliaksei is an educated and inspiring pro who works with several software development teams. I've had the pleasure of knowing him for about a year now, as we have worked together on several corporate initiatives. He has shown significant knowledge about methodological (e.g. Scrum or Kanban), HR-related, and UX-specific aspects in a broad sense. Above all, I was impressed with his abilities to focus on results and keep everybody informed. And, of course, his open nature and hard working habits, which helped us stay healthy as a team and deliver on time. Aliaksei would be a true asset for any positions requiring a development management jedi. :-)`,
+    quote: `Aliaksei is an educated and inspiring pro who works with several software development teams. I've had the pleasure of knowing him for about a year now, as we have worked together on several corporate initiatives. He has shown significant knowledge about methodological (e.g. Scrum or Kanban), HR-related, and UX-specific aspects in a broad sense. Above all, I was impressed with his abilities to focus on results and keep everybody informed. And, of course, his open nature and hard working habits, which helped us stay healthy as a team and deliver on time. Aliaksei would be a true asset for any positions requiring a development management jedi.`,
     author: 'Elizabeth Nova'
   },
   {
