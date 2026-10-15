@@ -80,6 +80,7 @@ if (cfgEl && root) {
     year: start[0],
     month: start[1],
     byDate: new Map(),
+    slots: [],
     days: 0,
     localDate: null,
     slot: null
@@ -104,7 +105,7 @@ if (cfgEl && root) {
     const btn = event.target.closest('[data-type]');
     if (!btn) return;
     selectType(btn.dataset.type);
-    load();
+    if (!state.slots.length) load();
   });
 
   const normTz = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -137,7 +138,9 @@ if (cfgEl && root) {
     tzLabel.textContent = tz.replace(/_/g, ' ');
     closePanel();
     goToCurrentMonth(state.tz);
-    load();
+    groupSlots();
+    render();
+    if (state.localDate && state.byDate.get(state.localDate)?.length) showTimes(state.localDate);
   }
   tzTrigger.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -222,18 +225,25 @@ if (cfgEl && root) {
     const to = addDays(from, 180);
     try {
       const body = await fetchWithRetry(`/api/slots?type=${encodeURIComponent(state.type)}&from=${from}&to=${to}`);
-      state.byDate = new Map();
-      for (const slot of body.data?.slots || []) {
-        const at = zonedWallClockToUtc(slot.date, slot.time, cfg.timezone).toISOString();
-        const local = dateInTz(state.tz, new Date(at));
-        if (!state.byDate.has(local)) state.byDate.set(local, []);
-        state.byDate.get(local).push({ ...slot, at });
-      }
+      state.slots = (body.data?.slots || []).map((slot) => ({
+        ...slot,
+        at: zonedWallClockToUtc(slot.date, slot.time, cfg.timezone).toISOString()
+      }));
+      groupSlots();
       render();
       if (state.localDate && state.byDate.get(state.localDate)?.length) showTimes(state.localDate);
     } catch (e) {
       console.error('schedule: failed to load slots', e);
       daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Couldn’t load times — try again.</span>';
+    }
+  }
+
+  function groupSlots() {
+    state.byDate = new Map();
+    for (const slot of state.slots) {
+      const local = dateInTz(state.tz, new Date(slot.at));
+      if (!state.byDate.has(local)) state.byDate.set(local, []);
+      state.byDate.get(local).push(slot);
     }
   }
 
