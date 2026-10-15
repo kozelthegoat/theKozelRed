@@ -1,6 +1,6 @@
 import { availability, findSessionType } from '../../data/sessions.js';
 import { computeSlots } from '../../lib/slots.js';
-import { nowInTz } from '../../lib/tz.js';
+import { nowInTz, zonedWallClockToUtc } from '../../lib/tz.js';
 import { json, jsonError } from '../../lib/api.js';
 import { env } from 'cloudflare:workers';
 
@@ -41,7 +41,7 @@ export const GET = async ({ url, locals }) => {
     nowDate: now.date,
     nowTime: now.time,
     taken
-  });
+  }).map((s) => ({ ...s, at: zonedWallClockToUtc(s.date, s.time, availability.timezone).toISOString() }));
 
   return json({ slots, timezone: availability.timezone, label: availability.label, type: type.id });
 };

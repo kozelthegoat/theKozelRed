@@ -50,6 +50,11 @@ import { sessionTypes, availability } from '../data/sessions.js';
               <button type="button" class="btn px-3 py-1.5" data-month-next aria-label="Next month">→</button>
             </div>
           </div>
+          <div class="mt-4 flex flex-wrap items-center gap-2">
+            <span class="mono text-muted">Times in</span>
+            <select data-tz class="hair rounded-lg bg-transparent px-3 py-1.5 text-sm" aria-label="Timezone"></select>
+            <span class="mono text-muted" data-tz-note></span>
+          </div>
           <div class="mt-4 grid grid-cols-7 gap-1 text-center">
             {
               ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
@@ -153,7 +158,8 @@ import { sessionTypes, availability } from '../data/sessions.js';
     data-schedule-config
     set:html={JSON.stringify({
       types: sessionTypes.map((t) => ({ id: t.id, name: t.name, minutes: t.minutes })),
-      label: availability.label
+      label: availability.label,
+      timezone: availability.timezone
     })}
   ></script>
   <script>

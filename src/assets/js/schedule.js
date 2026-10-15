@@ -1,15 +1,14 @@
 // 1:1 scheduling: type → month calendar → time → request.
+// Times are shown in the visitor's timezone; every session is anchored to Minsk.
 
 const cfgEl = document.querySelector('[data-schedule-config]');
 const root = document.querySelector('[data-schedule]');
 
 if (cfgEl && root) {
   const cfg = JSON.parse(cfgEl.textContent);
-  const pad = (n) => String(n).padStart(2, '0');
-  const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  const monthName = (d) => d.toLocaleString('en', { month: 'long', year: 'numeric' });
-
   const $ = (sel) => root.querySelector(sel);
+  const pad = (n) => String(n).padStart(2, '0');
+
   const typesEl = $('[data-schedule-types]');
   const daysEl = $('[data-days]');
   const monthLabel = $('[data-month-label]');
@@ -22,81 +21,128 @@ if (cfgEl && root) {
   const stepDone = $('[data-step="done"]');
   const formError = $('[data-form-error]');
   const form = $('[data-step="form"]');
+  const tzSelect = $('[data-tz]');
+  const tzNote = $('[data-tz-note]');
 
-  const state = { type: null, month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), date: null, time: null, byDate: new Map() };
+  const detected = Intl.DateTimeFormat().resolvedOptions().timeZone || cfg.timezone;
+  const zones = (typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || [];
+  if (zones.length && !zones.includes(detected)) zones.unshift(detected);
+  const startTz = localStorage.getItem('tz') || detected;
+  tzSelect.innerHTML = (zones.length ? zones : [detected])
+    .map((z) => `<option value="${z}">${z.replace(/_/g, ' ')}</option>`)
+    .join('');
+  tzSelect.value = startTz;
+
+  const dateInTz = (tz, at) =>
+    new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(at);
+  const shortTz = () => state.tz.replace(/_/g, ' ');
+  const monthName = (y, m) => new Date(y, m - 1, 1).toLocaleString(undefined, { month: 'long', year: 'numeric' });
+  const dayName = (y, m, d) =>
+    new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+  const addDays = (ymd, n) => {
+    const [y, m, d] = ymd.split('-').map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    dt.setUTCDate(dt.getUTCDate() + n);
+    return dt.toISOString().slice(0, 10);
+  };
+
+  const start = dateInTz(startTz, new Date()).split('-').map(Number);
+  const state = { type: null, tz: startTz, year: start[0], month: start[1], byDate: new Map(), localDate: null, slot: null };
 
   function typeById(id) {
     return cfg.types.find((t) => t.id === id);
   }
   function updateSummary() {
     const t = typeById(state.type);
-    summary.textContent = t ? `${t.name} · ${t.minutes} min · times in ${cfg.label}` : '';
+    summary.textContent = t ? `${t.name} · ${t.minutes} min` : '';
+    tzNote.textContent = `· ${cfg.label}`;
   }
   function hideTimes() {
-    state.date = null;
-    state.time = null;
+    state.localDate = null;
+    state.slot = null;
     timesWrap.hidden = true;
     timesEl.innerHTML = '';
   }
-
   function selectType(id) {
     state.type = id;
-    typesEl.querySelectorAll('[data-type]').forEach((b) => {
-      b.setAttribute('aria-pressed', b.dataset.type === id ? 'true' : 'false');
-    });
+    typesEl.querySelectorAll('[data-type]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.type === id ? 'true' : 'false'));
+  }
+  function goToCurrentMonth(tz) {
+    const [y, m] = dateInTz(tz, new Date()).split('-').map(Number);
+    state.year = y;
+    state.month = m;
   }
 
   typesEl.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-type]');
     if (!btn) return;
     selectType(btn.dataset.type);
-    loadMonth();
+    load();
   });
 
-  $('[data-month-prev]').addEventListener('click', () => {
-    state.month = new Date(state.month.getFullYear(), state.month.getMonth() - 1, 1);
-    loadMonth();
-  });
-  $('[data-month-next]').addEventListener('click', () => {
-    state.month = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 1);
-    loadMonth();
+  tzSelect.addEventListener('change', () => {
+    state.tz = tzSelect.value;
+    localStorage.setItem('tz', state.tz);
+    goToCurrentMonth(state.tz);
+    load();
   });
 
-  async function loadMonth() {
+  $('[data-month-prev]').addEventListener('click', () => shiftMonth(-1));
+  $('[data-month-next]').addEventListener('click', () => shiftMonth(1));
+
+  function shiftMonth(delta) {
+    let m = state.month + delta;
+    let y = state.year;
+    while (m < 1) {
+      m += 12;
+      y -= 1;
+    }
+    while (m > 12) {
+      m -= 12;
+      y += 1;
+    }
+    state.year = y;
+    state.month = m;
+    renderMonth();
+  }
+
+  async function load() {
     if (!state.type) return;
-    const first = state.month;
-    const last = new Date(first.getFullYear(), first.getMonth() + 1, 0);
-    monthLabel.textContent = monthName(first);
     hideTimes();
     updateSummary();
+    monthLabel.textContent = monthName(state.year, state.month);
     daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Loading…</span>';
+    const from = dateInTz(cfg.timezone, new Date());
+    const to = addDays(from, 180);
     try {
-      const res = await fetch(`/api/slots?type=${encodeURIComponent(state.type)}&from=${iso(first)}&to=${iso(last)}`);
+      const res = await fetch(`/api/slots?type=${encodeURIComponent(state.type)}&from=${from}&to=${to}`);
       const body = await res.json();
       state.byDate = new Map();
       for (const slot of body.data?.slots || []) {
-        if (!state.byDate.has(slot.date)) state.byDate.set(slot.date, []);
-        state.byDate.get(slot.date).push(slot.time);
+        const local = dateInTz(state.tz, new Date(slot.at));
+        if (!state.byDate.has(local)) state.byDate.set(local, []);
+        state.byDate.get(local).push(slot);
       }
-      renderDays();
+      renderMonth();
     } catch {
       daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Couldn’t load times — try again.</span>';
     }
   }
 
-  function renderDays() {
-    const first = state.month;
-    const daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
-    const lead = (first.getDay() + 6) % 7; // Mon-first
-    const today = iso(new Date());
+  function renderMonth() {
+    monthLabel.textContent = monthName(state.year, state.month);
+    const first = new Date(Date.UTC(state.year, state.month - 1, 1));
+    const daysInMonth = new Date(Date.UTC(state.year, state.month, 0)).getUTCDate();
+    const lead = (first.getUTCDay() + 6) % 7;
+    const today = dateInTz(state.tz, new Date());
     let html = '';
     for (let i = 0; i < lead; i++) html += '<span></span>';
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = `${first.getFullYear()}-${pad(first.getMonth() + 1)}-${pad(day)}`;
-      const times = state.byDate.get(date) || [];
-      if (times.length) {
-        const isToday = date === today ? ' text-brand' : '';
-        html += `<button type="button" class="hair rounded-lg py-2 text-sm transition hover:border-brand${isToday}" data-day="${date}">${day}</button>`;
+      const local = `${state.year}-${pad(state.month)}-${pad(day)}`;
+      const slots = state.byDate.get(local) || [];
+      if (slots.length) {
+        const isToday = local === today ? ' text-brand' : '';
+        html += `<button type="button" class="hair rounded-lg py-2 text-sm transition hover:border-brand${isToday}" data-day="${local}">${day}</button>`;
       } else {
         html += `<span class="pointer-events-none rounded-lg py-2 text-sm text-muted opacity-40">${day}</span>`;
       }
@@ -107,18 +153,20 @@ if (cfgEl && root) {
   daysEl.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-day]');
     if (!btn) return;
-    state.date = btn.dataset.day;
+    state.localDate = btn.dataset.day;
     daysEl.querySelectorAll('[data-day]').forEach((b) => b.classList.toggle('border-brand', b === btn));
-    showTimes(state.date);
+    showTimes(state.localDate);
   });
 
-  function showTimes(date) {
-    const times = state.byDate.get(date) || [];
-    const [y, m, d] = date.split('-').map(Number);
-    const label = new Date(y, m - 1, d).toLocaleDateString('en', { weekday: 'long', day: 'numeric', month: 'long' });
-    timesLabel.textContent = `${label} — ${cfg.label}`;
-    timesEl.innerHTML = times
-      .map((t) => `<button type="button" class="btn px-4 py-2" data-time="${t}">${t}</button>`)
+  function showTimes(local) {
+    const slots = state.byDate.get(local) || [];
+    const [y, m, d] = local.split('-').map(Number);
+    timesLabel.textContent = `${dayName(y, m, d)} — ${shortTz()}`;
+    timesEl.innerHTML = slots
+      .map(
+        (s) =>
+          `<button type="button" class="btn px-4 py-2" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${new Intl.DateTimeFormat(undefined, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at))}</button>`
+      )
       .join('');
     timesWrap.hidden = false;
   }
@@ -126,19 +174,37 @@ if (cfgEl && root) {
   timesEl.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-time]');
     if (!btn) return;
-    state.time = btn.dataset.time;
+    state.slot = { date: btn.dataset.date, time: btn.dataset.time, at: btn.dataset.at };
     showForm();
   });
 
+  function whenLabel(withWeekday) {
+    const at = new Date(state.slot.at);
+    const local = new Intl.DateTimeFormat(undefined, {
+      timeZone: state.tz,
+      weekday: withWeekday ? 'short' : undefined,
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(at);
+    const minsk = new Intl.DateTimeFormat(undefined, {
+      timeZone: cfg.timezone,
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(at);
+    return `${local} (${shortTz()}) — ${cfg.label}: ${minsk}`;
+  }
+
   function showForm() {
     const t = typeById(state.type);
-    const [y, m, d] = state.date.split('-').map(Number);
-    const label = new Date(y, m - 1, d).toLocaleDateString('en', { weekday: 'short', day: 'numeric', month: 'short' });
     form.querySelector('[data-form-when]')?.remove();
     const when = document.createElement('p');
     when.dataset.formWhen = '';
     when.className = 'mono text-muted';
-    when.textContent = `${t.name} · ${label} · ${state.time} (${cfg.label})`;
+    when.textContent = `${t.name} · ${whenLabel(true)}`;
     form.prepend(when);
     formError.hidden = true;
     stepSlots.hidden = true;
@@ -156,8 +222,8 @@ if (cfgEl && root) {
     const data = new FormData(form);
     const payload = {
       type: state.type,
-      date: state.date,
-      time: state.time,
+      date: state.slot.date,
+      time: state.slot.time,
       name: String(data.get('name') || '').trim(),
       email: String(data.get('email') || '').trim(),
       note: String(data.get('note') || '').trim()
@@ -173,10 +239,7 @@ if (cfgEl && root) {
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error?.message || 'Something went wrong.');
-      const t = typeById(state.type);
-      const [y, m, d] = state.date.split('-').map(Number);
-      const label = new Date(y, m - 1, d).toLocaleDateString('en', { weekday: 'long', day: 'numeric', month: 'long' });
-      $('[data-done-summary]').textContent = `${t.name} · ${label} · ${state.time} (${cfg.label})`;
+      $('[data-done-summary]').textContent = `${typeById(state.type).name} · ${whenLabel(true)}`;
       stepForm.classList.add('hidden');
       stepDone.classList.remove('hidden');
     } catch (err) {
@@ -190,6 +253,6 @@ if (cfgEl && root) {
   const firstType = typesEl.querySelector('[data-type]');
   if (firstType) {
     selectType(firstType.dataset.type);
-    loadMonth();
+    load();
   }
 }
