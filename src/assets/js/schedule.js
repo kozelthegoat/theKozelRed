@@ -180,4 +180,11 @@ if (cfgEl && root) {
       submit.textContent = 'Send request';
     }
   });
+
+  const firstType = typesEl.querySelector('[data-type]');
+  if (firstType) {
+    state.type = firstType.dataset.type;
+    firstType.classList.add('border-brand');
+    loadMonth();
+  }
 }
