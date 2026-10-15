@@ -21,6 +21,7 @@
   --muted: #72726f;
   --border: #d9d9d5;
   --brand: #fa3600;
+  --brand-deep: #d92f00;
   --hair: max(1px, 0.0625rem);
   --pad: clamp(1rem, 3vw, 2.5rem);
 }
@@ -150,8 +151,8 @@
 .btn:hover { color: #fff; border-color: var(--brand); }
 .btn:hover::after { transform: translateY(0); }
 .btn--solid { background: var(--brand); border-color: var(--brand); color: #fff; }
-.btn--solid::after { background: var(--foreground); }
-.btn--solid:hover { border-color: var(--foreground); }
+.btn--solid::after { background: var(--brand-deep); }
+.btn--solid:hover { border-color: var(--brand-deep); }
 
 .arrow { transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1); }
 .btn:hover .arrow { transform: translateX(0.25rem); }
@@ -179,4 +180,4 @@ html {
   border: 3px solid var(--background);
   border-radius: 999px;
 }
-::-webkit-scrollbar-thumb:hover { background: #d92f00; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-deep); }
