@@ -42,7 +42,16 @@ const pad = (n) => String(n).padStart(2, '0');
             </dd>
           </div>
           <div><dt>Education</dt><dd class="mt-2 text-foreground">{site.education}</dd></div>
-          <div><dt>Off the clock</dt><dd class="mt-2 text-foreground">{site.offClock}</dd></div>
+          <div>
+            <dt>Off the clock</dt>
+            <dd class="mt-2 text-foreground">
+              <ul class="grid gap-1">
+                {site.offClock.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
         </dl>
       </div>
     </div>
