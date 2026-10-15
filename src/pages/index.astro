@@ -50,7 +50,7 @@ const pad = (n) => String(n).padStart(2, '0');
         helpWith.map((item, i) => (
           <div class="grid items-baseline gap-4 hair-t px-[var(--pad)] py-8 md:grid-cols-[6rem_1fr]">
             <span class="mono text-muted">[{pad(i + 1)}]</span>
-            <p class="text-[clamp(1.3rem,3vw,2.1rem)] leading-tight">{item}</p>
+            <p class="max-w-[34ch] text-[clamp(1.2rem,2.4vw,1.85rem)] leading-[1.15] text-pretty text-secondary">{item}</p>
           </div>
         ))
       }
@@ -82,13 +82,15 @@ const pad = (n) => String(n).padStart(2, '0');
         </article>
       ))
     }
-    <div class="hair-t mono flex flex-wrap gap-x-2 gap-y-1 px-[var(--pad)] py-6 text-muted">
-      <span>Earlier:</span>
-      {earlierRoles.map((r, i) => (
-        <span>
-          {r.role}, {r.org} ({r.when}){i < earlierRoles.length - 1 ? ' ·' : ''}
-        </span>
-      ))}
+    <div class="hair-t px-[var(--pad)] py-8">
+      <p class="mono text-muted">Earlier</p>
+      <ul class="mono mt-4 grid gap-2 text-muted">
+        {earlierRoles.map((r) => (
+          <li>
+            {r.role}, {r.org} <span class="text-secondary">({r.when})</span>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
