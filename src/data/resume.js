@@ -3,11 +3,11 @@
 export const helpWith = [
   'Running operations across distributed, multi-entity teams',
   'Putting AI and automation to work in real delivery — not slide decks',
-  'Turning strategy into scope, priorities, and shipped product',
+  'Turning strategy into scope, priorities, and shipped products',
   'Structuring and staffing teams for the work at hand',
-  'Forecasting risk and steering teams through a crisis',
+  'Forecasting risks and steering teams through a crisis',
   'Keeping the numbers honest — P&L, budgets, and “misc” spend',
-  'Building processes and tooling people actually adopt',
+  'Building processes and tools people actually love',
   'Aligning product, design, engineering, and art around one plan'
 ];
 
