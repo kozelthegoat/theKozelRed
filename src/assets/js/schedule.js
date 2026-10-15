@@ -1,6 +1,8 @@
 // 1:1 scheduling: type → month calendar → time → request.
 // Times are shown in the visitor's timezone; every session is anchored to Minsk.
 
+import { zonedWallClockToUtc } from '../../lib/tz.js';
+
 const cfgEl = document.querySelector('[data-schedule-config]');
 const root = document.querySelector('[data-schedule]');
 
@@ -50,8 +52,15 @@ if (cfgEl && root) {
   if (!zones.length) zones.push(detected);
   tzLabel.textContent = detected.replace(/_/g, ' ');
 
-  const dateInTz = (tz, at) =>
-    new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(at);
+  const dateFormatters = new Map();
+  const dateInTz = (tz, at) => {
+    let f = dateFormatters.get(tz);
+    if (!f) {
+      f = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' });
+      dateFormatters.set(tz, f);
+    }
+    return f.format(at);
+  };
   const shortTz = () => state.tz.replace(/_/g, ' ');
   const monthName = (y, m) => new Date(y, m - 1, 1).toLocaleString(undefined, { month: 'long', year: 'numeric' });
   const dayName = (y, m, d) =>
@@ -187,6 +196,21 @@ if (cfgEl && root) {
     renderMonth();
   }
 
+  async function fetchWithRetry(url) {
+    let lastErr;
+    for (let i = 0; i < 3; i++) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      } catch (e) {
+        lastErr = e;
+        if (i < 2) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
+      }
+    }
+    throw lastErr;
+  }
+
   async function load() {
     if (!state.type) return;
     state.slot = null;
@@ -197,14 +221,13 @@ if (cfgEl && root) {
     const from = dateInTz(cfg.timezone, new Date());
     const to = addDays(from, 180);
     try {
-      const res = await fetch(`/api/slots?type=${encodeURIComponent(state.type)}&from=${from}&to=${to}`);
-      const body = await res.json();
+      const body = await fetchWithRetry(`/api/slots?type=${encodeURIComponent(state.type)}&from=${from}&to=${to}`);
       state.byDate = new Map();
       for (const slot of body.data?.slots || []) {
-        if (!slot.at) continue;
-        const local = dateInTz(state.tz, new Date(slot.at));
+        const at = zonedWallClockToUtc(slot.date, slot.time, cfg.timezone).toISOString();
+        const local = dateInTz(state.tz, new Date(at));
         if (!state.byDate.has(local)) state.byDate.set(local, []);
-        state.byDate.get(local).push(slot);
+        state.byDate.get(local).push({ ...slot, at });
       }
       render();
       if (state.localDate && state.byDate.get(state.localDate)?.length) showTimes(state.localDate);
