@@ -3,6 +3,9 @@
 export const site = {
   name: 'Aliaksei Kozel',
   altName: 'formerly Aliaksei Pashkel',
+  previousName: 'Aliaksei Pashkel',
+  bornYear: 1987,
+  renameYear: 2026,
   role: 'Strategy / Operations / Production',
   location: 'Minsk right now — where next is your call',
   email: 'aliaksei.pashkel@gmail.com',
