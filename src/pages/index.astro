@@ -39,21 +39,23 @@ const pad = (n) => String(n).padStart(2, '0');
 
   <!-- what I can help -->
   <section id="help" class="hair-b">
-    <div class="px-[var(--pad)] py-14">
-      <p class="mono text-brand">What I Can Help</p>
-      <h2 class="mt-4 max-w-[20ch] text-[clamp(1.8rem,4vw,3.2rem)] font-medium">
-        Where I make the difference
-      </h2>
-    </div>
-    <div>
-      {
-        helpWith.map((item, i) => (
-          <div class="grid items-baseline gap-4 hair-t px-[var(--pad)] py-8 md:grid-cols-[6rem_1fr]">
-            <span class="mono text-muted">[{pad(i + 1)}]</span>
-            <p class="max-w-[34ch] text-[clamp(1.2rem,2.4vw,1.85rem)] leading-[1.15] text-pretty text-secondary">{item}</p>
-          </div>
-        ))
-      }
+    <div class="px-[var(--pad)] py-16 md:grid md:grid-cols-[1fr_1.3fr] md:gap-16">
+      <div>
+        <p class="mono text-brand">What I Can Help</p>
+        <h2 class="mt-4 max-w-[16ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+          What I can help with
+        </h2>
+      </div>
+      <ul class="mt-10 grid max-w-[52ch] gap-4 text-[1.05rem] leading-relaxed text-secondary md:mt-1">
+        {
+          helpWith.map((item) => (
+            <li class="flex gap-3">
+              <span class="text-brand">—</span>
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 

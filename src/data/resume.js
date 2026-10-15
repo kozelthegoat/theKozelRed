@@ -1,10 +1,12 @@
 // Résumé content — sourced from kozel-resume-2026-10-15.pdf. Edit freely.
 
 export const helpWith = [
-  'Building and running operations across studios and legal entities',
-  'Production: scope, pipelines, and shipping on time',
-  'Team structure and staffing — dynamic talent pooling',
-  'Risk forecasting and crisis management'
+  'Building and running operations across teams and entities',
+  'Production — scope, pipelines, and shipping on time',
+  'Structuring teams and staffing for the work at hand',
+  'Forecasting risk and steering through a crisis',
+  'Process and tooling — workflows, automation, and Jira',
+  'Keeping spend honest — P&L, budgets, and “misc” spend'
 ];
 
 export const experience = [
