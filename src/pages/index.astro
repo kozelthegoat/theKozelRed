@@ -240,7 +240,7 @@ const pad = (n) => String(n).padStart(2, '0');
         recommendations.map((r, i) => (
           <blockquote class={`group relative p-[var(--pad)] transition-transform duration-300 ease-out hover:-translate-y-1 ${i === 1 ? 'hair-t-mobile' : i >= 2 ? 'hair-t' : ''} ${i % 2 === 1 ? 'hair-l-md' : ''}`}>
             <span class="pointer-events-none absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 bg-brand transition-transform duration-300 ease-out group-hover:scale-y-100"></span>
-            <p class="mono text-muted">[{pad(i + 1)}]</p>
+            <p class="mono text-muted"><span class="px-1 transition-colors duration-200 group-hover:bg-brand group-hover:text-white">[{pad(i + 1)}]</span></p>
             <p class="mt-5 text-[0.95rem] leading-relaxed text-secondary">“{r.quote}”</p>
             <cite class="mono mt-5 block not-italic text-muted">
               —{' '}
