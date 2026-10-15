@@ -184,7 +184,7 @@ if (cfgEl && root) {
   }
 
   function renderList() {
-    listEl.className = state.layout === 'week' ? 'grid gap-5 md:grid-cols-7' : 'grid gap-5';
+    listEl.className = state.layout === 'week' ? 'grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7' : 'grid gap-5';
     const today = dateInTz(state.tz, new Date());
     const days = [...state.byDate.keys()]
       .filter((d) => d >= today)
@@ -202,7 +202,7 @@ if (cfgEl && root) {
 
   function timeChip(s) {
     const label = new Intl.DateTimeFormat(undefined, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at));
-    return `<button type="button" class="hair rounded-lg px-3 py-1.5 text-sm transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${label}</button>`;
+    return `<button type="button" class="hair rounded-lg px-2.5 py-1.5 text-sm whitespace-nowrap tabular-nums transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${label}</button>`;
   }
 
   function onTimeClick(event) {
