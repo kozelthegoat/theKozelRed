@@ -1,3 +1,5 @@
+import { nowInTz } from './tz.js';
+
 const pad = (n) => String(n).padStart(2, '0');
 
 // Every calendar date from `from` to `to` (inclusive), as YYYY-MM-DD strings.
@@ -31,4 +33,11 @@ export function computeSlots({ week, from, to, nowDate, nowTime, taken }) {
     }
   }
   return slots;
+}
+
+// The earliest bookable wall-clock (YYYY-MM-DD / HH:MM) in the schedule's
+// timezone, given a minimum notice in hours.
+export function minBookable(availability, now = Date.now()) {
+  const ms = (availability.minNoticeHours || 0) * 3600 * 1000;
+  return nowInTz(availability.timezone, new Date(now + ms));
 }

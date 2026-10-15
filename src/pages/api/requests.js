@@ -1,6 +1,5 @@
 import { availability, findSessionType } from '../../data/sessions.js';
-import { computeSlots } from '../../lib/slots.js';
-import { nowInTz } from '../../lib/tz.js';
+import { computeSlots, minBookable } from '../../lib/slots.js';
 import { json, jsonError } from '../../lib/api.js';
 import { sendBookingEmails } from '../../lib/email.js';
 import { env } from 'cloudflare:workers';
@@ -36,14 +35,14 @@ export const POST = async ({ request, locals }) => {
     return jsonError('invalid_slot', 'Pick a time.');
   }
 
-  // The slot must be one we offer and not already in the past.
-  const now = nowInTz(availability.timezone);
+  // The slot must be one we offer, with enough notice.
+  const min = minBookable(availability);
   const offered = computeSlots({
     week: availability.week,
     from: date,
     to: date,
-    nowDate: now.date,
-    nowTime: now.time,
+    nowDate: min.date,
+    nowTime: min.time,
     taken: new Set()
   });
   if (!offered.some((s) => s.id === `${date}T${time}`)) {

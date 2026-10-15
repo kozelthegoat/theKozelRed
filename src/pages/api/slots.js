@@ -1,5 +1,5 @@
 import { availability, findSessionType } from '../../data/sessions.js';
-import { computeSlots } from '../../lib/slots.js';
+import { computeSlots, minBookable } from '../../lib/slots.js';
 import { nowInTz } from '../../lib/tz.js';
 import { json, jsonError } from '../../lib/api.js';
 import { env } from 'cloudflare:workers';
@@ -34,12 +34,13 @@ export const GET = async ({ url, locals }) => {
     taken = new Set((results || []).map((r) => `${r.slot_date}T${r.slot_time}`));
   }
 
+  const min = minBookable(availability);
   const slots = computeSlots({
     week: availability.week,
     from,
     to,
-    nowDate: now.date,
-    nowTime: now.time,
+    nowDate: min.date,
+    nowTime: min.time,
     taken
   }).map(({ date, time }) => ({ date, time }));
 

@@ -1,5 +1,5 @@
 // Current wall-clock date/time (YYYY-MM-DD / HH:MM) in an IANA timezone.
-export function nowInTz(tz) {
+export function nowInTz(tz, at = new Date()) {
   const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: tz,
     year: 'numeric',
@@ -8,7 +8,7 @@ export function nowInTz(tz) {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
-  }).formatToParts(new Date());
+  }).formatToParts(at);
   const get = (t) => parts.find((p) => p.type === t)?.value || '00';
   return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}` };
 }
