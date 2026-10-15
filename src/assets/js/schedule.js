@@ -51,7 +51,6 @@ if (cfgEl && root) {
   const zones = ((typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || []).filter(isValidZone);
   if (zones.length && !zones.includes(detected)) zones.unshift(detected);
   if (!zones.length) zones.push(detected);
-  setTzDisplay(detected);
 
   const dateFormatters = new Map();
   const dateInTz = (tz, at) => {
@@ -83,6 +82,7 @@ if (cfgEl && root) {
     tzLabel.textContent = tz.replace(/_/g, ' ');
     tzOffsetEl.textContent = tzOffset(tz);
   };
+  setTzDisplay(detected);
   const monthName = (y, m) => new Date(y, m - 1, 1).toLocaleString(undefined, { month: 'long', year: 'numeric' });
   const dayName = (y, m, d) =>
     new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
