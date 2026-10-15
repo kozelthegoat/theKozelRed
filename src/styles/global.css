@@ -78,6 +78,19 @@
   color: var(--brand);
 }
 
+/* Segmented control */
+.seg-btn {
+  color: var(--muted);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.seg-btn:hover {
+  color: var(--brand);
+}
+.seg-btn[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  color: var(--brand);
+}
+
 /* Hairline frame */
 .hair { border-color: var(--border); border-width: var(--hair); }
 .hair-t { border-top: var(--hair) solid var(--border); }

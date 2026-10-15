@@ -23,6 +23,11 @@ if (cfgEl && root) {
   const form = $('[data-step="form"]');
   const tzSelect = $('[data-tz]');
   const tzNote = $('[data-tz-note]');
+  const layoutSwitch = $('[data-layout-switch]');
+  const monthNav = $('[data-month-nav]');
+  const monthView = $('[data-view="month"]');
+  const listView = $('[data-view="list"]');
+  const listEl = $('[data-list]');
 
   const detected = Intl.DateTimeFormat().resolvedOptions().timeZone || cfg.timezone;
   const zones = (typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || [];
@@ -47,7 +52,18 @@ if (cfgEl && root) {
   };
 
   const start = dateInTz(startTz, new Date()).split('-').map(Number);
-  const state = { type: null, tz: startTz, year: start[0], month: start[1], byDate: new Map(), localDate: null, slot: null };
+  const state = {
+    type: null,
+    tz: startTz,
+    layout: localStorage.getItem('layout') || 'month',
+    year: start[0],
+    month: start[1],
+    byDate: new Map(),
+    localDate: null,
+    slot: null
+  };
+
+  layoutSwitch.querySelectorAll('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.layout === state.layout ? 'true' : 'false'));
 
   function typeById(id) {
     return cfg.types.find((t) => t.id === id);
@@ -123,7 +139,7 @@ if (cfgEl && root) {
         if (!state.byDate.has(local)) state.byDate.set(local, []);
         state.byDate.get(local).push(slot);
       }
-      renderMonth();
+      render();
     } catch {
       daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Couldn’t load times — try again.</span>';
     }
@@ -150,6 +166,57 @@ if (cfgEl && root) {
     daysEl.innerHTML = html;
   }
 
+  function render() {
+    monthView.classList.toggle('hidden', state.layout !== 'month');
+    listView.classList.toggle('hidden', state.layout === 'month');
+    monthNav.classList.toggle('hidden', state.layout !== 'month');
+    if (state.layout === 'month') {
+      monthLabel.textContent = monthName(state.year, state.month);
+      renderMonth();
+    } else {
+      monthLabel.textContent = state.layout === 'week' ? 'Next 7 days' : 'Upcoming';
+      renderList();
+    }
+  }
+
+  function renderList() {
+    listEl.className = state.layout === 'week' ? 'grid gap-5 md:grid-cols-7' : 'grid gap-5';
+    const today = dateInTz(state.tz, new Date());
+    const days = [...state.byDate.keys()]
+      .filter((d) => d >= today)
+      .sort()
+      .slice(0, state.layout === 'week' ? 7 : 14);
+    listEl.innerHTML = days.map(dayBlock).join('') || '<p class="mono text-muted">No times yet.</p>';
+  }
+
+  function dayBlock(local) {
+    const slots = state.byDate.get(local) || [];
+    const [y, m, d] = local.split('-').map(Number);
+    const label = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+    return `<div class="grid content-start gap-2"><p class="mono text-muted">${label}</p><div class="flex flex-wrap gap-2">${slots.map(timeChip).join('')}</div></div>`;
+  }
+
+  function timeChip(s) {
+    const label = new Intl.DateTimeFormat(undefined, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at));
+    return `<button type="button" class="hair rounded-lg px-3 py-1.5 text-sm transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${label}</button>`;
+  }
+
+  function onTimeClick(event) {
+    const btn = event.target.closest('[data-time]');
+    if (!btn) return;
+    state.slot = { date: btn.dataset.date, time: btn.dataset.time, at: btn.dataset.at };
+    showForm();
+  }
+
+  layoutSwitch.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-layout]');
+    if (!btn) return;
+    state.layout = btn.dataset.layout;
+    localStorage.setItem('layout', state.layout);
+    layoutSwitch.querySelectorAll('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.layout === state.layout ? 'true' : 'false'));
+    render();
+  });
+
   daysEl.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-day]');
     if (!btn) return;
@@ -171,12 +238,8 @@ if (cfgEl && root) {
     timesWrap.hidden = false;
   }
 
-  timesEl.addEventListener('click', (event) => {
-    const btn = event.target.closest('[data-time]');
-    if (!btn) return;
-    state.slot = { date: btn.dataset.date, time: btn.dataset.time, at: btn.dataset.at };
-    showForm();
-  });
+  timesEl.addEventListener('click', onTimeClick);
+  listEl.addEventListener('click', onTimeClick);
 
   function whenLabel(withWeekday) {
     const at = new Date(state.slot.at);
