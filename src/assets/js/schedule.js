@@ -68,6 +68,7 @@ if (cfgEl && root) {
     year: start[0],
     month: start[1],
     byDate: new Map(),
+    days: 0,
     localDate: null,
     slot: null
   };
@@ -115,8 +116,17 @@ if (cfgEl && root) {
     load();
   });
 
-  $('[data-month-prev]').addEventListener('click', () => shiftMonth(-1));
-  $('[data-month-next]').addEventListener('click', () => shiftMonth(1));
+  $('[data-month-prev]').addEventListener('click', () => shift(-1));
+  $('[data-month-next]').addEventListener('click', () => shift(1));
+
+  function shift(delta) {
+    if (state.layout === 'month') {
+      shiftMonth(delta);
+    } else {
+      state.days = Math.max(0, state.days + delta * 7);
+      render();
+    }
+  }
 
   function shiftMonth(delta) {
     let m = state.month + delta;
@@ -187,24 +197,32 @@ if (cfgEl && root) {
   function render() {
     monthView.classList.toggle('hidden', state.layout !== 'month');
     listView.classList.toggle('hidden', state.layout === 'month');
-    monthNav.classList.toggle('hidden', state.layout !== 'month');
+    monthNav.classList.toggle('hidden', state.layout === 'list');
     if (state.layout === 'month') {
-      monthLabel.textContent = monthName(state.year, state.month);
       renderMonth();
     } else {
-      monthLabel.textContent = state.layout === 'week' ? 'Next 7 days' : 'Upcoming';
       renderList();
     }
   }
 
   function renderList() {
     listEl.className = state.layout === 'week' ? 'grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7' : 'grid gap-5';
-    const today = dateInTz(state.tz, new Date());
+    const from = addDays(dateInTz(state.tz, new Date()), state.days);
     const days = [...state.byDate.keys()]
-      .filter((d) => d >= today)
+      .filter((d) => d >= from)
       .sort()
       .slice(0, state.layout === 'week' ? 7 : 14);
     listEl.innerHTML = days.map(dayBlock).join('') || '<p class="mono text-muted">No times yet.</p>';
+    monthLabel.textContent = days.length ? rangeLabel(days) : 'No times yet';
+  }
+
+  function rangeLabel(list) {
+    const fmt = (ymd) => {
+      const [y, m, d] = ymd.split('-').map(Number);
+      return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+    };
+    if (list.length === 1) return fmt(list[0]);
+    return `${fmt(list[0])} – ${fmt(list[list.length - 1])}`;
   }
 
   function dayBlock(local) {
@@ -230,6 +248,7 @@ if (cfgEl && root) {
     const btn = event.target.closest('[data-layout]');
     if (!btn) return;
     state.layout = btn.dataset.layout;
+    state.days = 0;
     layoutSwitch.querySelectorAll('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.layout === state.layout ? 'true' : 'false'));
     render();
   });
