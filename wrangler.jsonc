@@ -1,0 +1,18 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "kozel-red",
+	"compatibility_date": "2026-10-12",
+	"compatibility_flags": ["global_fetch_strictly_public"],
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"routes": [
+		{ "pattern": "kozel.red", "custom_domain": true },
+		{ "pattern": "www.kozel.red", "custom_domain": true }
+	]
+}

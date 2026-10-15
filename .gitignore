@@ -7,3 +7,7 @@ dist/
 .DS_Store
 coverage/
 *.log
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
