@@ -155,6 +155,7 @@ if (cfgEl && root) {
       const body = await res.json();
       state.byDate = new Map();
       for (const slot of body.data?.slots || []) {
+        if (!slot.at) continue;
         const local = dateInTz(state.tz, new Date(slot.at));
         if (!state.byDate.has(local)) state.byDate.set(local, []);
         state.byDate.get(local).push(slot);
@@ -263,12 +264,7 @@ if (cfgEl && root) {
     const slots = state.byDate.get(local) || [];
     const [y, m, d] = local.split('-').map(Number);
     timesLabel.textContent = `${dayName(y, m, d)} — ${shortTz()}`;
-    timesEl.innerHTML = slots
-      .map(
-        (s) =>
-          `<button type="button" class="btn px-4 py-2" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${new Intl.DateTimeFormat(undefined, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at))}</button>`
-      )
-      .join('');
+    timesEl.innerHTML = slots.map(timeChip).join('');
     timesWrap.hidden = false;
   }
 
