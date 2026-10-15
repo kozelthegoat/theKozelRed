@@ -16,11 +16,11 @@ export const experience = [
     where: 'Ireland',
     when: 'Feb 2024 – Sep 2025',
     points: [
-      'Led operations across several legal entities for ~20 AA+ titles.',
-      'Steered P&L, bringing transparency to “misc” spend with no clear ROI, saving R&D budget.',
+      'Led operations across a few legal entities for ~20 AA+ titles.',
+      'Steered P&L to bring transparency to “misc” expenses with no clear ROI, saving R&D budget.',
       'Sunset “pet” projects with no path to production.',
-      'Reduced idle time via dynamic talent pooling from cross-project staffing.',
-      'Standardised Jira workflows, reducing cross-team dependencies.'
+      'Optimized bench mgmt reducing idle time w/ dynamic talent pooling from cross-project staffing.',
+      'Standardized Jira workflows for a number of projects reducing cross-team dependencies.'
     ]
   },
   {
@@ -28,11 +28,14 @@ export const experience = [
     org: 'Fracture Labs',
     where: 'Singapore',
     when: 'Jun 2022 – Feb 2024',
+    intro: 'Worked on Decimated, AA+, an MMO TPS for PC and Console.',
     points: [
-      'Shipped Decimated — an AA+ MMO TPS for PC and console.',
-      'Reworked and phased out product scope across multiple iterations.',
-      'Built and managed Engineering, Design, DevOps, Tech Art, Animation, VFX, and Recruitment.',
-      'Introduced task-management automation and Agile as continuous improvement.'
+      'Reworked & phased out product scope (multiple iterations).',
+      'Streamlined team structure to re-define responsibilities and pipelines.',
+      'Built & managed: Engineering, Design, DevOps, Tech Art, Animation, VFX, Recruitment.',
+      'Introduced new studio task management & automation tools.',
+      'Introduced & maintained Agile as continuous improvement practices.',
+      'Reworked knowledge-base structure, fueling its quality & depth.'
     ]
   },
   {
@@ -41,10 +44,11 @@ export const experience = [
     where: 'Estonia',
     when: 'Mar 2022 – Jul 2022',
     points: [
-      'Revamped LiveOps for global updates — events, economies, and pricing.',
-      'Cut rollout delays from 3 weeks to ~2 days with a kill-switch feature.',
-      'Partnered with Huawei and Microsoft to add 250K+ users.'
-    ]
+      'Revamped LiveOps leading global updates optimizing live events, car economies & balancing, IAP pricing, etc.',
+      'Reduced rollout delays from 3 weeks to healthy “2 days” with kill-switch feature enabled (multi-platform updates).',
+      'Partnered with Huawei and Microsoft to expand distribution, adding 250K+ new users in untapped markets.'
+    ],
+    released: ['a number of updates to Nitro Nation, a popular game in the Racing genre']
   },
   {
     role: 'Co-founder',
@@ -52,38 +56,66 @@ export const experience = [
     where: 'Belarus',
     when: 'Mar 2020 – Mar 2022',
     points: [
-      'Pioneered award-winning survival-horror development in Eastern Europe.',
-      'Developed 5+ mobile & web games using NFC and smart-chip technologies.',
-      'Awards and nominations across Games Gathering, BelGameDev, WebCon, and the Unreal Engine Dev Contest.'
+      'Pioneered award-winning survival horror game development in Eastern Europe.',
+      'Developed 5+ mobile & web games powered by the latest NFC and smart chip technologies.'
+    ],
+    released: [
+      'a PC game in the Horror genre inspired by P.T. on Steam',
+      '“Best PC Game” & “Best Art” @ Games Gathering',
+      '“True Indie” @ BelGameDev (nominated by WarHorse Studios)',
+      '“People’s Choice” & “Best Game” @ WebCon',
+      'a PC game in the Adventure / Horror genres on Steam',
+      '“The Finalist” @ Unreal Engine Dev Contest',
+      '5 mobile & web games in the Charitable Gaming / Lottery / Casino genres powered by NFC'
     ]
   },
   {
     role: 'Co-founder',
-    org: 'Abelana VR Productions',
+    org: 'Abelana VR Productions, Inc.',
     where: 'United States',
     when: 'Mar 2018 – Mar 2022',
     points: [
-      'Built educational VR experiences and a distribution platform.',
-      'Partnered with Columbia University and Verizon to distribute VR apps globally.'
+      'Pioneered & developed educational VR experiences and tools.',
+      'Launched platform + 5 games/apps blending science, education, and latest visionary technologies.',
+      'Partnered with Columbia University to ensure scientific grounds.',
+      'Partnered with Verizon to distribute VR apps globally.'
+    ],
+    released: [
+      'a VR game featuring Atoms and Orbitals + mobile companion app',
+      'a VR game featuring Speed Of Light + mobile game',
+      'a VR game featuring String Theory',
+      'a distribution platform for educational VR apps (including 3rd-party ones)',
+      'a VR experience featuring Romina Russell, the US writer and author of famous Zodiac series',
+      'a VR app for online metaverse collaboration'
     ]
   },
   {
     role: 'Co-founder',
-    org: 'Iridescent Studio',
+    org: 'Iridescent Studio, Ltd.',
     where: 'Belarus',
     when: 'Mar 2016 – Mar 2022',
     points: [
-      'Scaled the studio from 1 to 50 people with zero funding.',
-      'Launched 10+ games and apps across board, brain-training, RTS, hyper-casual, and mental-health genres.'
+      'Pioneered subscription monetization in mobile gaming, mastered with A/B testing & predictive analytics.',
+      'Spearheaded studio from 1 to 50 employees with zero funding.',
+      'Launched 10+ games/apps blending entertainment, brain science, and mindfulness.'
+    ],
+    released: [
+      '3 mobile games in the Board game genre',
+      'a mobile app with 50+ different brain-training mini-games approved by neuroscientists',
+      'an AA mobile multiplayer online game in the RTS genre',
+      'a web platform for skill-based cash mobile games',
+      '10+ hyper-casual games with various gameplay mechanics',
+      '2 mental health mobile gamified apps with hundreds of unique meditation content items',
+      '2 emoji apps featuring celebrities (Zayn Malik, Kevin Durant)'
     ]
   }
 ];
 
 export const earlierRoles = [
-  { role: 'Project Manager', org: 'Omertex', when: '2014 – 2016' },
-  { role: 'Project Manager', org: 'Cactus', when: '2011 – 2012' },
-  { role: 'Business Development Manager', org: 'Artezio', when: '2012 – 2013' },
-  { role: 'Business Development Manager', org: 'Svyaznoy', when: '2009 – 2011' }
+  { role: 'Project Manager', org: 'Omertex', when: 'Aug 2014 – Feb 2016' },
+  { role: 'Project Manager', org: 'Cactus', when: 'Sep 2011 – Aug 2012' },
+  { role: 'Business Development Manager', org: 'Artezio', when: 'Aug 2012 – Jul 2013' },
+  { role: 'Business Development Manager', org: 'Svyaznoy', when: 'Oct 2009 – Mar 2011' }
 ];
 
 // Ordered so each 2-up row pairs quotes of near-equal length — the section

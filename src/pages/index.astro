@@ -90,14 +90,32 @@ const pad = (n) => String(n).padStart(2, '0');
             <p class="mono mt-3 text-muted">{job.org}</p>
             <p class="mono mt-1 text-muted">{job.where} · {job.when}</p>
           </div>
-          <ul class="grid gap-2 text-[0.98rem] text-secondary">
-            {job.points.map((point) => (
-              <li class="flex gap-3">
-                <span class="text-brand">—</span>
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
+          <div>
+            {job.intro && <p class="mb-4 text-[0.98rem] text-foreground">{job.intro}</p>}
+            <ul class="grid gap-2 text-[0.98rem] text-secondary">
+              {job.points.map((point) => (
+                <li class="flex gap-3">
+                  <span class="text-brand">—</span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+            {
+              job.released && (
+                <div class="mt-5">
+                  <p class="mono text-muted">Released</p>
+                  <ul class="mt-2 grid gap-1.5 text-[0.92rem] text-secondary">
+                    {job.released.map((item) => (
+                      <li class="flex gap-3">
+                        <span class="text-brand">✔</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
+          </div>
         </article>
       ))
     }
