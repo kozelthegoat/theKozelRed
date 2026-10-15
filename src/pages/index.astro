@@ -31,7 +31,16 @@ const pad = (n) => String(n).padStart(2, '0');
           <div><dt>Based</dt><dd class="mt-2 whitespace-pre-line text-foreground">{site.location}</dd></div>
           <div><dt>1:1</dt><dd class="mt-2"><a class="text-foreground underline-offset-4 hover:text-brand hover:underline" href="/schedule/">Schedule 1:1</a></dd></div>
           <div><dt>Résumé</dt><dd class="mt-2 text-foreground">PDF, one page</dd></div>
-          <div><dt>Languages</dt><dd class="mt-2 text-foreground">{site.languages}</dd></div>
+          <div>
+            <dt>Languages</dt>
+            <dd class="mt-2 text-foreground">
+              <ul class="grid gap-1">
+                {site.languages.map((lang) => (
+                  <li>{lang}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
           <div><dt>Education</dt><dd class="mt-2 text-foreground">{site.education}</dd></div>
           <div><dt>Off the clock</dt><dd class="mt-2 text-foreground">{site.offClock}</dd></div>
         </dl>
