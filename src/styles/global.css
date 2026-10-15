@@ -101,6 +101,15 @@
   color: var(--foreground);
 }
 
+/* iOS Safari zooms a focused control whose font-size is < 16px — avoid that on small screens */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* Segmented control */
 .seg-btn {
   color: var(--muted);
