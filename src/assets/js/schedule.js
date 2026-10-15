@@ -32,7 +32,7 @@ if (cfgEl && root) {
   const detected = Intl.DateTimeFormat().resolvedOptions().timeZone || cfg.timezone;
   const zones = (typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || [];
   if (zones.length && !zones.includes(detected)) zones.unshift(detected);
-  const startTz = localStorage.getItem('tz') || detected;
+  const startTz = detected;
   tzSelect.innerHTML = (zones.length ? zones : [detected])
     .map((z) => `<option value="${z}">${z.replace(/_/g, ' ')}</option>`)
     .join('');
@@ -55,7 +55,7 @@ if (cfgEl && root) {
   const state = {
     type: null,
     tz: startTz,
-    layout: sessionStorage.getItem('layout') || 'month',
+    layout: 'month',
     year: start[0],
     month: start[1],
     byDate: new Map(),
@@ -98,7 +98,6 @@ if (cfgEl && root) {
 
   tzSelect.addEventListener('change', () => {
     state.tz = tzSelect.value;
-    localStorage.setItem('tz', state.tz);
     goToCurrentMonth(state.tz);
     load();
   });
@@ -161,7 +160,8 @@ if (cfgEl && root) {
           ? '<span class="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-brand"></span>'
           : '';
       if (slots.length) {
-        html += `<button type="button" class="relative hair rounded-lg py-2 text-sm transition hover:border-brand" data-day="${local}">${day}${dot}</button>`;
+        const pressed = local === state.localDate ? 'true' : 'false';
+        html += `<button type="button" class="pick-btn relative rounded-lg py-2 text-sm" data-day="${local}" aria-pressed="${pressed}">${day}${dot}</button>`;
       } else {
         const dim = local === today ? '' : ' opacity-40';
         html += `<span class="relative pointer-events-none rounded-lg py-2 text-sm text-muted${dim}">${day}${dot}</span>`;
@@ -216,7 +216,6 @@ if (cfgEl && root) {
     const btn = event.target.closest('[data-layout]');
     if (!btn) return;
     state.layout = btn.dataset.layout;
-    sessionStorage.setItem('layout', state.layout);
     layoutSwitch.querySelectorAll('[data-layout]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.layout === state.layout ? 'true' : 'false'));
     render();
   });
@@ -225,7 +224,7 @@ if (cfgEl && root) {
     const btn = event.target.closest('[data-day]');
     if (!btn) return;
     state.localDate = btn.dataset.day;
-    daysEl.querySelectorAll('[data-day]').forEach((b) => b.classList.toggle('border-brand', b === btn));
+    daysEl.querySelectorAll('[data-day]').forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
     showTimes(state.localDate);
   });
 

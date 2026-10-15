@@ -61,21 +61,33 @@
   line-height: 1;
 }
 
-/* Session type selector */
-.type-btn {
+/* Selectable tiles (session types, calendar days) */
+.pick-btn {
   border: var(--hair) solid var(--border);
   background: transparent;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
-.type-btn:hover {
+.pick-btn:hover {
   border-color: var(--brand);
 }
-.type-btn[aria-pressed="true"] {
+.pick-btn[aria-pressed="true"] {
   border-color: var(--brand);
-  background: color-mix(in srgb, var(--brand) 8%, transparent);
-}
-.type-btn[aria-pressed="true"] [data-type-name] {
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
   color: var(--brand);
+}
+.pick-btn[aria-pressed="true"] [data-type-name] {
+  color: var(--brand);
+}
+
+/* Icon button (calendar nav) */
+.icon-btn {
+  border-radius: 0.5rem;
+  color: var(--muted);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.icon-btn:hover {
+  color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
 }
 
 /* Segmented control */

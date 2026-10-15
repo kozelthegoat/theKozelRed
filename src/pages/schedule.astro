@@ -25,7 +25,7 @@ import { sessionTypes, availability } from '../data/sessions.js';
             sessionTypes.map((t) => (
               <button
                 type="button"
-                class="type-btn rounded-lg p-5 text-left"
+                class="pick-btn rounded-lg p-5 text-left"
                 data-type={t.id}
                 aria-pressed="false"
               >
@@ -65,9 +65,17 @@ import { sessionTypes, availability } from '../data/sessions.js';
                   </svg>
                 </button>
               </div>
-              <div class="flex gap-2" data-month-nav>
-                <button type="button" class="btn px-3 py-1.5" data-month-prev aria-label="Previous month">←</button>
-                <button type="button" class="btn px-3 py-1.5" data-month-next aria-label="Next month">→</button>
+              <div class="flex items-center gap-0.5" data-month-nav>
+                <button type="button" class="icon-btn p-1.5" data-month-prev aria-label="Previous month">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M15 18l-6-6 6-6"></path>
+                  </svg>
+                </button>
+                <button type="button" class="icon-btn p-1.5" data-month-next aria-label="Next month">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6"></path>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
