@@ -30,6 +30,9 @@
 }
 
 :root {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-heading: "Spectral", ui-serif, Georgia, "Times New Roman", serif;
   --radius: 0.5rem;
   --background: #f8f5f0;
   --foreground: #1a1a18;

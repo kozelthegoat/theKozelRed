@@ -1,4 +1,4 @@
-import { defineConfig, fontProviders } from 'astro/config';
+import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -7,10 +7,5 @@ export default defineConfig({
   adapter: cloudflare(),
   vite: {
     plugins: [tailwindcss()]
-  },
-  fonts: [
-    { provider: fontProviders.google(), name: 'Geist', cssVariable: '--font-sans', subsets: ['latin'] },
-    { provider: fontProviders.google(), name: 'Geist Mono', cssVariable: '--font-mono', subsets: ['latin'] },
-    { provider: fontProviders.google(), name: 'Spectral', cssVariable: '--font-heading', subsets: ['latin'] }
-  ]
+  }
 });
