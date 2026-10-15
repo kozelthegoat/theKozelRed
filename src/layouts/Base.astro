@@ -7,6 +7,7 @@ const {
   description = `${site.name} — ${site.role}.`
 } = Astro.props;
 const year = new Date().getFullYear();
+const ticker = ['Operations', 'Production', 'Studio leadership', 'Risk & crisis', 'Team building'];
 ---
 <!doctype html>
 <html lang="en">
@@ -24,52 +25,99 @@ const year = new Date().getFullYear();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
     />
   </head>
-  <body class="min-h-screen bg-background text-foreground">
-    <a
-      href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
-      >Skip to content</a
-    >
-
-    <header class="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur">
-      <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
-        <a href="/" class="font-serif text-lg tracking-tight">{site.name}</a>
-        <nav class="flex items-center gap-5 text-sm text-muted-foreground" aria-label="Primary">
-          <a class="hidden transition hover:text-foreground sm:inline" href="/#help">What I Can Help</a>
-          <a class="hidden transition hover:text-foreground sm:inline" href="/#experience">Experience</a>
-          <a class="hidden transition hover:text-foreground sm:inline" href="/#contact">Contact</a>
-          <a
-            class="rounded-full bg-primary px-4 py-1.5 text-primary-foreground transition hover:opacity-90"
-            href="/schedule/">Schedule a 1:1</a
-          >
-        </nav>
+  <body>
+    <div class="mx-auto min-h-screen max-w-[1680px] hair-l hair-r">
+      <!-- ticker -->
+      <div class="marquee hair-b py-3">
+        <div class="marquee__track mono text-muted">
+          {
+            [...ticker, ...ticker].map((t) => (
+              <span class="flex items-center gap-3 whitespace-nowrap">
+                <span class="inline-block h-1 w-1 rounded-full bg-brand" />
+                {t}
+              </span>
+            ))
+          }
+        </div>
       </div>
-    </header>
 
-    <main id="main">
-      <slot />
-    </main>
+      <!-- header -->
+      <header class="sticky top-0 z-20 hair-b bg-background/85 backdrop-blur">
+        <div class="flex items-center justify-between gap-4 px-[var(--pad)] py-4">
+          <a href="/" class="flex items-center gap-3">
+            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="3.5" y="3.5" width="13" height="13" fill="#fa3600" transform="rotate(45 10 10)"></rect>
+            </svg>
+            <span class="text-[1.05rem] font-medium tracking-tight">{site.name}</span>
+          </a>
 
-    <footer class="mt-24 border-t border-border">
-      <div
-        class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-10 text-sm text-muted-foreground"
-      >
-        <p>© {year} {site.name}. {site.altName}.</p>
-        <a class="transition hover:text-foreground" href={`mailto:${site.email}`}>{site.email}</a>
-      </div>
-    </footer>
+          <nav class="mono hidden items-center gap-7 text-muted md:flex" aria-label="Primary">
+            <a class="transition-colors hover:text-foreground" href="/#help">What I Can Help</a>
+            <a class="transition-colors hover:text-foreground" href="/#experience">Experience</a>
+            <a class="transition-colors hover:text-foreground" href="/#contact">Contact</a>
+          </nav>
+
+          <a class="btn btn--solid mono" href="/schedule/">
+            <span>Schedule a 1:1</span>
+            <svg class="arrow" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M11.875 14.375L16.25 9.93818L11.875 5.625M16.25 9.93818H2.5" stroke="currentColor" stroke-width="1.5"></path>
+            </svg>
+          </a>
+        </div>
+      </header>
+
+      <main id="main">
+        <slot />
+      </main>
+
+      <!-- footer -->
+      <footer class="hair-t">
+        <div class="grid gap-8 p-[var(--pad)] sm:grid-cols-2 md:grid-cols-4">
+          <div>
+            <p class="mono text-muted">Navigate</p>
+            <ul class="mt-4 grid gap-2 text-sm">
+              <li><a class="hover:text-brand" href="/#help">What I Can Help</a></li>
+              <li><a class="hover:text-brand" href="/#experience">Experience</a></li>
+              <li><a class="hover:text-brand" href="/#recommendations">Recommendations</a></li>
+              <li><a class="hover:text-brand" href="/#resume">Résumé</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mono text-muted">1:1</p>
+            <ul class="mt-4 grid gap-2 text-sm">
+              <li><a class="hover:text-brand" href="/schedule/">Schedule a 1:1</a></li>
+              <li class="text-muted">Intro call — 30 min</li>
+              <li class="text-muted">Deep-dive — 60 min</li>
+            </ul>
+          </div>
+          <div>
+            <p class="mono text-muted">Contact</p>
+            <ul class="mt-4 grid gap-2 text-sm">
+              <li><a class="hover:text-brand" href={`mailto:${site.email}`}>{site.email}</a></li>
+              <li class="text-muted">{site.location}</li>
+            </ul>
+          </div>
+          <div>
+            <p class="mono text-muted">Résumé</p>
+            <ul class="mt-4 grid gap-2 text-sm">
+              <li><a class="hover:text-brand" href={site.resume}>Download PDF</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hair-t mono flex flex-wrap items-center justify-between gap-3 px-[var(--pad)] py-5 text-muted">
+          <span>© {year} {site.name}</span>
+          <span>{site.altName}</span>
+        </div>
+      </footer>
+    </div>
 
     {
       site.donateUrl && (
-        <a
-          class="fixed bottom-6 right-6 z-30 rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground shadow-lg transition hover:opacity-90"
-          href={site.donateUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a class="btn btn--solid mono fixed bottom-6 right-6 z-30 shadow-xl" href={site.donateUrl} target="_blank" rel="noopener noreferrer">
           Donate
         </a>
       )

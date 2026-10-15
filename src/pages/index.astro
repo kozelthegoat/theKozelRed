@@ -2,111 +2,152 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site.js';
 import { helpWith, experience, earlierRoles, recommendations } from '../data/resume.js';
+
+const pad = (n) => String(n).padStart(2, '0');
 ---
 <Base>
-  <section class="mx-auto max-w-5xl px-6 pt-20 pb-16 sm:pt-28">
-    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">{site.location}</p>
-    <h1 class="mt-4 text-5xl leading-[1.05] tracking-tight sm:text-6xl">{site.name}</h1>
-    <p class="mt-5 max-w-2xl text-xl text-muted-foreground">{site.role}</p>
-    <div class="mt-8 flex flex-wrap gap-3">
-      <a
-        class="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-        href="/schedule/">Schedule a 1:1</a
-      >
-      <a
-        class="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition hover:border-ring"
-        href={site.resume}>Download résumé</a
-      >
-    </div>
-  </section>
-
-  <section id="help" class="border-t border-border">
-    <div class="mx-auto max-w-5xl px-6 py-16">
-      <h2 class="text-3xl tracking-tight">What I Can Help</h2>
-      <ul class="mt-6 grid gap-3 sm:grid-cols-2">
-        {helpWith.map((item) => (
-          <li class="flex gap-3 text-muted-foreground">
-            <span class="text-accent">→</span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <section id="experience" class="border-t border-border">
-    <div class="mx-auto max-w-5xl px-6 py-16">
-      <h2 class="text-3xl tracking-tight">Experience</h2>
-      <div class="mt-8 grid gap-6">
-        {experience.map((job) => (
-          <article class="rounded-lg border border-border bg-card p-6">
-            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h3 class="font-serif text-lg">{job.role}</h3>
-              <span class="text-foreground">{job.org}</span>
-              <span class="ml-auto font-mono text-xs text-muted-foreground">{job.where} · {job.when}</span>
-            </div>
-            <ul class="mt-4 grid gap-1.5 text-sm text-muted-foreground">
-              {job.points.map((point) => (
-                <li class="flex gap-2">
-                  <span class="text-accent">–</span>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
-        ))}
+  <!-- hero -->
+  <section class="hair-b">
+    <div class="grid md:grid-cols-[1fr_auto]">
+      <div class="px-[var(--pad)] pt-20 pb-14">
+        <p class="mono text-brand">Operations &amp; production</p>
+        <h1 class="mt-6 max-w-[16ch] text-[clamp(2.6rem,7.5vw,6.5rem)] font-medium">
+          An operations &amp; production leader for game studios
+        </h1>
+        <div class="mt-12 flex flex-wrap gap-3">
+          <a class="btn btn--solid mono" href="/schedule/">
+            <span>Schedule a 1:1</span>
+            <svg class="arrow" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M11.875 14.375L16.25 9.93818L11.875 5.625M16.25 9.93818H2.5" stroke="currentColor" stroke-width="1.5"></path>
+            </svg>
+          </a>
+          <a class="btn mono" href={site.resume}>
+            <span>Download résumé</span>
+          </a>
+        </div>
       </div>
-      <p class="mt-6 text-sm text-muted-foreground">
-        Earlier:{' '}
-        {earlierRoles.map((r, i) => (
-          <span>
-            <span class="text-foreground">{r.role}</span>, {r.org} ({r.when}){i < earlierRoles.length - 1 ? ' · ' : ''}
-          </span>
-        ))}
-      </p>
+      <div class="hidden w-[22rem] hair-l px-[var(--pad)] pt-20 pb-14 md:block">
+        <dl class="mono grid gap-6 text-muted">
+          <div><dt>Role</dt><dd class="mt-2 text-foreground">{site.role}</dd></div>
+          <div><dt>Based</dt><dd class="mt-2 text-foreground">{site.location}</dd></div>
+          <div><dt>Email</dt><dd class="mt-2 text-foreground">{site.email}</dd></div>
+          <div><dt>Résumé</dt><dd class="mt-2 text-foreground">PDF, one page</dd></div>
+        </dl>
+      </div>
     </div>
   </section>
 
-  <section id="recommendations" class="border-t border-border">
-    <div class="mx-auto max-w-5xl px-6 py-16">
-      <h2 class="text-3xl tracking-tight">Recommendations</h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2">
-        {recommendations.map((r) => (
-          <blockquote class="rounded-lg border border-border bg-card p-6">
-            <p class="font-serif text-lg leading-snug">“{r.quote}”</p>
-            <cite class="mt-4 block text-sm not-italic text-muted-foreground">— {r.author}</cite>
+  <!-- what I can help -->
+  <section id="help" class="hair-b">
+    <div class="px-[var(--pad)] py-14">
+      <p class="mono text-brand">What I Can Help</p>
+      <h2 class="mt-4 max-w-[20ch] text-[clamp(1.8rem,4vw,3.2rem)] font-medium">
+        Where I make the difference
+      </h2>
+    </div>
+    <div>
+      {
+        helpWith.map((item, i) => (
+          <div class="grid items-baseline gap-4 hair-t px-[var(--pad)] py-8 md:grid-cols-[6rem_1fr]">
+            <span class="mono text-muted">[{pad(i + 1)}]</span>
+            <p class="text-[clamp(1.3rem,3vw,2.1rem)] leading-tight">{item}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- experience -->
+  <section id="experience" class="hair-b">
+    <div class="px-[var(--pad)] py-14">
+      <p class="mono text-brand">Experience</p>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">Selected work</h2>
+    </div>
+    {
+      experience.map((job) => (
+        <article class="grid gap-6 hair-t px-[var(--pad)] py-10 md:grid-cols-[1fr_2fr]">
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight">{job.role}</h3>
+            <p class="mono mt-3 text-muted">{job.org}</p>
+            <p class="mono mt-1 text-muted">{job.where} · {job.when}</p>
+          </div>
+          <ul class="grid gap-2 text-[0.98rem] text-secondary">
+            {job.points.map((point) => (
+              <li class="flex gap-3">
+                <span class="text-brand">—</span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+    <div class="hair-t mono flex flex-wrap gap-x-2 gap-y-1 px-[var(--pad)] py-6 text-muted">
+      <span>Earlier:</span>
+      {earlierRoles.map((r, i) => (
+        <span>
+          {r.role}, {r.org} ({r.when}){i < earlierRoles.length - 1 ? ' ·' : ''}
+        </span>
+      ))}
+    </div>
+  </section>
+
+  <!-- recommendations -->
+  <section id="recommendations" class="hair-b">
+    <div class="px-[var(--pad)] py-14">
+      <p class="mono text-brand">Recommendations</p>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">What colleagues say</h2>
+    </div>
+    <div class="grid md:grid-cols-2">
+      {
+        recommendations.map((r, i) => (
+          <blockquote class={`hair-t p-[var(--pad)] ${i % 2 === 1 ? 'md:hair-l' : ''}`}>
+            <p class="mono text-muted">[{pad(i + 1)}]</p>
+            <p class="mt-5 text-[1.05rem] leading-relaxed">“{r.quote}”</p>
+            <cite class="mono mt-5 block not-italic text-muted">— {r.author}</cite>
           </blockquote>
-        ))}
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- resume CTA -->
+  <section id="resume" class="hair-b">
+    <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="mono text-brand">Résumé</p>
+        <h2 class="mt-4 max-w-[22ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+          The full story, experience and all, on one page
+        </h2>
       </div>
+      <a class="btn btn--solid mono" href={site.resume}>
+        <span>Download résumé (PDF)</span>
+        <svg class="arrow" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M11.875 14.375L16.25 9.93818L11.875 5.625M16.25 9.93818H2.5" stroke="currentColor" stroke-width="1.5"></path>
+        </svg>
+      </a>
     </div>
   </section>
 
-  <section id="resume" class="border-t border-border">
-    <div class="mx-auto max-w-5xl px-6 py-16">
-      <h2 class="text-3xl tracking-tight">Résumé</h2>
-      <p class="mt-3 max-w-2xl text-muted-foreground">
-        Experience, skills, and recommendations — on one page.
-      </p>
-      <a
-        class="mt-6 inline-block rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-        href={site.resume}>Download résumé (PDF)</a
-      >
-    </div>
-  </section>
-
-  <section id="contact" class="border-t border-border">
-    <div class="mx-auto max-w-5xl px-6 py-16">
-      <h2 class="text-3xl tracking-tight">Let’s talk</h2>
-      <p class="mt-3 max-w-2xl text-muted-foreground">The fastest way to reach me — or book a 1:1.</p>
-      <div class="mt-6 flex flex-wrap gap-3">
-        <a
-          class="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-          href="/schedule/">Schedule a 1:1</a
-        >
-        <a
-          class="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition hover:border-ring"
-          href={`mailto:${site.email}`}>{site.email}</a
-        >
+  <!-- contact / 1:1 -->
+  <section id="contact" class="hair-b">
+    <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="mono text-brand">1:1</p>
+        <h2 class="mt-4 max-w-[18ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+          Let’s talk — book a 30- or 60-minute call
+        </h2>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a class="btn btn--solid mono" href="/schedule/">
+          <span>Schedule a 1:1</span>
+          <svg class="arrow" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M11.875 14.375L16.25 9.93818L11.875 5.625M16.25 9.93818H2.5" stroke="currentColor" stroke-width="1.5"></path>
+          </svg>
+        </a>
+        <a class="btn mono" href={`mailto:${site.email}`}>
+          <span>{site.email}</span>
+        </a>
       </div>
     </div>
   </section>
