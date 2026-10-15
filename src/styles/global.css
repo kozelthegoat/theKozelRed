@@ -63,6 +63,8 @@
 .hair-b { border-bottom: var(--hair) solid var(--border); }
 .hair-l { border-left: var(--hair) solid var(--border); }
 .hair-r { border-right: var(--hair) solid var(--border); }
+/* Lighter rule for section boundaries */
+.hair-soft { border-color: color-mix(in srgb, var(--border) 42%, transparent); }
 
 /* Dotted vertical guide */
 .dash-v {
