@@ -11,6 +11,14 @@
 	"observability": {
 		"enabled": true
 	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "kozel-red",
+			"database_id": "9ec40089-ac14-4fc7-900f-96d17fbfc217",
+			"migrations_dir": "migrations"
+		}
+	],
 	"routes": [
 		{ "pattern": "kozel.red", "custom_domain": true },
 		{ "pattern": "www.kozel.red", "custom_domain": true }

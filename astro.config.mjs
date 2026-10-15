@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://kozel.red',
-  adapter: cloudflare(),
+  adapter: cloudflare({ platformProxy: { enabled: true } }),
   vite: {
     plugins: [tailwindcss()]
   }
