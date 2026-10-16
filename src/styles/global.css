@@ -133,12 +133,15 @@
   select {
     font-size: 16px;
   }
-  /* The timezone search box is an input, so it is already 16px here. Its trigger and the
-     zone list are not, and would sit a size below it inside the same control. */
-  [data-tz-trigger],
-  [data-tz-options] li {
-    font-size: 16px;
-  }
+}
+
+/* The timezone picker is the exception: it stays compact at every width, so the search box is
+   deliberately under 16px on phones too and iOS will zoom the page when it takes focus. The
+   smaller picker was preferred to a 16px one. */
+[data-tz-trigger],
+[data-tz-search],
+[data-tz-options] li {
+  font-size: 0.875rem;
 }
 
 /* Segmented control */
