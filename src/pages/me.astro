@@ -4,6 +4,7 @@ import { env } from 'cloudflare:workers';
 import { listParams, listSql, listHref } from '../lib/requests.js';
 import { availability } from '../data/sessions.js';
 import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel } from '../lib/tz.js';
+import StatusForm from '../components/StatusForm.astro';
 
 export const prerender = false;
 
@@ -73,7 +74,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
 ---
 
 <Base title="Requests — Aliaksei Kozel" description="1:1 requests.">
-  <section class="hair-b hair-soft">
+  <section class="hair-b">
     <div class="px-[var(--pad)] pt-14 pb-6">
       <p class="mono text-brand">Me</p>
       <h1 class="page-title mt-4">1:1 requests</h1>
@@ -122,30 +123,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                     <p class={`mono mt-1 ${statusTone(r.status)}`}>{r.status}</p>
                     {r.note && <p class="mt-1 text-sm text-secondary">{r.note}</p>}
                   </div>
-                  <form method="post" action="/api/me/status" class="status-form flex flex-wrap items-center gap-2">
-                    <input type="hidden" name="id" value={r.id} />
-                    <input type="hidden" name="sort" value={list.sort} />
-                    <input type="hidden" name="dir" value={list.dir} />
-                    <input type="hidden" name="page" value={list.page} />
-                    <button
-                      class="btn mono"
-                      name="status"
-                      value="confirmed"
-                      aria-pressed={r.status === 'confirmed'}
-                      disabled={r.status !== 'new'}
-                    >
-                      <span>Confirm</span>
-                    </button>
-                    <button
-                      class="btn mono"
-                      name="status"
-                      value="declined"
-                      aria-pressed={r.status === 'declined'}
-                      disabled={r.status !== 'new'}
-                    >
-                      <span>Decline</span>
-                    </button>
-                  </form>
+                  <StatusForm request={r} sort={list.sort} dir={list.dir} page={list.page} />
                 </article>
               ))}
             </div>
@@ -236,38 +214,13 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                         <span class="block">{r.requested.time}</span>
                       </td>
                       <td class="py-4 whitespace-nowrap">
-                        <form method="post" action="/api/me/status" class="status-form flex flex-nowrap items-center justify-end gap-2">
-                          <input type="hidden" name="id" value={r.id} />
-                          <input type="hidden" name="sort" value={list.sort} />
-                          <input type="hidden" name="dir" value={list.dir} />
-                          <input type="hidden" name="page" value={list.page} />
-                          <button
-                            class="btn btn--icon"
-                            name="status"
-                            value="confirmed"
-                            aria-pressed={r.status === 'confirmed'}
-                            disabled={r.status !== 'new'}
-                            aria-label="Confirm"
-                            title="Confirm"
-                          >
-                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                              <path d="M4 10.5l4 4 8-9.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                          </button>
-                          <button
-                            class="btn btn--icon"
-                            name="status"
-                            value="declined"
-                            aria-pressed={r.status === 'declined'}
-                            disabled={r.status !== 'new'}
-                            aria-label="Decline"
-                            title="Decline"
-                          >
-                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                              <path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke-linecap="round"></path>
-                            </svg>
-                          </button>
-                        </form>
+                        <StatusForm
+                          request={r}
+                          sort={list.sort}
+                          dir={list.dir}
+                          page={list.page}
+                          variant="icon"
+                        />
                       </td>
                     </tr>
                   ))}

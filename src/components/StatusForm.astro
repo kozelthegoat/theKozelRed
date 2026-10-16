@@ -1,0 +1,56 @@
+---
+// Confirm/Decline for one request, shared by the two layouts on /me: labelled buttons in the
+// mobile card, icon-only ones in the table row. The hidden fields carry the current view so
+// the POST lands back on the same page and sort.
+const { request, sort, dir, page, variant = 'label' } = Astro.props;
+const compact = variant === 'icon';
+
+const BUTTONS = [
+  { value: 'confirmed', label: 'Confirm', icon: 'M4 10.5l4 4 8-9.5' },
+  { value: 'declined', label: 'Decline', icon: 'M5.5 5.5l9 9M14.5 5.5l-9 9' }
+];
+---
+
+<form
+  method="post"
+  action="/api/me/status"
+  class:list={[
+    'status-form flex items-center gap-2',
+    compact ? 'flex-nowrap justify-end' : 'flex-wrap'
+  ]}
+>
+  <input type="hidden" name="id" value={request.id} />
+  <input type="hidden" name="sort" value={sort} />
+  <input type="hidden" name="dir" value={dir} />
+  <input type="hidden" name="page" value={page} />
+
+  {
+    BUTTONS.map((button) => (
+      <button
+        class:list={['btn', compact ? 'btn--icon' : 'mono']}
+        name="status"
+        value={button.value}
+        aria-pressed={request.status === button.value}
+        disabled={request.status !== 'new'}
+        aria-label={compact ? button.label : undefined}
+        title={compact ? button.label : undefined}
+      >
+        {compact ? (
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <path d={button.icon} stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        ) : (
+          <span>{button.label}</span>
+        )}
+      </button>
+    ))
+  }
+</form>
