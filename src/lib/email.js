@@ -38,7 +38,7 @@ const wrap = (body, brand) => `<!doctype html>
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;">
 <tr><td style="height:6px;background-color:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
 <tr><td align="center" style="padding:28px 24px 0;">
-<div style="width:11px;height:11px;margin:0 auto;background-color:${brand};-webkit-transform:rotate(45deg);transform:rotate(45deg);font-size:0;line-height:0;">&nbsp;</div>
+      <div style="font-family:${SANS};font-size:13px;line-height:1;color:${brand};">&#9670;</div>
 <div style="padding-top:16px;font-family:${MONO};font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:${brand};">Aliaksei Kozel</div>
 </td></tr>
 <tr><td class="body" style="padding:20px 24px 44px;font-family:${SANS};font-size:16px;line-height:1.6;color:${INK};">${body}</td></tr>
