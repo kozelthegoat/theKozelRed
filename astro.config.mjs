@@ -6,6 +6,7 @@ export default defineConfig({
   site: 'https://kozel.red',
   adapter: cloudflare({ platformProxy: { enabled: true } }),
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: { assetsInlineLimit: 0 }
   }
 });
