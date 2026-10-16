@@ -196,8 +196,9 @@ summary::-webkit-details-marker { display: none; }
 .btn--solid::after { background: var(--background); }
 .btn--solid:hover { color: var(--brand); border-color: var(--brand); }
 
-/* Compact button (admin UI — no 12rem min-width) */
-.btn[aria-pressed="true"] {
+/* Selected state (admin rows). Same specificity as .btn:hover but later in source,
+   so it must exclude hover — otherwise the label takes the fill's colour and vanishes. */
+.btn[aria-pressed="true"]:not(:hover) {
   border-color: var(--brand);
   background: color-mix(in srgb, var(--brand) 10%, transparent);
   color: var(--brand);
