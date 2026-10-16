@@ -1,5 +1,5 @@
-// Current wall-clock date/time (YYYY-MM-DD / HH:MM) in an IANA timezone.
-export function nowInTz(tz, at = new Date()) {
+// Wall-clock date/time (YYYY-MM-DD / HH:MM) of an instant in an IANA timezone.
+export function wallClockInTz(instantMs, tz) {
   const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: tz,
     year: 'numeric',
@@ -8,9 +8,30 @@ export function nowInTz(tz, at = new Date()) {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
-  }).formatToParts(at);
+  }).formatToParts(new Date(instantMs));
   const get = (t) => parts.find((p) => p.type === t)?.value || '00';
   return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}` };
+}
+
+// Current wall-clock date/time (YYYY-MM-DD / HH:MM) in an IANA timezone.
+export function nowInTz(tz, at = new Date()) {
+  return wallClockInTz(at.getTime(), tz);
+}
+
+// SQLite writes `datetime('now')` as "YYYY-MM-DD HH:MM:SS" in UTC, with no marker.
+export function instantFromSqliteUtc(value) {
+  return Date.parse(`${String(value).replace(' ', 'T')}Z`);
+}
+
+// Human offset for a zone at an instant, e.g. "UTC+3". Derived from the IANA rules, so
+// it follows the zone instead of a hardcoded number.
+export function zoneOffsetLabel(tz, atMs = Date.now()) {
+  const mins = Math.round(zoneOffset(atMs, tz) / 60000);
+  const sign = mins < 0 ? '-' : '+';
+  const abs = Math.abs(mins);
+  const hours = Math.floor(abs / 60);
+  const rest = abs % 60;
+  return `UTC${sign}${hours}${rest ? `:${String(rest).padStart(2, '0')}` : ''}`;
 }
 
 const zoneFormatters = new Map();
