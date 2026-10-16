@@ -105,29 +105,35 @@ ${cta(BOOK, 'Pick another time', brand)}
   return { sent: true };
 }
 
-// Decline notice, sent to the requester. No apology — a calendar gap, not a verdict.
+// Copy for the decline notice. No apology, no promised reply, no claimed reason:
+// it names the declined time, thanks them for the opportunity, and leaves another
+// time as theirs to take — true whether the reason was the calendar or a no.
+export function declineCopy({ name, when, brand = brandFor() }) {
+  return {
+    subject: `About your 1:1 request — ${when}`,
+    text: `Hi ${name},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nThe time you picked (${when}) is off the table now. Call it a race condition — the calendar won this round.\n\nIf you'd still like to talk, you're welcome to pick another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\nAliaksei Kozel`,
+    html: wrap(
+      `
+<p style="margin:0 0 20px;">Hi ${esc(name)},</p>
+<p style="margin:0 0 20px;">Thank you for reaching out — I'm grateful for the opportunity.</p>
+<p style="margin:0;">The time you picked (${esc(when)}) is off the table now. Call it a race condition — the calendar won this round.</p>
+<p style="margin:20px 0 0;">If you'd still like to talk, you're welcome to pick another time whenever it suits you.</p>
+${cta(BOOK, 'Pick another time', brand)}
+<p class="muted" style="margin:8px 0 0;color:${MUTED};">I appreciate your trust.<br>Aliaksei Kozel</p>`,
+      brand
+    )
+  };
+}
+
+// Decline notice, sent to the requester.
 export async function sendDeclineEmail(env, { name, email, when }) {
   const key = env.RESEND_API_KEY;
   const from = env.BOOKING_FROM || 'Aliaksei Kozel <aliaksei@kozel.red>';
   if (!key || !email) return { skipped: true };
 
-  const brand = brandFor();
+  const { subject, text, html } = declineCopy({ name, when });
 
-  await send(key, {
-    from,
-    to: email,
-    subject: `About your 1:1 request — ${when}`,
-    text: `Hi ${name},\n\nThank you for reaching out — I'd like to talk.\n\nLet’s find a time that works: pick whatever suits you and I’ll confirm right away.\n\n${BOOK}\n\nI appreciate your trust,\nAliaksei Kozel`,
-    html: wrap(
-      `
-<p style="margin:0 0 20px;">Hi ${esc(name)},</p>
-<p style="margin:0 0 20px;">Thank you for reaching out — I'd like to talk.</p>
-<p style="margin:0;">Let’s find a time that works — pick whatever suits you and I’ll confirm right away.</p>
-${cta(BOOK, 'Pick another time', brand)}
-<p class="muted" style="margin:8px 0 0;color:${MUTED};">I appreciate your trust.<br>Aliaksei Kozel</p>`,
-      brand
-    )
-  });
+  await send(key, { from, to: email, subject, text, html });
 
   return { sent: true };
 }

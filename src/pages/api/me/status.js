@@ -34,7 +34,7 @@ export const POST = async ({ request }) => {
       .all();
     const row = results?.[0];
     if (row) {
-      const when = `${row.slot_date} at ${row.slot_time} (${TYPE_NAMES[row.type] || row.type})`;
+      const when = `${row.slot_date} ${row.slot_time} · ${TYPE_NAMES[row.type] || row.type}`;
       await sendDeclineEmail(env, { name: row.name, email: row.email, when }).catch(() => {});
     }
   }
