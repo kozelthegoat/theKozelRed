@@ -150,7 +150,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
 
             {/* md and up: the table proper */}
             <div class="hidden lg:block overflow-x-auto">
-              <table class="w-full border-collapse text-left align-top">
+              <table class="req-table w-full border-collapse text-left">
                 <thead>
                   <tr class="hair-b">
                     {COLUMNS.map((c) => (
@@ -176,7 +176,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                 </thead>
                 <tbody>
                   {rows.map((r) => (
-                    <tr class="hair-b align-top">
+                    <tr class="hair-b">
                       <td class="mono py-4 pr-4 leading-tight whitespace-nowrap">
                         <span class={r.status === 'declined' ? 'text-muted line-through' : ''}>
                           {r.slot_date}

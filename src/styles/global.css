@@ -56,6 +56,13 @@
   }
 }
 
+/* Requests table. Everything inside the table inherits `vertical-align: middle`, which
+   centres each cell's box — so a 10px mono date beside a 12px sans name reads as two
+   different lines (measured 6.6px apart). Align the text cells on their first baseline
+   instead; the actions cell holds only buttons and has no baseline, so it stays at the top. */
+.req-table td { vertical-align: baseline; }
+.req-table td:last-child { vertical-align: top; }
+
 /* Page title — one size for every page h1, so they can't drift apart.
    The home hero keeps its own, much larger display size. */
 .page-title {
