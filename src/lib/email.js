@@ -117,14 +117,14 @@ export async function sendDeclineEmail(env, { name, email, when }) {
     from,
     to: email,
     subject: `About your 1:1 request — ${when}`,
-    text: `Hi ${name},\n\nThank you for reaching out — I'd like to talk.\n\nThat specific slot doesn't work on my side. I'd welcome another time: pick whatever suits you and I'll confirm right away.\n\n${BOOK}\n\nThanks for your time,\nAliaksei Kozel`,
+    text: `Hi ${name},\n\nThank you for reaching out — I'd like to talk.\n\nLet’s find a time that works: pick whatever suits you and I’ll confirm right away.\n\n${BOOK}\n\nI appreciate your trust,\nAliaksei Kozel`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">Hi ${esc(name)},</p>
 <p style="margin:0 0 20px;">Thank you for reaching out — I'd like to talk.</p>
-<p style="margin:0;">That specific slot doesn't work on my side. I'd welcome another time: pick whatever suits you and I'll confirm right away.</p>
+<p style="margin:0;">Let’s find a time that works — pick whatever suits you and I’ll confirm right away.</p>
 ${cta(BOOK, 'Pick another time', brand)}
-<p class="muted" style="margin:8px 0 0;color:${MUTED};">Thanks for your time,<br>Aliaksei Kozel</p>`,
+<p class="muted" style="margin:8px 0 0;color:${MUTED};">I appreciate your trust.<br>Aliaksei Kozel</p>`,
       brand
     )
   });
