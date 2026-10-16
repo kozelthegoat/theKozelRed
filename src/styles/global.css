@@ -214,8 +214,12 @@
 .btn:hover { color: var(--on-brand); border-color: var(--brand); }
 .btn:hover::after { transform: translateY(0); }
 .btn--solid { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
-.btn--solid::after { background: var(--background); }
-.btn--solid:hover { color: var(--brand); border-color: var(--brand); }
+/* The hover fill is opaque rather than the page colour: it paints over the button's own solid
+   accent, so an alpha tint would show nothing, and cream made the button dissolve into the
+   background. A light blue keeps the button recognisably the same blue it always was. */
+.btn--solid::after { background: color-mix(in srgb, var(--brand) 12%, var(--background)); }
+/* Thin strokes on a light field need the deeper accent to read as the same blue (6.6:1 vs 4.7:1). */
+.btn--solid:hover { color: var(--brand-deep); border-color: var(--brand-deep); }
 
 /* Selected state (admin rows). Same specificity as .btn:hover but later in source,
    so it must exclude hover — otherwise the label takes the fill's colour and vanishes. */
