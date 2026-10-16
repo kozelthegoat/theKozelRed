@@ -1,6 +1,6 @@
-// Regenerate the favicon + PNG icons from the `--brand` token.
+// Regenerate the favicon + PNG icons + BIMI logo from the design tokens.
 // Usage: npm run icons
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -15,9 +15,15 @@ const token = (name) => {
 };
 
 const brand = token('brand');
+const background = token('background');
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="10,4 16,10 10,16 4,10" fill="${brand}"/></svg>`;
 
 writeFileSync(path.join(root, 'public/favicon.svg'), `${svg}\n`);
+
+// BIMI logo — square, self-contained, static brand colour.
+const bimi = `<svg xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" fill="${background}"/><polygon points="256,102 410,256 256,410 102,256" fill="${brand}"/></svg>`;
+mkdirSync(path.join(root, 'public/bimi'), { recursive: true });
+writeFileSync(path.join(root, 'public/bimi/logo.svg'), `${bimi}\n`);
 
 for (const [name, size] of [
   ['apple-touch-icon.png', 180],
@@ -29,3 +35,4 @@ for (const [name, size] of [
 }
 
 console.log(`wrote public/favicon.svg (brand ${brand})`);
+console.log(`wrote public/bimi/logo.svg (brand ${brand}, background ${background})`);
