@@ -16,12 +16,17 @@ const esc = (s) =>
 
 const wrap = (body, brand) => `<!doctype html>
 <html><body style="margin:0;padding:0;background:${BG};">
-<div style="max-width:560px;margin:0 auto;padding:40px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;color:${INK};">
-<p style="margin:0 0 28px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:${brand};">Aliaksei Kozel</p>
-${body}
-<hr style="border:none;border-top:1px solid ${BORDER};margin:32px 0 16px;">
-<p style="margin:0;font-size:13px;color:${MUTED};">Aliaksei Kozel · <a href="${SITE}" style="color:${MUTED};">kozel.red</a></p>
-</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};">
+<tr><td align="center">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;">
+<tr><td style="height:6px;background:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td align="center" style="padding:32px 24px 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:${brand};">Aliaksei Kozel</td></tr>
+<tr><td style="padding:20px 24px 44px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;color:${INK};">${body}</td></tr>
+<tr><td style="height:6px;background:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td align="center" style="padding:16px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;color:${MUTED};">Aliaksei Kozel · <a href="${SITE}" style="color:${MUTED};">kozel.red</a></td></tr>
+</table>
+</td></tr>
+</table>
 </body></html>`;
 
 const cta = (href, label, brand) =>

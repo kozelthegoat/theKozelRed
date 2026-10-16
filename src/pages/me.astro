@@ -11,7 +11,7 @@ let rows = [];
 if (db) {
   const { results } = await db
     .prepare(
-      'SELECT id, type, slot_date, slot_time, name, email, note, decision_note, status, created_at FROM requests ORDER BY slot_date, slot_time'
+      'SELECT id, type, slot_date, slot_time, name, email, note, status, created_at FROM requests ORDER BY slot_date, slot_time'
     )
     .all();
   rows = results || [];
