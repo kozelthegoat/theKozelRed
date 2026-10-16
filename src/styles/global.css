@@ -219,12 +219,11 @@
 .btn:hover { color: var(--on-brand); border-color: var(--brand); }
 .btn:hover::after { transform: translateY(0); }
 .btn--solid { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
-/* The hover fill is opaque rather than the page colour: it paints over the button's own solid
-   accent, so an alpha tint would show nothing, and cream made the button dissolve into the
-   background. A light blue keeps the button recognisably the same blue it always was. */
-.btn--solid::after { background: color-mix(in srgb, var(--brand) 12%, var(--background)); }
-/* Thin strokes on a light field need the deeper accent to read as the same blue (6.6:1 vs 4.7:1). */
-.btn--solid:hover { color: var(--brand-deep); border-color: var(--brand-deep); }
+/* Hover deepens the same blue instead of draining it to the page colour: the fill slides up in
+   --brand-deep and the label stays white, so the button keeps its identity and the label keeps
+   its contrast (white on the deeper accent is 6.6:1, against 5.2:1 on the base accent). */
+.btn--solid::after { background: var(--brand-deep); }
+.btn--solid:hover { color: var(--on-brand); border-color: var(--brand-deep); }
 
 /* Selected state (admin rows). Same specificity as .btn:hover but later in source,
    so it must exclude hover — otherwise the label takes the fill's colour and vanishes. */
@@ -249,7 +248,7 @@
 
 /* Marquee (subtle, non-interactive) */
 .marquee { display: flex; overflow: hidden; user-select: none; }
-.marquee__track { display: flex; flex: none; gap: 3rem; padding-right: 3rem; animation: marquee 32s linear infinite; }
+.marquee__track { display: flex; flex: none; gap: 3rem; padding-right: 3rem; animation: marquee 42.7s linear infinite; }
 @keyframes marquee { to { transform: translateX(-100%); } }
 @media (prefers-reduced-motion: reduce) {
   .marquee__track { animation: none; }
