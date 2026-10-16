@@ -185,7 +185,9 @@ summary::-webkit-details-marker { display: none; }
   content: "";
   position: absolute;
   inset: 0;
-  z-index: 0;
+  /* Behind in-flow content: a bare text label (no <span> child) must stay legible
+     while the fill is up. Positioned z-index:0 would paint over the text. */
+  z-index: -1;
   background: var(--brand);
   transform: translateY(101%);
   transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
