@@ -26,6 +26,7 @@ if (db) {
 }
 const typeName = (id) => TYPE_NAMES[id] || id;
 const isPast = (d) => d < new Date().toISOString().slice(0, 10);
+const pending = rows.filter((r) => r.status === 'new').length;
 ---
 <Base title="Requests — Aliaksei Kozel" description="1:1 requests.">
   <section class="hair-b hair-soft">
@@ -33,7 +34,7 @@ const isPast = (d) => d < new Date().toISOString().slice(0, 10);
       <p class="mono text-brand">Me</p>
       <h1 class="mt-4 text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium">1:1 requests</h1>
       <p class="mt-3 text-secondary">
-        {rows.length} request{rows.length === 1 ? '' : 's'}.
+        {pending} to review · {rows.length} total
       </p>
     </div>
 
@@ -58,10 +59,17 @@ const isPast = (d) => d < new Date().toISOString().slice(0, 10);
               </div>
               <form method="post" action="/api/me/status" class="flex flex-wrap items-center gap-2">
                 <input type="hidden" name="id" value={r.id} />
-                <button class="btn btn--sm mono" name="status" value="confirmed"><span>Confirm</span></button>
+                <button class="btn btn--sm mono" name="status" value="confirmed" aria-pressed={r.status === 'confirmed'}><span>Confirm</span></button>
                 <span class="mono text-muted">Decline:</span>
                 {DECLINE_REASONS.map((opt) => (
-                  <button class="btn btn--sm mono" name="reason" value={opt.text}><span>{opt.label}</span></button>
+                  <button
+                    class="btn btn--sm mono"
+                    name="reason"
+                    value={opt.text}
+                    aria-pressed={r.status === 'declined' && r.decision_note === opt.text}
+                  >
+                    <span>{opt.label}</span>
+                  </button>
                 ))}
               </form>
             </li>
