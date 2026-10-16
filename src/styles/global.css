@@ -209,6 +209,16 @@ summary::-webkit-details-marker { display: none; }
 .arrow { transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1); }
 .btn:hover .arrow { transform: translateX(0.25rem); }
 
+/* Square icon-only button (table row actions) — drops .btn's 12rem min-width so the
+   row's other columns keep the space. Label comes from aria-label/title. */
+.btn--icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  min-width: 0;
+  padding: 0;
+  gap: 0;
+}
+
 /* Marquee (subtle, non-interactive) */
 .marquee { display: flex; overflow: hidden; user-select: none; }
 .marquee__track { display: flex; flex: none; gap: 3rem; padding-right: 3rem; animation: marquee 32s linear infinite; }

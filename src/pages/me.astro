@@ -194,20 +194,28 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                           <input type="hidden" name="dir" value={list.dir} />
                           <input type="hidden" name="page" value={list.page} />
                           <button
-                            class="btn mono"
+                            class="btn btn--icon"
                             name="status"
                             value="confirmed"
                             aria-pressed={r.status === 'confirmed'}
+                            aria-label="Confirm"
+                            title="Confirm"
                           >
-                            <span>Confirm</span>
+                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                              <path d="M4 10.5l4 4 8-9.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
                           </button>
                           <button
-                            class="btn mono"
+                            class="btn btn--icon"
                             name="status"
                             value="declined"
                             aria-pressed={r.status === 'declined'}
+                            aria-label="Decline"
+                            title="Decline"
                           >
-                            <span>Decline</span>
+                            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                              <path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke-linecap="round"></path>
+                            </svg>
                           </button>
                         </form>
                       </td>
