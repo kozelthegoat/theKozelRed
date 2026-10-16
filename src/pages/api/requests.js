@@ -54,15 +54,13 @@ export const POST = async ({ request, locals }) => {
     return jsonError('slot_unavailable', 'That time is no longer available.', 409);
   }
 
-  let insertedId = null;
   try {
-    const result = await db
+    await db
       .prepare(
         'INSERT INTO requests (type, slot_date, slot_time, name, email, note, visitor_tz) VALUES (?, ?, ?, ?, ?, ?, ?)'
       )
       .bind(type.id, date, time, name, email, note || null, visitorTz)
       .run();
-    insertedId = result?.meta?.last_row_id ?? null;
   } catch (e) {
     if (/unique/i.test(String(e && e.message))) {
       return jsonError('slot_taken', 'That time was just taken.', 409);
@@ -70,9 +68,7 @@ export const POST = async ({ request, locals }) => {
     throw e;
   }
 
-  await sendBookingEmails(env, { id: insertedId, type, date, time, name, email, note, visitorTz }).catch(
-    () => {}
-  );
+  await sendBookingEmails(env, { type, date, time, name, email, note, visitorTz }).catch(() => {});
 
   return json({ ok: true });
 };
