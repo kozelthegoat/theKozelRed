@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { declineCopy, dualTime } from '../src/lib/email.js';
+import { declineCopy, dualTime, sendBookingEmails } from '../src/lib/email.js';
 
 const args = {
   name: 'Alex',
@@ -69,5 +69,41 @@ describe('dualTime', () => {
 
   it('falls back to the anchor rather than throwing on a junk zone', () => {
     expect(dualTime({ ...base, visitorTz: 'Not/AZone' })).toBe('2026-10-17 16:00 (Europe/Minsk)');
+  });
+});
+
+describe('subject shape', () => {
+  it('reads the same way for every email about a request', async () => {
+    const sent = [];
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = async (_url, opts) => {
+      sent.push(JSON.parse(opts.body));
+      return { ok: true };
+    };
+    try {
+      await sendBookingEmails(
+        { RESEND_API_KEY: 'k', BOOKING_TO: 'me@kozel.red' },
+        {
+          type: { name: 'Working Session', minutes: 60 },
+          date: '2026-10-17',
+          time: '16:00',
+          name: 'Alex Berlin',
+          email: 'alex@example.com',
+          note: 'hi'
+        }
+      );
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+
+    expect(sent[0].subject).toBe('1:1 request — New · Alex Berlin · Working Session · 2026-10-17 16:00 Minsk');
+    expect(sent[1].subject).toBe('1:1 request — Received · Working Session · 2026-10-17 16:00 Minsk');
+
+    const decline = declineCopy({
+      name: 'Alex Berlin',
+      when: '2026-10-17 16:00 Minsk',
+      typeName: 'Working Session'
+    });
+    expect(decline.subject).toBe('1:1 request — Declined · Working Session · 2026-10-17 16:00 Minsk');
   });
 });

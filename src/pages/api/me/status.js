@@ -40,14 +40,15 @@ export const POST = async ({ request }) => {
   await db.prepare('UPDATE requests SET status = ? WHERE id = ?').bind(status, id).run();
 
   if (shouldSendDecline(row.status, status)) {
-    const when = `${row.slot_date} ${row.slot_time} · ${TYPE_NAMES[row.type] || row.type}`;
+    const typeName = TYPE_NAMES[row.type] || row.type;
+    const when = `${row.slot_date} ${row.slot_time} Minsk`;
     // The subject stays Minsk; the body can also quote the clock they booked in.
     const whenDisplay = dualTime({
       date: row.slot_date,
       time: row.slot_time,
       visitorTz: row.visitor_tz
     });
-    await sendDeclineEmail(env, { name: row.name, email: row.email, when, whenDisplay }).catch(
+    await sendDeclineEmail(env, { name: row.name, email: row.email, when, whenDisplay, typeName }).catch(
       () => {}
     );
   }

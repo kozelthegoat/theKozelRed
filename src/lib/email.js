@@ -86,7 +86,7 @@ export async function sendBookingEmails(env, req) {
     from,
     to,
     reply_to: req.email,
-    subject: `New 1:1 request — ${req.name} · ${req.date} ${req.time}`,
+    subject: `1:1 request — New · ${req.name} · ${req.type.name} · ${req.date} ${req.time} Minsk`,
     text: `New 1:1 request.\n\n${req.name} <${req.email}>\n${when}\n\n${req.note || '(no note)'}\n\nReply to this email to answer them.`,
     html: wrap(
       `
@@ -103,7 +103,7 @@ ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left
   await send(key, {
     from,
     to: req.email,
-    subject: `I've got your 1:1 request — ${req.date} ${req.time}`,
+    subject: `1:1 request — Received · ${req.type.name} · ${req.date} ${req.time} Minsk`,
     text: `Thanks, ${req.name} — your request is in.\n\n${whenForThem}\n\nI'll reply to confirm. If you'd rather move it, pick another time any time: ${BOOK}\n\n— Aliaksei Kozel`,
     html: wrap(
       `
@@ -122,9 +122,9 @@ ${cta(BOOK, 'Pick another time', brand)}
 // Copy for the decline notice. No apology, no promised reply, no claimed reason:
 // it names the declined time, thanks them for the opportunity, and leaves another
 // time as theirs to take — true whether the reason was the calendar or a no.
-export function declineCopy({ name, when, whenDisplay = when, brand = brandFor() }) {
+export function declineCopy({ name, when, whenDisplay = when, typeName = '', brand = brandFor() }) {
   return {
-    subject: `About your 1:1 request — ${when}`,
+    subject: `1:1 request — Declined${typeName ? ` · ${typeName}` : ''} · ${when}`,
     text: `Hi ${name},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nThe time you picked (${whenDisplay}) is off the table now. Call it a race condition — the calendar won this round.\n\nIf you'd still like to talk, you're welcome to pick another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\nAliaksei Kozel`,
     html: wrap(
       `
@@ -140,12 +140,12 @@ ${cta(BOOK, 'Pick another time', brand)}
 }
 
 // Decline notice, sent to the requester.
-export async function sendDeclineEmail(env, { name, email, when, whenDisplay }) {
+export async function sendDeclineEmail(env, { name, email, when, whenDisplay, typeName }) {
   const key = env.RESEND_API_KEY;
   const from = env.BOOKING_FROM || 'Aliaksei Kozel <aliaksei@kozel.red>';
   if (!key || !email) return { skipped: true };
 
-  const { subject, text, html } = declineCopy({ name, when, whenDisplay });
+  const { subject, text, html } = declineCopy({ name, when, whenDisplay, typeName });
 
   await send(key, { from, to: email, subject, text, html });
 
