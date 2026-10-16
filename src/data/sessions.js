@@ -15,7 +15,7 @@ export const sessionTypes = [
       'An honest read on whether I can help',
       'A name for the thing that’s been bugging you',
       'A clear next step — with me or without',
-      'Reassurance that you’re on a good path'
+      'A bit of calm and confidence'
     ]
   },
   {
