@@ -8,7 +8,6 @@ const STATUSES = new Set(['new', 'confirmed', 'declined']);
 const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Working Session' };
 
 // POST /api/me/status — set a request's status (Access-protected in production).
-// A reason may accompany a decline; it is stored and emailed to the requester.
 export const POST = async ({ request }) => {
   const db = env?.DB;
   if (!db) return jsonError('unavailable', 'No database.', 503);
