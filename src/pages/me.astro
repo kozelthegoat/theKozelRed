@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import { env } from 'cloudflare:workers';
 import { listParams, listSql, listHref } from '../lib/requests.js';
+import { availability } from '../data/sessions.js';
+import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel } from '../lib/tz.js';
 
 export const prerender = false;
 
@@ -41,8 +43,16 @@ if (db) {
     .prepare(listSql(list.sort, list.dir))
     .bind(list.pageSize, list.offset)
     .all();
-  rows = results || [];
+  // created_at is a UTC instant; the slot columns are already Minsk wall clock. Show both
+  // in the zone the site runs on, so a row can be read without converting in your head.
+  rows = (results || []).map((r) => ({
+    ...r,
+    requested: wallClockInTz(instantFromSqliteUtc(r.created_at), availability.timezone)
+  }));
 }
+
+// Derived, not hardcoded: follows Europe/Minsk if its rules ever change.
+const tzLabel = `${availability.timezone} (${zoneOffsetLabel(availability.timezone)})`;
 
 const typeName = (id) => TYPE_NAMES[id] || id;
 // Table-only short labels, so the Type column stays narrow; the full name is in the title.
@@ -68,6 +78,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
       <p class="mono text-brand">Me</p>
       <h1 class="page-title mt-4">1:1 requests</h1>
       <p class="mono mt-3 text-muted">{pending} to review · {total} total</p>
+      <p class="mono mt-2 text-muted">Times in {tzLabel}</p>
     </div>
 
     <div class="px-[var(--pad)] pb-16">
@@ -182,8 +193,21 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                       <td class="py-4 pr-4 whitespace-nowrap text-sm text-secondary">
                         <span title={typeName(r.type)}>{typeShort(r.type)}</span>
                       </td>
-                      <td class={`mono py-4 pr-4 whitespace-nowrap ${statusTone(r.status)}`}>
-                        {r.status}
+                      <td class="py-4 pr-4">
+                        <span class="sr-only">{r.status}</span>
+                        <span class="inline-flex h-4 w-4 items-center justify-center" aria-hidden="true">
+                          {r.status === 'confirmed' && (
+                            <svg class="text-brand" width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
+                              <path d="M4 10.5l4 4 8-9.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                          )}
+                          {r.status === 'declined' && (
+                            <svg class="text-muted" width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
+                              <path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke-linecap="round" />
+                            </svg>
+                          )}
+                          {r.status === 'new' && <span class="h-2 w-2 rounded-full bg-brand" />}
+                        </span>
                       </td>
                       <td class="w-full py-4 pr-4 text-sm text-secondary">
                         {r.note ? (
@@ -195,8 +219,8 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                         )}
                       </td>
                       <td class="mono py-4 pr-4 leading-tight whitespace-nowrap text-muted">
-                        {r.created_at.slice(0, 10)}
-                        <span class="block">{r.created_at.slice(11, 16)}</span>
+                        {r.requested.date}
+                        <span class="block">{r.requested.time}</span>
                       </td>
                       <td class="py-4 whitespace-nowrap">
                         <form method="post" action="/api/me/status" class="flex flex-nowrap items-center justify-end gap-2">
