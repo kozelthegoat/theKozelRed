@@ -57,7 +57,7 @@ const MINSK = 'Europe/Minsk';
 // The booked time in the requester's own clock, with the Minsk anchor kept alongside —
 // the zone is a browser guess, so never state their time without the one we run on.
 export function dualTime({ date, time, visitorTz, tz = MINSK }) {
-  const anchor = `${date} ${time} Minsk`;
+  const anchor = `${date} ${time} (${tz})`;
   if (!visitorTz || visitorTz === tz || !isValidZone(visitorTz)) return anchor;
   const local = wallClockInTz(zonedWallClockToUtc(date, time, tz).getTime(), visitorTz);
   return `${local.date} ${local.time} (${visitorTz}) — ${anchor}`;
