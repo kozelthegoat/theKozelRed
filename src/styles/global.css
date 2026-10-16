@@ -56,6 +56,13 @@
   }
 }
 
+/* Page title — one size for every page h1, so they can't drift apart.
+   The home hero keeps its own, much larger display size. */
+.page-title {
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 500;
+}
+
 /* Mono micro-label */
 .mono {
   font-family: var(--font-mono);
