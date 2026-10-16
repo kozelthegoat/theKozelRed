@@ -7,7 +7,7 @@ export const site = {
   bornYear: 1987,
   renameYear: 2026,
   role: 'Strategy / Operations / Production',
-  location: 'Minsk, Belarus — right now\nwhere next is your call',
+  location: 'Minsk, Belarus — right now\nwhere next can be your call',
   email: 'aliaksei.pashkel@gmail.com',
   resume: '/kozel-resume-2026-10-16.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],
