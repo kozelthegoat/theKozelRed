@@ -86,7 +86,7 @@ export async function sendBookingEmails(env, req) {
     from,
     to,
     reply_to: req.email,
-    subject: `1:1 request — New · ${req.name} · ${req.type.name} · ${req.date} ${req.time} Minsk`,
+    subject: `1:1 — New · ${req.name} · ${req.type.name} · ${req.date} ${req.time} Minsk`,
     text: `New 1:1 request.\n\n${req.name} <${req.email}>\n${when}\n\n${req.note || '(no note)'}\n\nReply to this email to answer them.`,
     html: wrap(
       `
@@ -103,7 +103,7 @@ ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left
   await send(key, {
     from,
     to: req.email,
-    subject: `1:1 request — Received · ${req.type.name} · ${req.date} ${req.time} Minsk`,
+    subject: `1:1 — Received · ${req.type.name} · ${req.date} ${req.time} Minsk`,
     text: `Thanks, ${req.name} — your request is in.\n\n${whenForThem}\n\nI'll reply to confirm. If you'd rather move it, pick another time any time: ${BOOK}\n\n— Aliaksei Kozel`,
     html: wrap(
       `
@@ -111,7 +111,7 @@ ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left
 <p style="margin:0;">${esc(whenForThem)}</p>
 <p style="margin:20px 0 0;">I'll reply to confirm. If you'd rather move it, just pick another time.</p>
 ${cta(BOOK, 'Pick another time', brand)}
-<p class="muted" style="margin:8px 0 0;color:${MUTED};">— Aliaksei Kozel</p>`,
+<p style="margin:8px 0 0;">— Aliaksei Kozel</p>`,
       brand
     )
   });
@@ -124,7 +124,7 @@ ${cta(BOOK, 'Pick another time', brand)}
 // time as theirs to take — true whether the reason was the calendar or a no.
 export function declineCopy({ name, when, whenDisplay = when, typeName = '', brand = brandFor() }) {
   return {
-    subject: `1:1 request — Declined${typeName ? ` · ${typeName}` : ''} · ${when}`,
+    subject: `1:1 — Declined${typeName ? ` · ${typeName}` : ''} · ${when}`,
     text: `Hi ${name},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nThe time you picked (${whenDisplay}) is off the table now. Call it a race condition — the calendar won this round.\n\nIf you'd still like to talk, you're welcome to pick another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\nAliaksei Kozel`,
     html: wrap(
       `
@@ -133,7 +133,7 @@ export function declineCopy({ name, when, whenDisplay = when, typeName = '', bra
 <p style="margin:0;">The time you picked (${esc(whenDisplay)}) is off the table now. Call it a race condition — the calendar won this round.</p>
 <p style="margin:20px 0 0;">If you'd still like to talk, you're welcome to pick another time whenever it suits you.</p>
 ${cta(BOOK, 'Pick another time', brand)}
-<p class="muted" style="margin:8px 0 0;color:${MUTED};">I appreciate your trust.<br>Aliaksei Kozel</p>`,
+<p style="margin:8px 0 0;">I appreciate your trust.<br>Aliaksei Kozel</p>`,
       brand
     )
   };

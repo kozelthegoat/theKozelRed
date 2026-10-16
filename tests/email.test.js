@@ -96,14 +96,14 @@ describe('subject shape', () => {
       globalThis.fetch = realFetch;
     }
 
-    expect(sent[0].subject).toBe('1:1 request — New · Alex Berlin · Working Session · 2026-10-17 16:00 Minsk');
-    expect(sent[1].subject).toBe('1:1 request — Received · Working Session · 2026-10-17 16:00 Minsk');
+    expect(sent[0].subject).toBe('1:1 — New · Alex Berlin · Working Session · 2026-10-17 16:00 Minsk');
+    expect(sent[1].subject).toBe('1:1 — Received · Working Session · 2026-10-17 16:00 Minsk');
 
     const decline = declineCopy({
       name: 'Alex Berlin',
       when: '2026-10-17 16:00 Minsk',
       typeName: 'Working Session'
     });
-    expect(decline.subject).toBe('1:1 request — Declined · Working Session · 2026-10-17 16:00 Minsk');
+    expect(decline.subject).toBe('1:1 — Declined · Working Session · 2026-10-17 16:00 Minsk');
   });
 });
