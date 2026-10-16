@@ -11,7 +11,7 @@ Personal site and 1:1 booking for **Aliaksei Kozel** — product / operations / 
 - `/privacy/` — what's stored and why
 - `404` — styled not-found page
 
-Booking is **request-based, no payment**: you pick a slot and send a request; I reply to confirm (with the Zoom link). Styles: `Intro Call` (30 min), `Career Review` (45), `Deep Dive` (60).
+Booking is **request-based, no payment**: you pick a slot and send a request; I reply to confirm (with the Zoom link). Styles: `Intro Call` (30 min), `Career Review` (45), `Working Session` (60).
 
 ## Stack
 
@@ -41,19 +41,19 @@ npm run preview    # build + wrangler dev
 - `src/data/resume.js` — expertise bullets, experience, recommendations
 - `src/data/sessions.js` — session types + weekly availability
 - `src/styles/global.css` — design tokens and shared component styles
-- `public/fonts/` — self-hosted Geist / Geist Mono / Spectral
+- `public/fonts/` — self-hosted Geist / Geist Mono
 
 ## Repo layout
 
 ```
-src/pages/      routes (index, schedule, privacy, 404, api/)
+src/pages/      routes (index, schedule, privacy, me, 404, api/)
 src/layouts/    Base layout (header/footer)
 src/data/       content (site, résumé, sessions)
-src/lib/        slots + timezone + api helpers
+src/lib/        slots + timezone + api + email + headers helpers
 src/assets/js/  client scripts (schedule, reveal)
 migrations/     D1 schema
 public/         fonts, images, résumé PDF
-docs/           design + ideas notes
+docs/           design, ideas, DNS & donations notes
 ```
 
 ## Notes
@@ -63,4 +63,4 @@ docs/           design + ideas notes
 
 ## License
 
-Not decided yet.
+[MIT](LICENSE) © 2026 Aliaksei Kozel
