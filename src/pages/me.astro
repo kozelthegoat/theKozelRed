@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { env } from 'cloudflare:workers';
+
+export const prerender = false;
+
+const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Working Session' };
+
+const db = env?.DB;
+let rows = [];
+if (db) {
+  const { results } = await db
+    .prepare(
+      'SELECT id, type, slot_date, slot_time, name, email, note, status, created_at FROM requests ORDER BY slot_date, slot_time'
+    )
+    .all();
+  rows = results || [];
+}
+const typeName = (id) => TYPE_NAMES[id] || id;
+const isPast = (d) => d < new Date().toISOString().slice(0, 10);
+---
+<Base title="Requests — Aliaksei Kozel" description="1:1 requests.">
+  <section class="hair-b hair-soft">
+    <div class="px-[var(--pad)] pt-14 pb-6">
+      <p class="mono text-brand">Me</p>
+      <h1 class="mt-4 text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium">1:1 requests</h1>
+      <p class="mt-3 text-secondary">
+        {rows.length} request{rows.length === 1 ? '' : 's'}.
+      </p>
+    </div>
+
+    <div class="px-[var(--pad)] pb-16">
+      {rows.length === 0 && <p class="text-muted">Nothing yet.</p>}
+      <ul class="grid gap-4">
+        {
+          rows.map((r) => (
+            <li class="hair grid gap-4 p-5 md:grid-cols-[1fr_auto] md:items-start">
+              <div class="grid gap-1">
+                <p class={`mono ${r.status === 'declined' ? 'text-muted line-through' : 'text-brand'}`}>
+                  {r.slot_date} · {r.slot_time} · {typeName(r.type)}
+                  {r.status !== 'new' && ` · ${r.status}`}
+                  {isPast(r.slot_date) && ' · past'}
+                </p>
+                <p class="text-lg font-medium">{r.name}</p>
+                <p class="text-sm text-secondary">
+                  <a class="hover:text-brand" href={`mailto:${r.email}`}>{r.email}</a>
+                </p>
+                {r.note && <p class="mt-1 max-w-[70ch] text-sm text-secondary">{r.note}</p>}
+              </div>
+              <form method="post" action="/api/me/status" class="flex flex-wrap gap-2">
+                <input type="hidden" name="id" value={r.id} />
+                <button class="btn btn--solid mono" name="status" value="confirmed">Confirm</button>
+                <button class="btn mono" name="status" value="declined">Decline</button>
+                <button class="btn mono" name="status" value="new">Reset</button>
+              </form>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
