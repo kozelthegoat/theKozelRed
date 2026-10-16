@@ -126,6 +126,20 @@
   color: var(--brand);
 }
 
+/* Motto — decorative quote as a graphic, not as text */
+.motto { position: relative; }
+.motto::before {
+  content: "“";
+  position: absolute;
+  top: -0.62em;
+  left: -0.04em;
+  font-size: clamp(3rem, 7vw, 5rem);
+  line-height: 1;
+  color: var(--brand);
+  opacity: 0.18;
+  pointer-events: none;
+}
+
 /* Hairline frame */
 .hair { border-color: var(--border); border-width: var(--hair); }
 
