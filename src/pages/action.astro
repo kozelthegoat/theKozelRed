@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { env } from 'cloudflare:workers';
+import { verifyAction } from '../lib/action.js';
+import { dualTime } from '../lib/email.js';
+
+export const prerender = false;
+
+// Where the buttons in the notification email land. Deliberately outside the Cloudflare
+// Access app — the signed token is the authority, so answering needs no sign-in.
+//
+// This page only *shows* the decision; it is applied by POST /api/action. Mail scanners
+// (Outlook SafeLinks, antivirus link-checkers) fetch links on their own, so a GET that
+// applied it would let them answer the request behind your back.
+const key = env?.RESEND_API_KEY;
+const token = Astro.url.searchParams.get('t') || '';
+const done = Astro.url.searchParams.get('done') === '1';
+const action = key ? await verifyAction(token, key) : null;
+
+const row =
+  action && env?.DB
+    ? await env.DB.prepare(
+        'SELECT type, slot_date, slot_time, name, email, status, visitor_tz FROM requests WHERE id = ?'
+      )
+        .bind(action.id)
+        .first()
+    : null;
+
+const verb = action?.status === 'declined' ? 'Decline' : 'Confirm';
+const heading = !row ? 'Link expired' : done ? `${verb}d` : `${verb} this request?`;
+const when = row
+  ? dualTime({ date: row.slot_date, time: row.slot_time, visitorTz: row.visitor_tz })
+  : '';
+---
+
+<Base title={`${heading} — Aliaksei Kozel`} description="1:1 request.">
+  <section class="hair-b hair-soft">
+    <div class="px-[var(--pad)] pt-14 pb-16">
+      <p class="mono text-brand">Request</p>
+      <h1 class="page-title mt-4">{heading}</h1>
+
+      {
+        !row && (
+          <p class="mt-4 max-w-[52ch] text-secondary">
+            This link is no longer valid. Open the table to answer the request there.
+          </p>
+        )
+      }
+
+      {
+        row && done && (
+          <p class="mt-4 max-w-[52ch] text-secondary">
+            {row.name}'s request for {when} is now <strong>{row.status}</strong> — the table shows
+            it already.
+          </p>
+        )
+      }
+
+      {
+        row && !done && (
+          <div class="mt-6 grid gap-2">
+            <p class="text-lg font-medium">{row.name}</p>
+            <p class="text-sm">
+              <a class="text-secondary hover:text-brand" href={`mailto:${row.email}`}>
+                {row.email}
+              </a>
+            </p>
+            <p class="mono text-muted">{when}</p>
+          </div>
+        )
+      }
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        {
+          row && !done && (
+            <form method="post" action="/api/action">
+              <input type="hidden" name="t" value={token} />
+              <button
+                type="submit"
+                class:list={['btn mono', action.status === 'confirmed' && 'btn--solid']}
+              >
+                <span>{verb}</span>
+              </button>
+            </form>
+          )
+        }
+        <a class="btn mono" href="/me"><span>Open the table</span></a>
+      </div>
+    </div>
+  </section>
+</Base>

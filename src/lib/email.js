@@ -4,6 +4,7 @@
 
 import { brandFor } from '../data/palette.js';
 import { wallClockInTz, zonedWallClockToUtc, isValidZone } from './tz.js';
+import { signAction, actionExpiry, ACTION_TTL_DAYS } from './action.js';
 
 const INK = '#282828';
 const DARK = '#16150f';
@@ -63,6 +64,9 @@ export function dualTime({ date, time, visitorTz, tz = MINSK }) {
   return `${local.date} ${local.time} (${visitorTz}) — ${anchor}`;
 }
 
+const actionButton = (href, label, brand, filled) =>
+  `<a href="${href}" style="display:inline-block;text-decoration:none;padding:11px 18px;font-family:${MONO};font-size:12px;letter-spacing:.06em;text-transform:uppercase;${filled ? `background-color:${brand};color:#ffffff;` : `border:1px solid ${MUTED};color:${MUTED};`}">${esc(label)}</a>`;
+
 const send = (key, payload) =>
   fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -80,6 +84,15 @@ export async function sendBookingEmails(env, req) {
   const brand = brandFor();
   const when = `${req.date} at ${req.time} (${req.type.name}, ${req.type.minutes} min)`;
   const theirs = dualTime({ date: req.date, time: req.time, visitorTz: req.visitorTz });
+
+  // Answer straight from the email: the token carries the decision and its expiry, so
+  // /action needs no sign-in. Built here because only this worker holds the key.
+  const links = req.id
+    ? {
+        confirm: `${SITE}/action?t=${await signAction({ id: req.id, status: 'confirmed', exp: actionExpiry() }, key)}`,
+        decline: `${SITE}/action?t=${await signAction({ id: req.id, status: 'declined', exp: actionExpiry() }, key)}`
+      }
+    : null;
   const whenForThem = `${theirs} (${req.type.name}, ${req.type.minutes} min)`;
 
   await send(key, {
@@ -87,7 +100,7 @@ export async function sendBookingEmails(env, req) {
     to,
     reply_to: req.email,
     subject: `New 1:1 request — ${req.name} · ${req.date} ${req.time}`,
-    text: `New 1:1 request.\n\n${req.name} <${req.email}>\n${when}\n\n${req.note || '(no note)'}\n\nReply to this email to answer them.`,
+    text: `New 1:1 request.\n\n${req.name} <${req.email}>\n${when}\n\n${req.note || '(no note)'}\n\n${links ? `Confirm: ${links.confirm}\nDecline: ${links.decline}\n\n` : ''}Answer from those links (no sign-in) or just reply.`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">New 1:1 request.</p>
@@ -95,7 +108,13 @@ export async function sendBookingEmails(env, req) {
 <p style="margin:0;">${esc(when)}</p>
 ${req.visitorTz ? `<p class="muted" style="margin:6px 0 0;font-size:14px;color:${MUTED};">Their clock: ${esc(theirs)}</p>` : ''}
 ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left:3px solid ${brand};">${esc(req.note)}</p>` : ''}
-<p class="muted" style="margin:24px 0 0;font-size:14px;color:${MUTED};">Reply to this email to answer them.</p>`,
+${links ? `
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0 0;"><tr>
+<td style="padding-right:10px;">${actionButton(links.confirm, 'Confirm', brand, true)}</td>
+<td>${actionButton(links.decline, 'Decline', brand, false)}</td>
+</tr></table>
+<p class="muted" style="margin:12px 0 0;font-size:13px;color:${MUTED};">No sign-in needed, and the table updates itself. Links work for ${ACTION_TTL_DAYS} days.</p>` : ''}
+<p class="muted" style="margin:16px 0 0;font-size:14px;color:${MUTED};">Or just reply to this email.</p>`,
       brand
     )
   });
