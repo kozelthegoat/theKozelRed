@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers';
 import { jsonError } from '../../../lib/api.js';
 import { sendDeclineEmail } from '../../../lib/email.js';
 import { parseSort, parsePage, listHref } from '../../../lib/requests.js';
+import { dualTime } from '../../../lib/email.js';
 
 export const prerender = false;
 
@@ -30,13 +31,23 @@ export const POST = async ({ request }) => {
 
   if (status === 'declined') {
     const { results } = await db
-      .prepare('SELECT type, slot_date, slot_time, name, email FROM requests WHERE id = ?')
+      .prepare(
+        'SELECT type, slot_date, slot_time, name, email, visitor_tz FROM requests WHERE id = ?'
+      )
       .bind(id)
       .all();
     const row = results?.[0];
     if (row) {
       const when = `${row.slot_date} ${row.slot_time} · ${TYPE_NAMES[row.type] || row.type}`;
-      await sendDeclineEmail(env, { name: row.name, email: row.email, when }).catch(() => {});
+      // The subject stays Minsk; the body can also quote the clock they booked in.
+      const whenDisplay = dualTime({
+        date: row.slot_date,
+        time: row.slot_time,
+        visitorTz: row.visitor_tz
+      });
+      await sendDeclineEmail(env, { name: row.name, email: row.email, when, whenDisplay }).catch(
+        () => {}
+      );
     }
   }
 

@@ -45,7 +45,7 @@ export const GET = async ({ url, locals }) => {
   }).map(({ date, time }) => ({ date, time }));
 
   return json(
-    { slots, timezone: availability.timezone, label: availability.label, type: type.id },
+    { slots, timezone: availability.timezone, type: type.id },
     { headers: { 'cache-control': 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' } }
   );
 };

@@ -23,6 +23,18 @@ export function instantFromSqliteUtc(value) {
   return Date.parse(`${String(value).replace(' ', 'T')}Z`);
 }
 
+// A zone string is usable if Intl accepts it — guards both the visitor's detected zone
+// and anything posted to the API.
+export function isValidZone(tz) {
+  if (!tz) return false;
+  try {
+    new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(new Date());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Human offset for a zone at an instant, e.g. "UTC+3". Derived from the IANA rules, so
 // it follows the zone instead of a hardcoded number.
 export function zoneOffsetLabel(tz, atMs = Date.now()) {

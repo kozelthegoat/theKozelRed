@@ -228,7 +228,6 @@ import { sessionTypes, availability } from '../data/sessions.js';
     data-schedule-config
     set:html={JSON.stringify({
       types: sessionTypes.map((t) => ({ id: t.id, name: t.name, minutes: t.minutes })),
-      label: availability.label,
       timezone: availability.timezone
     })}
   ></script>

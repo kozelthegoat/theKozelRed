@@ -1,7 +1,7 @@
 // 1:1 scheduling: type → month calendar → time → request.
 // Times are shown in the visitor's timezone; every session is anchored to Minsk.
 
-import { zonedWallClockToUtc } from '../../lib/tz.js';
+import { zonedWallClockToUtc, zoneOffsetLabel, isValidZone } from '../../lib/tz.js';
 
 const cfgEl = document.querySelector('[data-schedule-config]');
 const root = document.querySelector('[data-schedule]');
@@ -37,15 +37,6 @@ if (cfgEl && root) {
   const listView = $('[data-view="list"]');
   const listEl = $('[data-list]');
 
-  const isValidZone = (tz) => {
-    if (!tz) return false;
-    try {
-      new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(new Date());
-      return true;
-    } catch {
-      return false;
-    }
-  };
   const detectedRaw = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const detected = isValidZone(detectedRaw) ? detectedRaw : cfg.timezone;
   const zones = ((typeof Intl.supportedValuesOf === 'function' && Intl.supportedValuesOf('timeZone')) || []).filter(isValidZone);
@@ -62,22 +53,8 @@ if (cfgEl && root) {
     return f.format(at);
   };
   const shortTz = () => state.tz.replace(/_/g, ' ');
-  const offsetCache = new Map();
-  const tzOffset = (tz) => {
-    let o = offsetCache.get(tz);
-    if (o === undefined) {
-      try {
-        o =
-          new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' })
-            .formatToParts(new Date())
-            .find((p) => p.type === 'timeZoneName')?.value || '';
-      } catch {
-        o = '';
-      }
-      offsetCache.set(tz, o);
-    }
-    return o;
-  };
+  // Same "UTC+3" notation the server uses, so the picker and /me agree.
+  const tzOffset = (tz) => zoneOffsetLabel(tz);
   const setTzDisplay = (tz) => {
     tzLabel.textContent = tz.replace(/_/g, ' ');
     tzOffsetEl.textContent = tzOffset(tz);
@@ -425,7 +402,16 @@ if (cfgEl && root) {
       form.querySelector('[name="email"]').focus();
       return;
     }
-    const payload = { type: state.type, date: state.slot.date, time: state.slot.time, name, email, note };
+    const payload = {
+      type: state.type,
+      date: state.slot.date,
+      time: state.slot.time,
+      name,
+      email,
+      note,
+      // So the confirmation can quote the time back in the clock they booked in.
+      tz: state.tz
+    };
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;
     submit.textContent = 'Sending…';
