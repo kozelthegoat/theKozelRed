@@ -59,6 +59,11 @@ docs/           design, ideas, DNS & donations notes
 ## Notes
 
 - Deployed to Cloudflare Workers; the API responses are `no-store` (the schedule page is edge-cached).
+- **A deploy rolls out to the edge over seconds and is not tied to the `wrangler deploy` output.** While it rolls out,
+  some requests still get the previous version. Measured with a probe byte on the layout: the prerendered HTML and an
+  uncached API route flipped to the new version at the *same instant* — so the HTML cache is not the cause. Prerendered
+  pages carry `public, max-age=0, must-revalidate` and are revalidated per request, so a cache hit reflects the origin
+  immediately. If a fresh deploy doesn't show up, re-check; purging the cache won't help.
 - See `docs/design.md` for the design language and `docs/ideas.md` for the backlog.
 
 ## License
