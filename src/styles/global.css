@@ -219,12 +219,10 @@
 .btn:hover { color: var(--on-brand); border-color: var(--brand); }
 .btn:hover::after { transform: translateY(0); }
 .btn--solid { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
-/* On hover the button goes light — the fill slides the page colour up over the accent. */
+/* On hover the button goes light: the fill slides the page colour up over the accent, and the
+   label and border keep the raw accent. Deepening them was tried and read worse — leave it. */
 .btn--solid::after { background: var(--background); }
-/* The label and border take the deeper accent rather than the raw one: over a near-white field a
-   bright surround washes the blue out, and --brand-deep (the accent mixed 20% toward black) is
-   the same hue with enough weight to hold its own (6.6:1 against 4.7:1). */
-.btn--solid:hover { color: var(--brand-deep); border-color: var(--brand-deep); }
+.btn--solid:hover { color: var(--brand); border-color: var(--brand); }
 
 /* Selected state (admin rows). Same specificity as .btn:hover but later in source,
    so it must exclude hover — otherwise the label takes the fill's colour and vanishes. */
