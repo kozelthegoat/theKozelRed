@@ -5,7 +5,7 @@ export const sessionTypes = [
     name: 'Intro Call',
     minutes: 30,
     audience: 'For everyone',
-    description: 'A short, no-agenda hello — to hear where you are, and whether I can help.',
+    description: 'A short, no-agenda hello — to hear where you are, and what might come next.',
     bring: [
       'A problem you can’t quite name yet',
       'A question you want a straight answer to',
@@ -15,7 +15,7 @@ export const sessionTypes = [
       'An honest read on whether I can help',
       'A name for the thing that’s been bugging you',
       'A clear next step — with me or without',
-      'The sense that you’re okay — not broken, not behind'
+      'Reassurance that you’re on a good path'
     ]
   },
   {
