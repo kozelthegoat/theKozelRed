@@ -8,7 +8,7 @@ import { sessionTypes, availability } from '../data/sessions.js';
 >
   <section class="hair-b hair-soft">
     <div class="px-[var(--pad)] py-14">
-      <p class="mono text-brand">1:1</p>
+      <p class="mono text-brand">Services</p>
       <h1 class="mt-5 max-w-[20ch] text-[clamp(2.2rem,6vw,4.5rem)] font-medium">Schedule 1:1</h1>
       <p class="mt-6 max-w-[52ch] text-secondary">
         Pick a session type, a date, a time, and a bit of context to share.<br />
@@ -16,7 +16,7 @@ import { sessionTypes, availability } from '../data/sessions.js';
       </p>
       <ul class="mt-5 flex flex-wrap gap-2">
         {
-          ['Free', 'Volunteering', 'Donations'].map((tag) => (
+          ['Free', 'Volunteering', 'No strings', 'Donations'].map((tag) => (
             <li class="tag mono px-3 py-1.5">{tag}</li>
           ))
         }
@@ -32,7 +32,8 @@ import { sessionTypes, availability } from '../data/sessions.js';
     <div class="grid gap-10 px-[var(--pad)] pb-16 md:grid-cols-3 md:gap-y-5">
       {
         sessionTypes.map((t) => (
-          <div class="grid content-start gap-5 md:row-span-4 md:grid-rows-subgrid">
+          <div class="grid content-start gap-5 md:row-span-5 md:grid-rows-subgrid">
+            <p class="mono text-muted">{t.audience}</p>
             <div class="flex items-baseline justify-between gap-4">
               <h3 class="text-xl font-medium">{t.name}</h3>
               <span class="mono text-muted">{t.minutes} min</span>
@@ -79,7 +80,8 @@ import { sessionTypes, availability } from '../data/sessions.js';
                 data-type={t.id}
                 aria-pressed="false"
               >
-                <span class="flex items-baseline justify-between gap-4">
+                <span class="mono block text-muted">{t.audience}</span>
+                <span class="mt-2 flex items-baseline justify-between gap-4">
                   <span class="text-lg font-medium" data-type-name>{t.name}</span>
                   <span class="mono text-muted">{t.minutes} min</span>
                 </span>
@@ -144,7 +146,7 @@ import { sessionTypes, availability } from '../data/sessions.js';
                   <path d="M6 9l6 6 6-6"></path>
                 </svg>
               </button>
-              <div class="hair absolute z-20 mt-1 hidden w-72 bg-background" data-tz-panel>
+              <div class="hair absolute z-20 mt-1 hidden w-64 bg-background" data-tz-panel>
                 <div class="sticky top-0 bg-background p-2">
                   <input
                     type="text"

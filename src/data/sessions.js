@@ -4,7 +4,8 @@ export const sessionTypes = [
     id: 'intro',
     name: 'Intro Call',
     minutes: 30,
-    description: 'A short, no-agenda hello — to see where you are and where you’re headed.',
+    audience: 'For everyone',
+    description: 'A short, no-agenda hello — to hear where you are, and whether I can help.',
     bring: [
       'A problem you can’t quite name yet',
       'A question you want a straight answer to',
@@ -14,14 +15,15 @@ export const sessionTypes = [
       'An honest read on whether I can help',
       'A name for the thing that’s been bugging you',
       'A clear next step — with me or without',
-      'Confidence that you’re not missing something obvious'
+      'The sense that you’re okay — not broken, not behind'
     ]
   },
   {
     id: 'career',
     name: 'Career Review',
     minutes: 45,
-    description: 'For you: your résumé, portfolio, and where you’re headed.',
+    audience: 'For individuals',
+    description: 'Your résumé, portfolio, and where you’re headed.',
     bring: [
       'A résumé that isn’t landing interviews',
       'A portfolio that undersells the work',
@@ -39,7 +41,8 @@ export const sessionTypes = [
     id: 'work',
     name: 'Working Session',
     minutes: 60,
-    description: 'For your work: one specific problem, worked through together.',
+    audience: 'For businesses',
+    description: 'One specific problem, worked through together.',
     bring: [
       'A launch that keeps slipping',
       'A scope that’s grown out of control',
