@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { declineCopy } from '../src/lib/email.js';
+import { declineCopy, dualTime } from '../src/lib/email.js';
 
 const args = {
   name: 'Alex',
@@ -45,5 +45,29 @@ describe('declineCopy', () => {
     expect(html).toContain('&lt;b&gt;Alex&lt;/b&gt;');
     expect(html).not.toContain('<b>Alex</b>');
     expect(html).toContain(args.brand);
+  });
+});
+
+describe('dualTime', () => {
+  const base = { date: '2026-10-17', time: '16:00' };
+
+  it('states Minsk alone when the zone is unknown', () => {
+    expect(dualTime(base)).toBe('2026-10-17 16:00 Minsk');
+    expect(dualTime({ ...base, visitorTz: null })).toBe('2026-10-17 16:00 Minsk');
+  });
+
+  it('quotes their clock first and keeps the Minsk anchor, when known', () => {
+    // Berlin is still on summer time in mid-October (UTC+2), so 16:00 Minsk is 15:00 there
+    expect(dualTime({ ...base, visitorTz: 'Europe/Berlin' })).toBe(
+      '2026-10-17 15:00 (Europe/Berlin) — 2026-10-17 16:00 Minsk'
+    );
+  });
+
+  it('does not repeat itself when they are already on Minsk', () => {
+    expect(dualTime({ ...base, visitorTz: 'Europe/Minsk' })).toBe('2026-10-17 16:00 Minsk');
+  });
+
+  it('falls back to the anchor rather than throwing on a junk zone', () => {
+    expect(dualTime({ ...base, visitorTz: 'Not/AZone' })).toBe('2026-10-17 16:00 Minsk');
   });
 });

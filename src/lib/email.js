@@ -3,6 +3,7 @@
 // (the request is still stored).
 
 import { brandFor } from '../data/palette.js';
+import { wallClockInTz, zonedWallClockToUtc, isValidZone } from './tz.js';
 
 const INK = '#282828';
 const DARK = '#16150f';
@@ -37,13 +38,12 @@ const wrap = (body, brand) => `<!doctype html>
 <tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;">
 <tr><td style="height:6px;background-color:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
-<tr><td align="center" style="padding:28px 24px 0;">
-      <div style="font-family:${SANS};font-size:13px;line-height:1;color:${brand};">&#9670;</div>
-<div style="padding-top:16px;font-family:${MONO};font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:${brand};">Aliaksei Kozel</div>
+<tr><td align="center" style="padding:26px 24px 0;">
+<div style="font-family:${SANS};font-size:13px;line-height:1;color:${brand};">&#9670;</div>
 </td></tr>
-<tr><td class="body" style="padding:20px 24px 44px;font-family:${SANS};font-size:16px;line-height:1.6;color:${INK};">${body}</td></tr>
+<tr><td class="body" style="padding:24px 24px 44px;font-family:${SANS};font-size:16px;line-height:1.6;color:${INK};">${body}</td></tr>
 <tr><td style="height:6px;background-color:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
-<tr><td align="center" style="padding:16px 24px;font-family:${SANS};font-size:12px;"><a class="muted" href="${SITE}" style="color:${MUTED};">kozel.red</a></td></tr>
+<tr><td align="center" style="padding:16px 24px;font-family:${SANS};font-size:12px;"><a class="muted" href="${SITE}" style="color:${MUTED};text-decoration:none;">kozel.red</a></td></tr>
 </table>
 </td></tr>
 </table>
@@ -51,6 +51,17 @@ const wrap = (body, brand) => `<!doctype html>
 
 const cta = (href, label, brand) =>
   `<p style="margin:28px 0;"><a class="cta" href="${href}" style="display:inline-block;background-color:${brand};color:#ffffff;text-decoration:none;padding:12px 20px;font-family:${MONO};font-size:13px;letter-spacing:.06em;text-transform:uppercase;">${esc(label)}</a></p>`;
+
+const MINSK = 'Europe/Minsk';
+
+// The booked time in the requester's own clock, with the Minsk anchor kept alongside —
+// the zone is a browser guess, so never state their time without the one we run on.
+export function dualTime({ date, time, visitorTz, tz = MINSK }) {
+  const anchor = `${date} ${time} Minsk`;
+  if (!visitorTz || visitorTz === tz || !isValidZone(visitorTz)) return anchor;
+  const local = wallClockInTz(zonedWallClockToUtc(date, time, tz).getTime(), visitorTz);
+  return `${local.date} ${local.time} (${visitorTz}) — ${anchor}`;
+}
 
 const send = (key, payload) =>
   fetch('https://api.resend.com/emails', {
@@ -68,6 +79,8 @@ export async function sendBookingEmails(env, req) {
 
   const brand = brandFor();
   const when = `${req.date} at ${req.time} (${req.type.name}, ${req.type.minutes} min)`;
+  const theirs = dualTime({ date: req.date, time: req.time, visitorTz: req.visitorTz });
+  const whenForThem = `${theirs} (${req.type.name}, ${req.type.minutes} min)`;
 
   await send(key, {
     from,
@@ -80,6 +93,7 @@ export async function sendBookingEmails(env, req) {
 <p style="margin:0 0 20px;">New 1:1 request.</p>
 <p style="margin:0 0 8px;"><strong>${esc(req.name)}</strong> · <a href="mailto:${esc(req.email)}" style="color:${brand};">${esc(req.email)}</a></p>
 <p style="margin:0;">${esc(when)}</p>
+${req.visitorTz ? `<p class="muted" style="margin:6px 0 0;font-size:14px;color:${MUTED};">Their clock: ${esc(theirs)}</p>` : ''}
 ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left:3px solid ${brand};">${esc(req.note)}</p>` : ''}
 <p class="muted" style="margin:24px 0 0;font-size:14px;color:${MUTED};">Reply to this email to answer them.</p>`,
       brand
@@ -90,11 +104,11 @@ ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left
     from,
     to: req.email,
     subject: `I've got your 1:1 request — ${req.date} ${req.time}`,
-    text: `Thanks, ${req.name} — your request is in.\n\n${when}\n\nI'll reply to confirm. If you'd rather move it, pick another time any time: ${BOOK}\n\n— Aliaksei Kozel`,
+    text: `Thanks, ${req.name} — your request is in.\n\n${whenForThem}\n\nI'll reply to confirm. If you'd rather move it, pick another time any time: ${BOOK}\n\n— Aliaksei Kozel`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">Thanks, ${esc(req.name)} — your request is in.</p>
-<p style="margin:0;">${esc(when)}</p>
+<p style="margin:0;">${esc(whenForThem)}</p>
 <p style="margin:20px 0 0;">I'll reply to confirm. If you'd rather move it, just pick another time.</p>
 ${cta(BOOK, 'Pick another time', brand)}
 <p class="muted" style="margin:8px 0 0;color:${MUTED};">— Aliaksei Kozel</p>`,
@@ -108,15 +122,15 @@ ${cta(BOOK, 'Pick another time', brand)}
 // Copy for the decline notice. No apology, no promised reply, no claimed reason:
 // it names the declined time, thanks them for the opportunity, and leaves another
 // time as theirs to take — true whether the reason was the calendar or a no.
-export function declineCopy({ name, when, brand = brandFor() }) {
+export function declineCopy({ name, when, whenDisplay = when, brand = brandFor() }) {
   return {
     subject: `About your 1:1 request — ${when}`,
-    text: `Hi ${name},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nThe time you picked (${when}) is off the table now. Call it a race condition — the calendar won this round.\n\nIf you'd still like to talk, you're welcome to pick another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\nAliaksei Kozel`,
+    text: `Hi ${name},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nThe time you picked (${whenDisplay}) is off the table now. Call it a race condition — the calendar won this round.\n\nIf you'd still like to talk, you're welcome to pick another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\nAliaksei Kozel`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">Hi ${esc(name)},</p>
 <p style="margin:0 0 20px;">Thank you for reaching out — I'm grateful for the opportunity.</p>
-<p style="margin:0;">The time you picked (${esc(when)}) is off the table now. Call it a race condition — the calendar won this round.</p>
+<p style="margin:0;">The time you picked (${esc(whenDisplay)}) is off the table now. Call it a race condition — the calendar won this round.</p>
 <p style="margin:20px 0 0;">If you'd still like to talk, you're welcome to pick another time whenever it suits you.</p>
 ${cta(BOOK, 'Pick another time', brand)}
 <p class="muted" style="margin:8px 0 0;color:${MUTED};">I appreciate your trust.<br>Aliaksei Kozel</p>`,
@@ -126,12 +140,12 @@ ${cta(BOOK, 'Pick another time', brand)}
 }
 
 // Decline notice, sent to the requester.
-export async function sendDeclineEmail(env, { name, email, when }) {
+export async function sendDeclineEmail(env, { name, email, when, whenDisplay }) {
   const key = env.RESEND_API_KEY;
   const from = env.BOOKING_FROM || 'Aliaksei Kozel <aliaksei@kozel.red>';
   if (!key || !email) return { skipped: true };
 
-  const { subject, text, html } = declineCopy({ name, when });
+  const { subject, text, html } = declineCopy({ name, when, whenDisplay });
 
   await send(key, { from, to: email, subject, text, html });
 
