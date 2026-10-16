@@ -6,14 +6,6 @@ export const prerender = false;
 
 const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Working Session' };
 
-// One-click decline reasons — each button sends the sentence as the reason.
-const DECLINE_REASONS = [
-  { label: 'Something came up', text: 'Something came up.' },
-  { label: 'Not that day', text: 'I’m not available that day.' },
-  { label: 'Fully booked', text: 'I’m already fully booked by then.' },
-  { label: 'Another time', text: 'Let’s find another time that works.' }
-];
-
 const db = env?.DB;
 let rows = [];
 if (db) {
@@ -55,22 +47,11 @@ const pending = rows.filter((r) => r.status === 'new').length;
                   <a class="hover:text-brand" href={`mailto:${r.email}`}>{r.email}</a>
                 </p>
                 {r.note && <p class="mt-1 max-w-[70ch] text-sm text-secondary">{r.note}</p>}
-                {r.decision_note && <p class="mt-2 max-w-[70ch] text-sm italic text-muted">— {r.decision_note}</p>}
               </div>
               <form method="post" action="/api/me/status" class="flex flex-wrap items-center gap-2">
                 <input type="hidden" name="id" value={r.id} />
                 <button class="btn btn--sm mono" name="status" value="confirmed" aria-pressed={r.status === 'confirmed'}><span>Confirm</span></button>
-                <span class="mono text-muted">Decline:</span>
-                {DECLINE_REASONS.map((opt) => (
-                  <button
-                    class="btn btn--sm mono"
-                    name="reason"
-                    value={opt.text}
-                    aria-pressed={r.status === 'declined' && r.decision_note === opt.text}
-                  >
-                    <span>{opt.label}</span>
-                  </button>
-                ))}
+                <button class="btn btn--sm mono" name="status" value="declined" aria-pressed={r.status === 'declined'}><span>Decline</span></button>
               </form>
             </li>
           ))

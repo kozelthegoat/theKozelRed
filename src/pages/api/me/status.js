@@ -21,16 +21,12 @@ export const POST = async ({ request }) => {
   }
 
   const id = Number(form.get('id'));
-  const status = String(form.get('status') || (form.get('reason') ? 'declined' : ''));
-  const reason = String(form.get('reason') || '').trim().slice(0, 1000);
+  const status = String(form.get('status') || '');
   if (!Number.isInteger(id) || !STATUSES.has(status)) {
     return jsonError('bad_request', 'Invalid input.');
   }
 
-  await db
-    .prepare('UPDATE requests SET status = ?, decision_note = ? WHERE id = ?')
-    .bind(status, reason || null, id)
-    .run();
+  await db.prepare('UPDATE requests SET status = ? WHERE id = ?').bind(status, id).run();
 
   if (status === 'declined') {
     const { results } = await db
@@ -40,7 +36,7 @@ export const POST = async ({ request }) => {
     const row = results?.[0];
     if (row) {
       const when = `${row.slot_date} at ${row.slot_time} (${TYPE_NAMES[row.type] || row.type})`;
-      await sendDeclineEmail(env, { name: row.name, email: row.email, when, reason }).catch(() => {});
+      await sendDeclineEmail(env, { name: row.name, email: row.email, when }).catch(() => {});
     }
   }
 

@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site.js';
+import { WEEKDAY_HUES } from '../data/palette.js';
 import '../styles/fonts.css';
 import '../styles/global.css';
 
@@ -11,7 +12,7 @@ const year = new Date().getFullYear();
 const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis Management'];
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-hues={WEEKDAY_HUES.join(',')}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,7 +30,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
     <script is:inline>
       (() => {
         // One accent per weekday (Mon → Sun); Tuesday keeps the brand orange.
-        const hues = ['#dc2626', '#fa3600', '#d97706', '#16a34a', '#2563eb', '#4f46e5', '#7c3aed'];
+        const hues = (document.documentElement.dataset.hues || '').split(',');
         const day = hues[(new Date().getDay() + 6) % 7];
         document.documentElement.style.setProperty('--brand', day);
         const theme = document.querySelector('meta[name="theme-color"]');
