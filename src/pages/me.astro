@@ -213,9 +213,20 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                       </td>
                       <td class="w-full py-4 pr-4 text-sm text-secondary">
                         {r.note ? (
-                          <span class="line-clamp-2" title={r.note}>
-                            {r.note}
-                          </span>
+                          <div data-note>
+                            <span class="line-clamp-2" data-note-text title={r.note}>
+                              {r.note}
+                            </span>
+                            <button
+                              type="button"
+                              class="mono mt-1 text-muted transition-colors hover:text-brand"
+                              data-note-toggle
+                              aria-expanded="false"
+                              hidden
+                            >
+                              More
+                            </button>
+                          </div>
                         ) : (
                           <span class="text-muted">—</span>
                         )}
@@ -293,4 +304,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
       }
     </div>
   </section>
+  <script>
+    import '../assets/js/notes.js';
+  </script>
 </Base>
