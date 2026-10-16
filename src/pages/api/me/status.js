@@ -1,7 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { jsonError } from '../../../lib/api.js';
 import { sendDeclineEmail } from '../../../lib/email.js';
-import { parseSort, parsePage, listHref } from '../../../lib/requests.js';
+import { parseSort, parsePage, listHref, shouldSendDecline } from '../../../lib/requests.js';
 import { dualTime } from '../../../lib/email.js';
 
 export const prerender = false;
@@ -27,28 +27,29 @@ export const POST = async ({ request }) => {
     return jsonError('bad_request', 'Invalid input.');
   }
 
+  // Read the row first: the notice depends on the status it is leaving, not the one it gets.
+  const { results } = await db
+    .prepare(
+      'SELECT type, slot_date, slot_time, name, email, status, visitor_tz FROM requests WHERE id = ?'
+    )
+    .bind(id)
+    .all();
+  const row = results?.[0];
+  if (!row) return jsonError('not_found', 'No such request.', 404);
+
   await db.prepare('UPDATE requests SET status = ? WHERE id = ?').bind(status, id).run();
 
-  if (status === 'declined') {
-    const { results } = await db
-      .prepare(
-        'SELECT type, slot_date, slot_time, name, email, visitor_tz FROM requests WHERE id = ?'
-      )
-      .bind(id)
-      .all();
-    const row = results?.[0];
-    if (row) {
-      const when = `${row.slot_date} ${row.slot_time} · ${TYPE_NAMES[row.type] || row.type}`;
-      // The subject stays Minsk; the body can also quote the clock they booked in.
-      const whenDisplay = dualTime({
-        date: row.slot_date,
-        time: row.slot_time,
-        visitorTz: row.visitor_tz
-      });
-      await sendDeclineEmail(env, { name: row.name, email: row.email, when, whenDisplay }).catch(
-        () => {}
-      );
-    }
+  if (shouldSendDecline(row.status, status)) {
+    const when = `${row.slot_date} ${row.slot_time} · ${TYPE_NAMES[row.type] || row.type}`;
+    // The subject stays Minsk; the body can also quote the clock they booked in.
+    const whenDisplay = dualTime({
+      date: row.slot_date,
+      time: row.slot_time,
+      visitorTz: row.visitor_tz
+    });
+    await sendDeclineEmail(env, { name: row.name, email: row.email, when, whenDisplay }).catch(
+      () => {}
+    );
   }
 
   // Send the browser back to the view it came from (validated, so a crafted form can't

@@ -56,6 +56,11 @@
   }
 }
 
+/* A decided request: the chosen action keeps its mark, the other greys out, and neither
+   takes a click — the answer is a decision, not a toggle. */
+.status-form button:disabled { cursor: default; pointer-events: none; }
+.status-form button:disabled:not([aria-pressed='true']) { opacity: 0.3; }
+
 /* Requests table. Everything inside the table inherits `vertical-align: middle`, which
    centres each cell's box — so a 10px mono date beside a 12px sans name reads as two
    different lines (measured 6.6px apart). Align the text cells on their first baseline

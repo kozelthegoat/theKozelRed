@@ -45,3 +45,10 @@ export function listHref({ sort, dir, page }, overrides = {}) {
   const next = { sort, dir, page, ...overrides };
   return `/me?${new URLSearchParams({ sort: next.sort, dir: next.dir, page: String(next.page) })}`;
 }
+
+// The decline notice goes out on the transition only. Without this, declining an
+// already-declined request emails the requester again — and the buttons used to allow
+// confirm/decline toggling, so a few clicks meant a few emails.
+export function shouldSendDecline(prevStatus, nextStatus) {
+  return nextStatus === 'declined' && prevStatus !== 'declined';
+}

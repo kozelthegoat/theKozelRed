@@ -122,7 +122,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                     <p class={`mono mt-1 ${statusTone(r.status)}`}>{r.status}</p>
                     {r.note && <p class="mt-1 text-sm text-secondary">{r.note}</p>}
                   </div>
-                  <form method="post" action="/api/me/status" class="flex flex-wrap items-center gap-2">
+                  <form method="post" action="/api/me/status" class="status-form flex flex-wrap items-center gap-2">
                     <input type="hidden" name="id" value={r.id} />
                     <input type="hidden" name="sort" value={list.sort} />
                     <input type="hidden" name="dir" value={list.dir} />
@@ -132,6 +132,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                       name="status"
                       value="confirmed"
                       aria-pressed={r.status === 'confirmed'}
+                      disabled={r.status !== 'new'}
                     >
                       <span>Confirm</span>
                     </button>
@@ -140,6 +141,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                       name="status"
                       value="declined"
                       aria-pressed={r.status === 'declined'}
+                      disabled={r.status !== 'new'}
                     >
                       <span>Decline</span>
                     </button>
@@ -223,7 +225,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                         <span class="block">{r.requested.time}</span>
                       </td>
                       <td class="py-4 whitespace-nowrap">
-                        <form method="post" action="/api/me/status" class="flex flex-nowrap items-center justify-end gap-2">
+                        <form method="post" action="/api/me/status" class="status-form flex flex-nowrap items-center justify-end gap-2">
                           <input type="hidden" name="id" value={r.id} />
                           <input type="hidden" name="sort" value={list.sort} />
                           <input type="hidden" name="dir" value={list.dir} />
@@ -233,6 +235,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                             name="status"
                             value="confirmed"
                             aria-pressed={r.status === 'confirmed'}
+                            disabled={r.status !== 'new'}
                             aria-label="Confirm"
                             title="Confirm"
                           >
@@ -245,6 +248,7 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                             name="status"
                             value="declined"
                             aria-pressed={r.status === 'declined'}
+                            disabled={r.status !== 'new'}
                             aria-label="Decline"
                             title="Decline"
                           >

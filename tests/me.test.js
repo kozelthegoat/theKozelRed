@@ -6,6 +6,7 @@ import {
   listParams,
   listSql,
   listHref,
+  shouldSendDecline,
   SORTABLE
 } from '../src/lib/requests.js';
 
@@ -108,5 +109,18 @@ describe('listHref', () => {
 describe('SORTABLE', () => {
   it('lists exactly the sortable columns, in display order', () => {
     expect(SORTABLE).toEqual(['slot_date', 'type', 'name', 'email', 'status', 'created_at']);
+  });
+});
+
+describe('shouldSendDecline', () => {
+  it('fires only on the move into declined', () => {
+    expect(shouldSendDecline('new', 'declined')).toBe(true);
+    expect(shouldSendDecline('confirmed', 'declined')).toBe(true);
+  });
+
+  it('stays quiet when already declined, or when not declining', () => {
+    expect(shouldSendDecline('declined', 'declined')).toBe(false);
+    expect(shouldSendDecline('new', 'confirmed')).toBe(false);
+    expect(shouldSendDecline('declined', 'confirmed')).toBe(false);
   });
 });
