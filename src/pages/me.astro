@@ -6,6 +6,14 @@ export const prerender = false;
 
 const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Working Session' };
 
+// One-click decline reasons — each button sends the sentence as the reason.
+const DECLINE_REASONS = [
+  { label: 'Something came up', text: 'Something came up.' },
+  { label: 'Not that day', text: 'I’m not available that day.' },
+  { label: 'Fully booked', text: 'I’m already fully booked by then.' },
+  { label: 'Another time', text: 'Let’s find another time that works.' }
+];
+
 const db = env?.DB;
 let rows = [];
 if (db) {
@@ -48,21 +56,13 @@ const isPast = (d) => d < new Date().toISOString().slice(0, 10);
                 {r.note && <p class="mt-1 max-w-[70ch] text-sm text-secondary">{r.note}</p>}
                 {r.decision_note && <p class="mt-2 max-w-[70ch] text-sm italic text-muted">— {r.decision_note}</p>}
               </div>
-              <form method="post" action="/api/me/status" class="grid content-start gap-2 md:w-56">
+              <form method="post" action="/api/me/status" class="flex flex-wrap items-center gap-2">
                 <input type="hidden" name="id" value={r.id} />
-                <button class="btn mono" name="status" value="confirmed"><span>Confirm</span></button>
-                <details class="grid gap-2">
-                  <summary class="btn mono"><span>Decline…</span></summary>
-                  <div class="grid gap-2">
-                    <textarea
-                      name="reason"
-                      rows="3"
-                      class="field w-full px-3 py-2 text-sm"
-                      placeholder="A line for them — why you can’t make it"
-                    ></textarea>
-                    <button class="btn mono" name="status" value="declined"><span>Send decline</span></button>
-                  </div>
-                </details>
+                <button class="btn btn--sm mono" name="status" value="confirmed"><span>Confirm</span></button>
+                <span class="mono text-muted">Decline:</span>
+                {DECLINE_REASONS.map((opt) => (
+                  <button class="btn btn--sm mono" name="reason" value={opt.text}><span>{opt.label}</span></button>
+                ))}
               </form>
             </li>
           ))

@@ -196,6 +196,9 @@ summary::-webkit-details-marker { display: none; }
 .btn--solid::after { background: var(--background); }
 .btn--solid:hover { color: var(--brand); border-color: var(--brand); }
 
+/* Compact button (admin UI — no 12rem min-width) */
+.btn--sm { min-width: 0; padding: 0.5rem 0.75rem; }
+
 .arrow { transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1); }
 .btn:hover .arrow { transform: translateX(0.25rem); }
 

@@ -21,7 +21,7 @@ export const POST = async ({ request }) => {
   }
 
   const id = Number(form.get('id'));
-  const status = String(form.get('status') || '');
+  const status = String(form.get('status') || (form.get('reason') ? 'declined' : ''));
   const reason = String(form.get('reason') || '').trim().slice(0, 1000);
   if (!Number.isInteger(id) || !STATUSES.has(status)) {
     return jsonError('bad_request', 'Invalid input.');
