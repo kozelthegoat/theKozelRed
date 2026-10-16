@@ -129,6 +129,10 @@
 /* Hairline frame */
 .hair { border-color: var(--border); border-width: var(--hair); }
 
+/* <details>/<summary> — no disclosure triangle */
+summary { list-style: none; }
+summary::-webkit-details-marker { display: none; }
+
 /* Form field — hairline, brand border on focus */
 .field {
   border: var(--hair) solid var(--border);

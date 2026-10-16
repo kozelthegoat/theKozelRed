@@ -31,3 +31,25 @@ export async function sendBookingEmails(env, req) {
 
   return { sent: true };
 }
+
+// Best-effort decline notice, sent to the requester with the host's reason.
+export async function sendDeclineEmail(env, { name, email, when, reason }) {
+  const key = env.RESEND_API_KEY;
+  const from = env.BOOKING_FROM || 'aliaksei@kozel.red';
+  if (!key || !email) return { skipped: true };
+
+  const line = reason || 'Something came up on my side.';
+  const text =
+    `Hi ${name},\n\n` +
+    `I’m sorry — I can’t make ${when}. ${line}\n\n` +
+    `If it helps, you’re welcome to pick another time: https://kozel.red/schedule/\n\n` +
+    `— Aliaksei`;
+
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ from, to: email, subject: `About your 1:1 request — ${when}`, text })
+  }).then((r) => r.ok);
+
+  return { sent: true };
+}
