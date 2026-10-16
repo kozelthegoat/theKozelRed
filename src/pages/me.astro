@@ -166,11 +166,12 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                 <tbody>
                   {rows.map((r) => (
                     <tr class="hair-b align-top">
-                      <td class="mono py-4 pr-4 whitespace-nowrap">
+                      <td class="mono py-4 pr-4 leading-tight whitespace-nowrap">
                         <span class={r.status === 'declined' ? 'text-muted line-through' : ''}>
-                          {r.slot_date} {r.slot_time}
+                          {r.slot_date}
                         </span>
                         {isPast(r.slot_date) && <span class="ml-2 text-muted">past</span>}
+                        <span class="block text-muted">{r.slot_time}</span>
                       </td>
                       <td class="py-4 pr-4 whitespace-nowrap text-sm text-secondary">{r.name}</td>
                       <td class="py-4 pr-4 whitespace-nowrap text-sm">
@@ -193,7 +194,10 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                           <span class="text-muted">—</span>
                         )}
                       </td>
-                      <td class="mono py-4 pr-4 whitespace-nowrap text-muted">{r.created_at}</td>
+                      <td class="mono py-4 pr-4 leading-tight whitespace-nowrap text-muted">
+                        {r.created_at.slice(0, 10)}
+                        <span class="block">{r.created_at.slice(11, 16)}</span>
+                      </td>
                       <td class="py-4 whitespace-nowrap">
                         <form method="post" action="/api/me/status" class="flex flex-nowrap items-center justify-end gap-2">
                           <input type="hidden" name="id" value={r.id} />
