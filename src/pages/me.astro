@@ -1,62 +1,249 @@
 ---
 import Base from '../layouts/Base.astro';
 import { env } from 'cloudflare:workers';
+import { listParams, listSql, listHref } from '../lib/requests.js';
 
 export const prerender = false;
 
 const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Working Session' };
 
+// Display columns, left to right. `sortable` ones come from the whitelist in lib/requests.js.
+const COLUMNS = [
+  { key: 'slot_date', label: 'When', sortable: true },
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'email', label: 'Email', sortable: true },
+  { key: 'type', label: 'Type', sortable: true },
+  { key: 'status', label: 'Status', sortable: true },
+  { key: 'note', label: 'Body', sortable: false },
+  { key: 'created_at', label: 'Requested', sortable: true }
+];
+const SORT_LINKS = COLUMNS.filter((c) => c.sortable);
+
 const db = env?.DB;
+const params = Astro.url.searchParams;
+
 let rows = [];
+let total = 0;
+let pending = 0;
+let list = listParams(params, 0);
+
 if (db) {
-  const { results } = await db
+  const totals = await db
     .prepare(
-      'SELECT id, type, slot_date, slot_time, name, email, note, status, created_at FROM requests ORDER BY slot_date, slot_time'
+      "SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END), 0) AS pending FROM requests"
     )
+    .first();
+  total = Number(totals?.total ?? 0);
+  pending = Number(totals?.pending ?? 0);
+
+  list = listParams(params, total);
+  const { results } = await db
+    .prepare(listSql(list.sort, list.dir))
+    .bind(list.pageSize, list.offset)
     .all();
   rows = results || [];
 }
+
 const typeName = (id) => TYPE_NAMES[id] || id;
 const isPast = (d) => d < new Date().toISOString().slice(0, 10);
-const pending = rows.filter((r) => r.status === 'new').length;
+
+// Clicking the active column flips direction; a new column starts ascending. Either way
+// we go back to page 1, otherwise the page can land past the end of the new order.
+const sortHref = (col) =>
+  listHref(list, { sort: col, dir: list.sort === col && list.dir === 'asc' ? 'desc' : 'asc', page: 1 });
+const ariaSort = (col) =>
+  list.sort === col ? (list.dir === 'asc' ? 'ascending' : 'descending') : 'none';
+const mark = (col) => (list.sort === col ? (list.dir === 'asc' ? '↑' : '↓') : '');
+const statusTone = (s) =>
+  s === 'declined' ? 'text-muted line-through' : s === 'new' ? 'text-brand' : 'text-foreground';
+const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hover:text-brand';
 ---
+
 <Base title="Requests — Aliaksei Kozel" description="1:1 requests.">
   <section class="hair-b hair-soft">
     <div class="px-[var(--pad)] pt-14 pb-6">
       <p class="mono text-brand">Me</p>
       <h1 class="mt-4 text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium">1:1 requests</h1>
-      <p class="mt-3 text-secondary">
-        {pending} to review · {rows.length} total
-      </p>
+      <p class="mt-3 text-secondary">{pending} to review · {total} total</p>
     </div>
 
     <div class="px-[var(--pad)] pb-16">
-      {rows.length === 0 && <p class="text-muted">Nothing yet.</p>}
-      <ul class="grid gap-4">
-        {
-          rows.map((r) => (
-            <li class="hair grid gap-4 p-5 md:grid-cols-[1fr_auto] md:items-start">
-              <div class="grid gap-1">
-                <p class={`mono ${r.status === 'declined' ? 'text-muted line-through' : 'text-brand'}`}>
-                  {r.slot_date} · {r.slot_time} · {typeName(r.type)}
-                  {r.status !== 'new' && ` · ${r.status}`}
-                  {isPast(r.slot_date) && ' · past'}
-                </p>
-                <p class="text-lg font-medium">{r.name}</p>
-                <p class="text-sm text-secondary">
-                  <a class="hover:text-brand" href={`mailto:${r.email}`}>{r.email}</a>
-                </p>
-                {r.note && <p class="mt-1 max-w-[70ch] text-sm text-secondary">{r.note}</p>}
+      {total === 0 && <p class="text-muted">Nothing yet.</p>}
+
+      {
+        total > 0 && (
+          <>
+            {/* narrow screens: same rows as cards, with a sort row standing in for the table header */}
+            <div class="mono mb-5 flex flex-wrap gap-x-3 gap-y-2 md:hidden">
+              <span class="text-muted">Sort</span>
+              {SORT_LINKS.map((c) => (
+                <a
+                  class={list.sort === c.key ? 'text-brand' : 'text-muted hover:text-brand'}
+                  href={sortHref(c.key)}
+                >
+                  {c.label}
+                  {mark(c.key)}
+                </a>
+              ))}
+            </div>
+
+            <div class="grid gap-4 md:hidden">
+              {rows.map((r) => (
+                <article class="hair grid gap-4 p-5">
+                  <div class="grid gap-1">
+                    <p class="mono text-muted">
+                      <span class={r.status === 'declined' ? 'line-through' : ''}>
+                        {r.slot_date} · {r.slot_time}
+                      </span>
+                      {' · '}
+                      {typeName(r.type)}
+                      {isPast(r.slot_date) && ' · past'}
+                    </p>
+                    <p class="text-lg font-medium">{r.name}</p>
+                    <p class="text-sm">
+                      <a class="text-secondary hover:text-brand" href={`mailto:${r.email}`}>
+                        {r.email}
+                      </a>
+                    </p>
+                    <p class={`mono mt-1 ${statusTone(r.status)}`}>{r.status}</p>
+                    {r.note && <p class="mt-1 text-sm text-secondary">{r.note}</p>}
+                  </div>
+                  <form method="post" action="/api/me/status" class="flex flex-wrap items-center gap-2">
+                    <input type="hidden" name="id" value={r.id} />
+                    <input type="hidden" name="sort" value={list.sort} />
+                    <input type="hidden" name="dir" value={list.dir} />
+                    <input type="hidden" name="page" value={list.page} />
+                    <button
+                      class="btn mono"
+                      name="status"
+                      value="confirmed"
+                      aria-pressed={r.status === 'confirmed'}
+                    >
+                      <span>Confirm</span>
+                    </button>
+                    <button
+                      class="btn mono"
+                      name="status"
+                      value="declined"
+                      aria-pressed={r.status === 'declined'}
+                    >
+                      <span>Decline</span>
+                    </button>
+                  </form>
+                </article>
+              ))}
+            </div>
+
+            {/* md and up: the table proper */}
+            <div class="hidden md:block">
+              <table class="w-full border-collapse text-left align-top">
+                <thead>
+                  <tr class="hair-b">
+                    {COLUMNS.map((c) => (
+                      <th
+                        scope="col"
+                        aria-sort={c.sortable ? ariaSort(c.key) : undefined}
+                        class="mono py-3 pr-4 font-normal text-muted"
+                      >
+                        {c.sortable ? (
+                          <a class="whitespace-nowrap hover:text-brand" href={sortHref(c.key)}>
+                            {c.label}
+                            <span class="text-brand">{mark(c.key)}</span>
+                          </a>
+                        ) : (
+                          c.label
+                        )}
+                      </th>
+                    ))}
+                    <th scope="col" class="mono py-3 text-right font-normal text-muted">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr class="hair-b align-top">
+                      <td class="mono py-4 pr-4 whitespace-nowrap">
+                        <span class={r.status === 'declined' ? 'text-muted line-through' : ''}>
+                          {r.slot_date} {r.slot_time}
+                        </span>
+                        {isPast(r.slot_date) && <span class="ml-2 text-muted">past</span>}
+                      </td>
+                      <td class="py-4 pr-4 font-medium">{r.name}</td>
+                      <td class="py-4 pr-4 text-sm">
+                        <a class="text-secondary hover:text-brand" href={`mailto:${r.email}`}>
+                          {r.email}
+                        </a>
+                      </td>
+                      <td class="py-4 pr-4 text-sm text-secondary">{typeName(r.type)}</td>
+                      <td class={`mono py-4 pr-4 ${statusTone(r.status)}`}>{r.status}</td>
+                      <td class="max-w-[38ch] py-4 pr-4 text-sm text-secondary">
+                        {r.note ? (
+                          <span class="line-clamp-2" title={r.note}>
+                            {r.note}
+                          </span>
+                        ) : (
+                          <span class="text-muted">—</span>
+                        )}
+                      </td>
+                      <td class="mono py-4 pr-4 whitespace-nowrap text-muted">{r.created_at}</td>
+                      <td class="py-4">
+                        <form method="post" action="/api/me/status" class="flex flex-wrap items-center justify-end gap-2">
+                          <input type="hidden" name="id" value={r.id} />
+                          <input type="hidden" name="sort" value={list.sort} />
+                          <input type="hidden" name="dir" value={list.dir} />
+                          <input type="hidden" name="page" value={list.page} />
+                          <button
+                            class="btn mono"
+                            name="status"
+                            value="confirmed"
+                            aria-pressed={r.status === 'confirmed'}
+                          >
+                            <span>Confirm</span>
+                          </button>
+                          <button
+                            class="btn mono"
+                            name="status"
+                            value="declined"
+                            aria-pressed={r.status === 'declined'}
+                          >
+                            <span>Decline</span>
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* pagination */}
+            <div class="hair-t mt-6 flex items-center justify-between gap-4 pt-4">
+              <p class="mono text-muted">Page {list.page} of {list.pages}</p>
+              <div class="flex items-center gap-2">
+                {list.page > 1 ? (
+                  <a class={pageLink} href={listHref(list, { page: list.page - 1 })}>
+                    ← Prev
+                  </a>
+                ) : (
+                  <span class={`${pageLink} pointer-events-none opacity-40`} aria-disabled="true">
+                    ← Prev
+                  </span>
+                )}
+                {list.page < list.pages ? (
+                  <a class={pageLink} href={listHref(list, { page: list.page + 1 })}>
+                    Next →
+                  </a>
+                ) : (
+                  <span class={`${pageLink} pointer-events-none opacity-40`} aria-disabled="true">
+                    Next →
+                  </span>
+                )}
               </div>
-              <form method="post" action="/api/me/status" class="flex flex-wrap items-center gap-2">
-                <input type="hidden" name="id" value={r.id} />
-                <button class="btn mono" name="status" value="confirmed" aria-pressed={r.status === 'confirmed'}><span>Confirm</span></button>
-                <button class="btn mono" name="status" value="declined" aria-pressed={r.status === 'declined'}><span>Decline</span></button>
-              </form>
-            </li>
-          ))
-        }
-      </ul>
+            </div>
+          </>
+        )
+      }
     </div>
   </section>
 </Base>

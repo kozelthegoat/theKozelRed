@@ -1,6 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { jsonError } from '../../../lib/api.js';
 import { sendDeclineEmail } from '../../../lib/email.js';
+import { parseSort, parsePage, listHref } from '../../../lib/requests.js';
 
 export const prerender = false;
 
@@ -39,5 +40,13 @@ export const POST = async ({ request }) => {
     }
   }
 
-  return new Response(null, { status: 303, headers: { location: '/me' } });
+  // Send the browser back to the view it came from (validated, so a crafted form can't
+  // redirect anywhere but /me).
+  const { sort, dir } = parseSort(form);
+  const page = parsePage(form);
+
+  return new Response(null, {
+    status: 303,
+    headers: { location: listHref({ sort, dir, page }) }
+  });
 };
