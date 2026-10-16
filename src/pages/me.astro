@@ -49,9 +49,9 @@ const isPast = (d) => d < new Date().toISOString().slice(0, 10);
               </div>
               <form method="post" action="/api/me/status" class="flex flex-wrap gap-2">
                 <input type="hidden" name="id" value={r.id} />
-                <button class="btn btn--solid mono" name="status" value="confirmed">Confirm</button>
-                <button class="btn mono" name="status" value="declined">Decline</button>
-                <button class="btn mono" name="status" value="new">Reset</button>
+                <button class="btn btn--solid mono" name="status" value="confirmed"><span>Confirm</span></button>
+                <button class="btn mono" name="status" value="declined"><span>Decline</span></button>
+                <button class="btn mono" name="status" value="new"><span>Reopen</span></button>
               </form>
             </li>
           ))
