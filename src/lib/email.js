@@ -3,7 +3,7 @@
 export async function sendBookingEmails(env, req) {
   const key = env.RESEND_API_KEY;
   const to = env.BOOKING_TO;
-  const from = env.BOOKING_FROM || 'hello@kozel.red';
+  const from = env.BOOKING_FROM || 'aliaksei@kozel.red';
   if (!key || !to) return { skipped: true };
 
   const when = `${req.date} at ${req.time} (${req.type.name}, ${req.type.minutes} min)`;
