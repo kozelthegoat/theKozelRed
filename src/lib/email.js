@@ -1,36 +1,56 @@
-// Booking emails via Resend — on-brand HTML (weekday accent) + plain-text fallback.
+// Booking emails via Resend — on-brand HTML (weekday accent, dark-mode aware) + plain-text fallback.
 // Best-effort: if RESEND_API_KEY / BOOKING_TO aren't set, sends are skipped
 // (the request is still stored).
 
 import { brandFor } from '../data/palette.js';
 
 const INK = '#282828';
+const DARK = '#16150f';
 const MUTED = '#72726f';
-const BORDER = '#d9d9d5';
+const DARK_MUTED = '#9a9992';
 const BG = '#f5f5ed';
 const SITE = 'https://kozel.red';
 const BOOK = 'https://kozel.red/schedule/';
+const SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+const MONO = "ui-monospace,SFMono-Regular,Menlo,monospace";
 
 const esc = (s) =>
   String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 const wrap = (body, brand) => `<!doctype html>
-<html><body style="margin:0;padding:0;background:${BG};">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};">
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<style>
+  @media (prefers-color-scheme: dark) {
+    .bg { background-color:${DARK} !important; }
+    .body { color:#f0efe8 !important; }
+    .muted, .muted a { color:${DARK_MUTED} !important; }
+    .cta { background-color:${brand} !important; color:#ffffff !important; }
+  }
+</style>
+</head>
+<body class="bg" style="margin:0;padding:0;background-color:${BG};">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="bg" style="background-color:${BG};">
 <tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;">
-<tr><td style="height:6px;background:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
-<tr><td align="center" style="padding:32px 24px 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:${brand};">Aliaksei Kozel</td></tr>
-<tr><td style="padding:20px 24px 44px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;color:${INK};">${body}</td></tr>
-<tr><td style="height:6px;background:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
-<tr><td align="center" style="padding:16px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;color:${MUTED};">Aliaksei Kozel · <a href="${SITE}" style="color:${MUTED};">kozel.red</a></td></tr>
+<tr><td style="height:6px;background-color:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td align="center" style="padding:28px 24px 0;">
+<div style="width:11px;height:11px;margin:0 auto;background-color:${brand};-webkit-transform:rotate(45deg);transform:rotate(45deg);font-size:0;line-height:0;">&nbsp;</div>
+<div style="padding-top:16px;font-family:${MONO};font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:${brand};">Aliaksei Kozel</div>
+</td></tr>
+<tr><td class="body" style="padding:20px 24px 44px;font-family:${SANS};font-size:16px;line-height:1.6;color:${INK};">${body}</td></tr>
+<tr><td style="height:6px;background-color:${brand};font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td align="center" style="padding:16px 24px;font-family:${SANS};font-size:12px;"><a class="muted" href="${SITE}" style="color:${MUTED};">kozel.red</a></td></tr>
 </table>
 </td></tr>
 </table>
 </body></html>`;
 
 const cta = (href, label, brand) =>
-  `<p style="margin:28px 0;"><a href="${href}" style="display:inline-block;background:${brand};color:#fff;text-decoration:none;padding:12px 20px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;letter-spacing:.06em;text-transform:uppercase;">${esc(label)}</a></p>`;
+  `<p style="margin:28px 0;"><a class="cta" href="${href}" style="display:inline-block;background-color:${brand};color:#ffffff;text-decoration:none;padding:12px 20px;font-family:${MONO};font-size:13px;letter-spacing:.06em;text-transform:uppercase;">${esc(label)}</a></p>`;
 
 const send = (key, payload) =>
   fetch('https://api.resend.com/emails', {
@@ -61,7 +81,7 @@ export async function sendBookingEmails(env, req) {
 <p style="margin:0 0 8px;"><strong>${esc(req.name)}</strong> · <a href="mailto:${esc(req.email)}" style="color:${brand};">${esc(req.email)}</a></p>
 <p style="margin:0;">${esc(when)}</p>
 ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left:3px solid ${brand};">${esc(req.note)}</p>` : ''}
-<p style="margin:24px 0 0;font-size:14px;color:${MUTED};">Reply to this email to answer them.</p>`,
+<p class="muted" style="margin:24px 0 0;font-size:14px;color:${MUTED};">Reply to this email to answer them.</p>`,
       brand
     )
   });
@@ -77,7 +97,7 @@ ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left
 <p style="margin:0;">${esc(when)}</p>
 <p style="margin:20px 0 0;">I'll reply to confirm. If you'd rather move it, just pick another time.</p>
 ${cta(BOOK, 'Pick another time', brand)}
-<p style="margin:8px 0 0;color:${MUTED};">— Aliaksei Kozel</p>`,
+<p class="muted" style="margin:8px 0 0;color:${MUTED};">— Aliaksei Kozel</p>`,
       brand
     )
   });
@@ -85,8 +105,7 @@ ${cta(BOOK, 'Pick another time', brand)}
   return { sent: true };
 }
 
-// Decline notice, sent to the requester. Deliberately no reason — anything can happen,
-// and the note should read well whatever it was.
+// Decline notice, sent to the requester. No apology — a calendar gap, not a verdict.
 export async function sendDeclineEmail(env, { name, email, when }) {
   const key = env.RESEND_API_KEY;
   const from = env.BOOKING_FROM || 'Aliaksei Kozel <aliaksei@kozel.red>';
@@ -98,14 +117,14 @@ export async function sendDeclineEmail(env, { name, email, when }) {
     from,
     to: email,
     subject: `About your 1:1 request — ${when}`,
-    text: `Hi ${name},\n\nThank you for reaching out. I'm sorry — I can't make ${when}.\n\nI don't want to leave it there, though: if it still makes sense, another time would be great. Pick whatever works and I'll confirm: ${BOOK}\n\nThanks for understanding,\nAliaksei Kozel`,
+    text: `Hi ${name},\n\nThank you for reaching out — I'd like to talk.\n\nThat specific slot doesn't work on my side. I'd welcome another time: pick whatever suits you and I'll confirm right away.\n\n${BOOK}\n\nThanks for your time,\nAliaksei Kozel`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">Hi ${esc(name)},</p>
-<p style="margin:0 0 20px;">Thank you for reaching out. I'm sorry — I can't make <strong>${esc(when)}</strong>.</p>
-<p style="margin:0;">I don't want to leave it there, though: if it still makes sense, another time would be great. Pick whatever works and I'll confirm.</p>
+<p style="margin:0 0 20px;">Thank you for reaching out — I'd like to talk.</p>
+<p style="margin:0;">That specific slot doesn't work on my side. I'd welcome another time: pick whatever suits you and I'll confirm right away.</p>
 ${cta(BOOK, 'Pick another time', brand)}
-<p style="margin:8px 0 0;color:${MUTED};">Thanks for understanding,<br>Aliaksei Kozel</p>`,
+<p class="muted" style="margin:8px 0 0;color:${MUTED};">Thanks for your time,<br>Aliaksei Kozel</p>`,
       brand
     )
   });

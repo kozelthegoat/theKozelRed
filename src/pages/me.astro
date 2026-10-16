@@ -50,8 +50,8 @@ const pending = rows.filter((r) => r.status === 'new').length;
               </div>
               <form method="post" action="/api/me/status" class="flex flex-wrap items-center gap-2">
                 <input type="hidden" name="id" value={r.id} />
-                <button class="btn btn--sm mono" name="status" value="confirmed" aria-pressed={r.status === 'confirmed'}><span>Confirm</span></button>
-                <button class="btn btn--sm mono" name="status" value="declined" aria-pressed={r.status === 'declined'}><span>Decline</span></button>
+                <button class="btn mono" name="status" value="confirmed" aria-pressed={r.status === 'confirmed'}><span>Confirm</span></button>
+                <button class="btn mono" name="status" value="declined" aria-pressed={r.status === 'declined'}><span>Decline</span></button>
               </form>
             </li>
           ))

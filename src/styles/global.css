@@ -211,8 +211,7 @@ summary::-webkit-details-marker { display: none; }
 .btn--solid:hover { color: var(--brand); border-color: var(--brand); }
 
 /* Compact button (admin UI — no 12rem min-width) */
-.btn--sm { min-width: 0; padding: 0.5rem 0.75rem; }
-.btn--sm[aria-pressed="true"] {
+.btn[aria-pressed="true"] {
   border-color: var(--brand);
   background: color-mix(in srgb, var(--brand) 10%, transparent);
   color: var(--brand);
