@@ -10,6 +10,19 @@ The floating **Donate** button (fixed, screen corner) reads `site.donateUrl` fro
 
 ## VPOS.am — assessed (2026-10-17)
 
+**Enquiry sent — 2026-10-17.** Awaiting their reply. Four answers decide what comes next:
+
+| their answer | what it unblocks |
+|---|---|
+| which bank route, what onboarding needs from a solo IE | the contract step, and the bank pre-check |
+| whether donations need fiscal receipts (SRC e-HDM) | whether the `donations` table carries a receipt status at all |
+| whether a refund policy is required for donations | how much of `legal-drafts.md` §1–2 we actually need |
+| the exact document set + language scope | **what goes to the translator, and nothing more** |
+
+Nothing here is blocked on any of it except the document set — the i18n scaffolding and the payment
+skeleton are the same work either way, and can start before the reply lands.
+
+
 Source: `vpos.am/en/` (integrations, developers, webhooks) + the public API contract at `api.vpos.am/openapi.yaml`.
 
 **What it is:** integration *software*, not a payment provider. In their words: "not a bank, acquirer, payment
