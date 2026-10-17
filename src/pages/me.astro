@@ -17,7 +17,7 @@ const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Workin
 // When column by 32px). Body takes the remainder.
 const COLUMNS = [
   { key: 'slot_date', label: 'When', sortable: true, width: '8.25rem' },
-  { key: 'name', label: 'Name', sortable: true, width: '9rem' },
+  { key: 'name', label: 'Name', sortable: true, width: '8rem' },
   { key: 'email', label: 'Email', sortable: true, width: '11rem' },
   { key: 'type', label: 'Type', sortable: true, width: '4.5rem' },
   { key: 'status', label: 'Status', sortable: true, width: '4.25rem' },
@@ -25,6 +25,13 @@ const COLUMNS = [
   { key: 'created_at', label: 'Requested', sortable: true, width: '6rem' }
 ];
 const SORT_LINKS = COLUMNS.filter((c) => c.sortable);
+
+// A long name was the only reason this column was wide. First name over the rest costs no row
+// height — the row is two lines anyway — and a two-word name needs about half the width.
+const nameLines = (full) => {
+  const [first, ...rest] = String(full || '').trim().split(/\s+/);
+  return { first: first || '', rest: rest.join(' ') };
+};
 
 const db = env?.DB;
 const params = Astro.url.searchParams;
@@ -52,7 +59,8 @@ if (db) {
   // in the zone the site runs on, so a row can be read without converting in your head.
   rows = (results || []).map((r) => ({
     ...r,
-    requested: wallClockInTz(instantFromSqliteUtc(r.created_at), availability.timezone)
+    requested: wallClockInTz(instantFromSqliteUtc(r.created_at), availability.timezone),
+    nameParts: nameLines(r.name)
   }));
 }
 
@@ -76,7 +84,7 @@ const statusTone = (s) =>
   s === 'declined' ? 'text-muted line-through' : s === 'new' ? 'text-brand' : 'text-foreground';
 ---
 
-<Base title="1:1 / Requests — Aliaksei Kozel" description="1:1 requests.">
+<Base title="Aliaksei Kozel — 1:1 / Requests" description="1:1 requests.">
   <section class="hair-b">
     <div class="px-[var(--pad)] pt-14 pb-6">
       <p class="mono text-brand">Me</p>
@@ -175,7 +183,10 @@ const statusTone = (s) =>
                         {isPast(r.slot_date) && <span class="ml-2 text-muted">past</span>}
                         <span class="block text-muted">{r.slot_time}</span>
                       </td>
-                      <td class="truncate py-4 pr-4 text-sm text-secondary" title={r.name}>{r.name}</td>
+                      <td class="py-4 pr-4 text-sm text-secondary" title={r.name}>
+                        <span class="block truncate">{r.nameParts.first}</span>
+                        {r.nameParts.rest && <span class="block truncate">{r.nameParts.rest}</span>}
+                      </td>
                       <td class="truncate py-4 pr-4 text-sm" title={r.email}>
                         <a class="text-secondary hover:text-brand" href={`mailto:${r.email}`}>
                           {r.email}
