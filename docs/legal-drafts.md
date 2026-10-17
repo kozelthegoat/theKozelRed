@@ -61,6 +61,13 @@ Nothing here excludes liability that cannot be excluded.
 
 **Changes.** These terms may change; the version in force is the one published when you book.
 
+**Language and precedence.** These terms are published in English, Russian and Armenian. If the versions
+disagree, the English text governs — except where mandatory law requires otherwise — and a translation discrepancy
+does not by itself create or widen an obligation.
+
+**Mandatory law prevails.** Nothing in these terms removes a right you hold under the law that mandatorily applies
+to you.
+
 **Governing law.** «The laws of «country», with disputes heard by the courts of «city».»
 
 ## 2. Cancellation & Refund Policy
@@ -123,3 +130,34 @@ footer next to the legal links.
 **The limit:** I can draft the **Russian**, but I will not machine-translate into **Armenian** for a document a bank
 reviews — a wrong register or a mistranslated refund clause is worse than an untranslated one. Armenian needs you or
 a translator. That is the one item on the whole donations path that code cannot close.
+
+## 6. Company details (block for the site)
+
+Modelled on how Amobit publishes its own — a bank reviewer looks for exactly this. Bank account numbers are
+deliberately *not* included; add them only if the bank asks.
+
+| field | value |
+|---|---|
+| Legal name | «your registered sole-proprietor / IE name» |
+| Tax ID / registration number | «from your Armenian registration» |
+| Registered address | «registered address, Republic of Armenia» |
+| Operating contact | `hello@kozel.red` (+ phone «optional») |
+| Website | kozel.red |
+| Director / owner | Aliaksei Kozel |
+
+## 7. Armenian references for the translator
+
+All verified live (HTTP 200). Use them for **terminology and register**, not as text to copy — they are a B2B SaaS
+operator's documents, several pages long, while ours are a few paragraphs for a solo service.
+
+| document | Armenian reference |
+|---|---|
+| privacy / personal-data policy | `amobit.io/hy/privacy` |
+| **refund policy** — the exact document type the bank asks for | `amobit.io/hy/refund-policy` |
+| terms / public offer | `amobit.io/hy/offerta` |
+| cookies | `amobit.io/hy/cookie-policy` |
+| payment security | `amobit.io/hy/payment-security` |
+| the donation article, in Armenian | `vpos.am/hy/blog/oplata-donatov-i-blagotvoritelnyh-sborov-v-armenii/` |
+
+They also keep dated revisions per language (`amobit.io/legal-archive/2026-09-25-r1/{ru,en,hy}-*.html`), which is the
+pattern to copy if the terms ever change after a bank review: never edit a reviewed version in place.
