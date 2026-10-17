@@ -2,6 +2,8 @@
 
 Status: **Draft for review** · Last updated: 2026-10-17 · Nothing here is published on the site yet.
 
+Provenance: the *document set* (privacy, refund policy, terms, company details) and the *conventions* in it — which document a bank wants, that versions must agree across languages, that a reviewed version is never edited in place — are regulatory and industry practice. The wording here is written for this site; nothing is copied from another operator's terms.
+
 Written as website copy for a bank/vPOS pre-check. Not legal advice — a reviewer (or a lawyer) should read it
 before it goes live. Placeholders are marked «like this».
 
@@ -65,7 +67,7 @@ Nothing here excludes liability that cannot be excluded.
 disagree, the English text governs — except where mandatory law requires otherwise — and a translation discrepancy
 does not by itself create or widen an obligation.
 
-**Mandatory law prevails.** Nothing in these terms removes a right you hold under the law that mandatorily applies
+**Where local law gives you more.** Nothing here removes a right you hold under the law that mandatorily applies to you, and where that law is more generous, it prevails.
 to you.
 
 **Governing law.** «The laws of «country», with disputes heard by the courts of «city».»
