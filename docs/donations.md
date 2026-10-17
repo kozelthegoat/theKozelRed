@@ -88,3 +88,25 @@ Source: `vpos.am/en/blog/donation-fundraising-payments-armenia/`. It confirms th
 
 They also offer a free flow review at `/en/company/contacts/?source=blog&article=donation-fundraising-payments-armenia`,
 which is a better opening than a cold enquiry.
+
+## Pivot: straight to the bank (2026-10-17)
+
+vpos.am is an **aggregator** — a middleman between the merchant and the bank. Ardshinbank (the likely acquirer
+anyway) offers its own **vPOS**, including Apple Pay, so the aggregator agreement can be skipped: one contract
+instead of two, one fewer party taking a cut.
+
+What that trade looks like, from what I could read:
+
+| | bank direct | via vpos.am |
+|---|---|---|
+| contracts | one (bank) | two (bank + VPOS.am) |
+| docs & API | unknown — usually a hosted payment page, a callback URL and a merchant-portal status lookup | published OpenAPI, signed webhooks, idempotency, sandbox |
+| fiscal receipts (SRC e-HDM) | our own problem | a product they sell (VPOS Fiscal) |
+| integration effort | higher | lower |
+
+**What I could not read:** `ardshinbank.am/for-your-business/pos-vpos?sft=vpos` renders the POS-terminal content
+server-side and the **VPOS tab client-side**, so the online-gateway specifics — merchant requirements, fees,
+integration docs — did not come through a plain fetch. Unverified, not absent.
+
+**Unchanged either way:** the source of truth is the **server-side status lookup**, never the return URL — which is
+what VPOS.am's own article insists on twice, and it matters more with a bank that may not sign webhooks at all.
