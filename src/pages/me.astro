@@ -70,7 +70,6 @@ const ariaSort = (col) =>
 const mark = (col) => (list.sort === col ? (list.dir === 'asc' ? '↑' : '↓') : '');
 const statusTone = (s) =>
   s === 'declined' ? 'text-muted line-through' : s === 'new' ? 'text-brand' : 'text-foreground';
-const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hover:text-brand';
 ---
 
 <Base title="Requests — Aliaksei Kozel" description="1:1 requests.">
@@ -90,19 +89,23 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
           <>
             {/* narrow screens: same rows as cards, with a sort row standing in for the table header */}
             <div class="mono mb-5 flex flex-wrap gap-x-3 gap-y-2 lg:hidden">
-              <span class="text-muted">Sort</span>
               {SORT_LINKS.map((c) => (
                 <a
-                  class={list.sort === c.key ? 'text-brand' : 'text-muted hover:text-brand'}
-                  href={sortHref(c.key)}
+                  class:list={[
+                    // The arrow is out of flow, in the gap: in flow it would change this link's
+                    // width as the sort moves, and a wrapping row would re-wrap under your thumb.
+                    'relative',
+                    list.sort === c.key ? 'text-brand' : 'text-muted hover:text-brand'
+                  ]}
+                  href={`${sortHref(c.key)}#list`}
                 >
                   {c.label}
-                  {mark(c.key)}
+                  <span class="absolute -right-3 text-brand">{mark(c.key)}</span>
                 </a>
               ))}
             </div>
 
-            <div class="grid gap-4 lg:hidden">
+            <div id="list" class="grid gap-4 lg:hidden">
               {rows.map((r) => (
                 <article class="hair grid gap-4 p-5">
                   <div class="grid gap-1">
@@ -229,21 +232,29 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
               <p class="mono text-muted">Page {list.page} of {list.pages}</p>
               <div class="flex items-center gap-2">
                 {list.page > 1 ? (
-                  <a class={pageLink} href={listHref(list, { page: list.page - 1 })}>
-                    ← Prev
+                  <a class="icon-btn p-1.5" href={listHref(list, { page: list.page - 1 })} aria-label="Previous page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                      <path d="M15 18l-6-6 6-6"></path>
+                    </svg>
                   </a>
                 ) : (
-                  <span class={`${pageLink} pointer-events-none opacity-40`} aria-disabled="true">
-                    ← Prev
+                  <span class="icon-btn pointer-events-none p-1.5 opacity-30" aria-disabled="true" aria-label="Previous page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                      <path d="M15 18l-6-6 6-6"></path>
+                    </svg>
                   </span>
                 )}
-                {list.page < list.pages ? (
-                  <a class={pageLink} href={listHref(list, { page: list.page + 1 })}>
-                    Next →
+{list.page < list.pages ? (
+                  <a class="icon-btn p-1.5" href={listHref(list, { page: list.page + 1 })} aria-label="Next page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                      <path d="M9 6l6 6-6 6"></path>
+                    </svg>
                   </a>
                 ) : (
-                  <span class={`${pageLink} pointer-events-none opacity-40`} aria-disabled="true">
-                    Next →
+                  <span class="icon-btn pointer-events-none p-1.5 opacity-30" aria-disabled="true" aria-label="Next page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                      <path d="M9 6l6 6-6 6"></path>
+                    </svg>
                   </span>
                 )}
               </div>
