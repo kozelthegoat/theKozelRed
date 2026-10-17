@@ -17,3 +17,6 @@ coverage/
 *.heic
 /kozel-photo-*.jpg
 /@theMultiverse/
+
+# Local working files, not site sources: bank screenshots (17 MB, possibly showing account details)
+src/assets/vPOS/
