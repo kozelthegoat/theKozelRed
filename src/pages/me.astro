@@ -12,14 +12,17 @@ export const prerender = false;
 const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Working Session' };
 
 // Display columns, left to right. `sortable` ones come from the whitelist in lib/requests.js.
+// Widths are declared, not measured from the page: with content-sized columns the layout moved
+// whenever a sort changed which requests were on the page (the `past` marker alone swung the
+// When column by 32px). Body takes the remainder.
 const COLUMNS = [
-  { key: 'slot_date', label: 'When', sortable: true },
-  { key: 'name', label: 'Name', sortable: true },
-  { key: 'email', label: 'Email', sortable: true },
-  { key: 'type', label: 'Type', sortable: true },
-  { key: 'status', label: 'Status', sortable: true },
+  { key: 'slot_date', label: 'When', sortable: true, width: '8.25rem' },
+  { key: 'name', label: 'Name', sortable: true, width: '4.75rem' },
+  { key: 'email', label: 'Email', sortable: true, width: '11rem' },
+  { key: 'type', label: 'Type', sortable: true, width: '4.5rem' },
+  { key: 'status', label: 'Status', sortable: true, width: '4.25rem' },
   { key: 'note', label: 'Body', sortable: false, wide: true },
-  { key: 'created_at', label: 'Requested', sortable: true }
+  { key: 'created_at', label: 'Requested', sortable: true, width: '6rem' }
 ];
 const SORT_LINKS = COLUMNS.filter((c) => c.sortable);
 
@@ -134,26 +137,30 @@ const statusTone = (s) =>
 
             {/* md and up: the table proper */}
             <div class="hidden lg:block overflow-x-auto">
-              <table class="req-table w-full border-collapse text-left">
+              <table class="req-table w-full table-fixed border-collapse text-left">
                 <thead>
                   <tr class="hair-b">
+                    <!-- The sort arrow is absolutely placed inside each cell's padding:
+                         in flow it widens whichever header is active, and auto table layout
+                         then re-apportions every column, so the row shifts on sort. -->
                     {COLUMNS.map((c) => (
                       <th
                         scope="col"
                         aria-sort={c.sortable ? ariaSort(c.key) : undefined}
                         class={`mono py-3 pr-4 font-normal text-muted ${c.wide ? 'w-full' : ''}`}
+                        style={c.width ? `width:${c.width}` : undefined}
                       >
                         {c.sortable ? (
-                          <a class="whitespace-nowrap hover:text-brand" href={sortHref(c.key)}>
+                          <a class="relative whitespace-nowrap hover:text-brand" href={sortHref(c.key)}>
                             {c.label}
-                            <span class="ml-1.5 text-brand">{mark(c.key)}</span>
+                            <span class="absolute -right-3.5 text-brand">{mark(c.key)}</span>
                           </a>
                         ) : (
                           c.label
                         )}
                       </th>
                     ))}
-                    <th scope="col" class="mono py-3 text-right font-normal text-muted">
+                    <th scope="col" class="mono py-3 text-right font-normal text-muted" style="width:5rem;">
                       Actions
                     </th>
                   </tr>
@@ -168,8 +175,8 @@ const statusTone = (s) =>
                         {isPast(r.slot_date) && <span class="ml-2 text-muted">past</span>}
                         <span class="block text-muted">{r.slot_time}</span>
                       </td>
-                      <td class="py-4 pr-4 whitespace-nowrap text-sm text-secondary">{r.name}</td>
-                      <td class="py-4 pr-4 whitespace-nowrap text-sm">
+                      <td class="truncate py-4 pr-4 text-sm text-secondary" title={r.name}>{r.name}</td>
+                      <td class="truncate py-4 pr-4 text-sm" title={r.email}>
                         <a class="text-secondary hover:text-brand" href={`mailto:${r.email}`}>
                           {r.email}
                         </a>
