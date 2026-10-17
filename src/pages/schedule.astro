@@ -97,6 +97,18 @@ import { sessionTypes, availability } from '../data/sessions.js';
           <div class="flex items-center justify-between gap-4">
             <p class="mono text-muted" data-month-label></p>
             <div class="flex items-center gap-3">
+              <div class="flex items-center gap-0.5" data-month-nav>
+                <button type="button" class="icon-btn p-1.5" data-month-prev aria-label="Previous month">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M15 18l-6-6 6-6"></path>
+                  </svg>
+                </button>
+                <button type="button" class="icon-btn p-1.5" data-month-next aria-label="Next month">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
               <div class="flex gap-0.5" data-layout-switch role="group" aria-label="Layout">
                 <button type="button" class="seg-btn p-1.5" data-layout="month" aria-pressed="true" aria-label="Month view" title="Month">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
@@ -113,18 +125,6 @@ import { sessionTypes, availability } from '../data/sessions.js';
                 <button type="button" class="seg-btn p-1.5" data-layout="list" aria-pressed="false" aria-label="List view" title="List">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                     <path d="M4 6h16M4 12h16M4 18h16"></path>
-                  </svg>
-                </button>
-              </div>
-              <div class="flex items-center gap-0.5" data-month-nav>
-                <button type="button" class="icon-btn p-1.5" data-month-prev aria-label="Previous month">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                    <path d="M15 18l-6-6 6-6"></path>
-                  </svg>
-                </button>
-                <button type="button" class="icon-btn p-1.5" data-month-next aria-label="Next month">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                    <path d="M9 6l6 6-6 6"></path>
                   </svg>
                 </button>
               </div>
