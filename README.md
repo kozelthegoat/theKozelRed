@@ -28,12 +28,17 @@ Availability is a single weekly grid of start times defined in **Minsk** (`src/d
 
 ```bash
 npm install
-npm run dev        # astro dev
+npm run dev        # astro dev (no database)
+npm run dev:local  # build + local D1 migrations + sample rows + wrangler dev on :8787
 npm run test       # vitest run
 npm run build      # astro build
 npm run deploy     # build + wrangler deploy
 npm run preview    # build + wrangler dev
 ```
+
+`npm run dev:local` exists because of two traps: the build resets the local D1 state (so `/me` 500s and the
+calendar has no slots), and applying migrations while a dev server holds the database open crashes the runtime.
+It does build → migrate → seed → serve, in that order.
 
 ## Editing content
 

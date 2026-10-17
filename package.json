@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
+    "dev:local": "node scripts/local-dev.mjs",
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "generate-types": "wrangler types",
