@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { env } from 'cloudflare:workers';
 import { listParams, listSql, listHref } from '../lib/requests.js';
-import { availability } from '../data/sessions.js';
+import { availability, sessionTypes } from '../data/sessions.js';
 import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel } from '../lib/tz.js';
 import StatusForm from '../components/StatusForm.astro';
 import { linkify } from '../lib/linkify.js';
@@ -18,8 +18,8 @@ const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Workin
 const COLUMNS = [
   { key: 'slot_date', label: 'When', sortable: true, width: '8.25rem' },
   { key: 'name', label: 'Name', sortable: true, width: '8rem' },
-  { key: 'email', label: 'Email', sortable: true, width: '11rem' },
-  { key: 'type', label: 'Type', sortable: true, width: '4.5rem' },
+  { key: 'email', label: 'Email', sortable: true, width: '7.5rem' },
+  { key: 'type', label: 'Type', sortable: true, width: '4rem' },
   { key: 'status', label: 'Status', sortable: true, width: '4.25rem' },
   { key: 'note', label: 'Body', sortable: false, wide: true },
   { key: 'created_at', label: 'Requested', sortable: true, width: '6rem' }
@@ -68,9 +68,11 @@ if (db) {
 const tzLabel = `${availability.timezone} (${zoneOffsetLabel(availability.timezone)})`;
 
 const typeName = (id) => TYPE_NAMES[id] || id;
-// Table-only short labels, so the Type column stays narrow; the full name is in the title.
-const SHORT_TYPES = { intro: 'Intro', career: 'Career', work: 'Working' };
-const typeShort = (id) => SHORT_TYPES[id] || id;
+// Table-only label: the duration. 30/45/60 identify the three types one-to-one, need no lookup
+// key to read, and take almost no width; the full name is in the title. Derived from the
+// session data, so the numbers live in one place.
+const TYPE_LABELS = Object.fromEntries(sessionTypes.map((t) => [t.id, `${t.minutes}m`]));
+const typeShort = (id) => TYPE_LABELS[id] || id;
 const isPast = (d) => d < new Date().toISOString().slice(0, 10);
 
 // Clicking the active column flips direction; a new column starts ascending. Either way
