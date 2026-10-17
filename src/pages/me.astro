@@ -5,6 +5,7 @@ import { listParams, listSql, listHref } from '../lib/requests.js';
 import { availability } from '../data/sessions.js';
 import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel } from '../lib/tz.js';
 import StatusForm from '../components/StatusForm.astro';
+import { linkify } from '../lib/linkify.js';
 
 export const prerender = false;
 
@@ -76,7 +77,7 @@ const statusTone = (s) =>
   <section class="hair-b">
     <div class="px-[var(--pad)] pt-14 pb-6">
       <p class="mono text-brand">Me</p>
-      <h1 class="page-title mt-4">1:1 requests</h1>
+      <h1 class="page-title mt-4">1:1 / Requests</h1>
       <p class="mono mt-3 text-muted">{pending} to review · {total} total</p>
       <p class="mono mt-2 text-muted">Times in {tzLabel}</p>
     </div>
@@ -124,7 +125,7 @@ const statusTone = (s) =>
                       </a>
                     </p>
                     <p class={`mono mt-1 ${statusTone(r.status)}`}>{r.status}</p>
-                    {r.note && <p class="mt-1 text-sm text-secondary">{r.note}</p>}
+                    {r.note && <p class="mt-1 text-sm text-secondary" set:html={linkify(r.note)} />}
                   </div>
                   <StatusForm request={r} sort={list.sort} dir={list.dir} page={list.page} />
                 </article>
@@ -160,7 +161,7 @@ const statusTone = (s) =>
                 <tbody>
                   {rows.map((r) => (
                     <tr class="hair-b">
-                      <td class="mono py-4 pr-4 leading-tight whitespace-nowrap">
+                      <td class="py-4 pr-4 text-sm leading-tight whitespace-nowrap">
                         <span class={r.status === 'declined' ? 'text-muted line-through' : ''}>
                           {r.slot_date}
                         </span>
@@ -194,21 +195,22 @@ const statusTone = (s) =>
                       </td>
                       <td class="w-full py-4 pr-4 text-sm text-secondary">
                         {r.note ? (
-                          <span
-                            class="line-clamp-2 cursor-pointer"
-                            data-note
-                            role="button"
-                            tabindex="0"
-                            aria-expanded="false"
-                            title="Show the whole note"
-                          >
-                            {r.note}
-                          </span>
+                          <>
+                            <span
+                              class="line-clamp-2 cursor-pointer"
+                              data-note
+                              title="Show the whole note"
+                              set:html={linkify(r.note)}
+                            />
+                            <button type="button" class="sr-only" data-note-toggle hidden>
+                              Show the whole note
+                            </button>
+                          </>
                         ) : (
                           <span class="text-muted">—</span>
                         )}
                       </td>
-                      <td class="mono py-4 pr-4 leading-tight whitespace-nowrap text-muted">
+                      <td class="py-4 pr-4 text-sm leading-tight whitespace-nowrap text-muted">
                         {r.requested.date}
                         <span class="block">{r.requested.time}</span>
                       </td>
