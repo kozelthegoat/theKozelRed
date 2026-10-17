@@ -119,6 +119,14 @@
   cursor: default;
 }
 
+/* Picked time chip. The calendar is what states the choice — the details form deliberately
+   carries no summary of the slot. */
+[data-time][aria-pressed='true'] {
+  border-color: var(--brand);
+  background: var(--brand-tint);
+  color: var(--brand);
+}
+
 /* Tags — light brand chip (mirrors the selected session tile) */
 .tag {
   border: var(--hair) solid var(--brand);

@@ -314,13 +314,17 @@ if (cfgEl && root) {
 
   function timeChip(s) {
     const label = new Intl.DateTimeFormat(undefined, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at));
-    return `<button type="button" class="hair px-2.5 py-1.5 text-sm whitespace-nowrap tabular-nums transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}">${label}</button>`;
+    const pressed = state.slot && state.slot.date === s.date && state.slot.time === s.time;
+    return `<button type="button" class="hair px-2.5 py-1.5 text-sm whitespace-nowrap tabular-nums transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}" aria-pressed="${pressed ? 'true' : 'false'}">${label}</button>`;
   }
 
   function onTimeClick(event) {
     const btn = event.target.closest('[data-time]');
     if (!btn) return;
     state.slot = { date: btn.dataset.date, time: btn.dataset.time, at: btn.dataset.at };
+    document
+      .querySelectorAll('[data-time]')
+      .forEach((chip) => chip.setAttribute('aria-pressed', chip === btn ? 'true' : 'false'));
     showForm();
   }
 
@@ -365,27 +369,10 @@ if (cfgEl && root) {
     return `${local} (${shortTz()})`;
   }
 
-  // The calendar stays mounted: picking a time opens the details form underneath it and picking
-  // another time just rewrites this summary, so the grid is still there to browse.
+  // Picking a time opens the details form underneath the calendar, which stays put and already
+  // shows the chosen day and time. No summary line of its own: stating the slot twice implied a
+  // confirmation step that does not exist — the request is the confirmation.
   function showForm() {
-    const t = typeById(state.type);
-    form.querySelector('[data-form-when]')?.remove();
-    const when = document.createElement('p');
-    when.dataset.formWhen = '';
-    when.className = 'mono flex flex-wrap items-center gap-2 text-muted';
-    when.textContent = `${t.name} · ${whenLabel(true)}`;
-
-    const change = document.createElement('button');
-    change.type = 'button';
-    change.className = 'text-brand underline-offset-2 hover:underline';
-    change.textContent = 'Change';
-    change.addEventListener('click', () => {
-      stepForm.classList.add('hidden');
-      stepSlots.scrollIntoView({ block: 'start' });
-    });
-    when.append(change);
-
-    form.prepend(when);
     formError.hidden = true;
     stepForm.classList.remove('hidden');
     stepForm.scrollIntoView({ block: 'nearest' });
