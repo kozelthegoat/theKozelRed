@@ -17,7 +17,7 @@ const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Workin
 // When column by 32px). Body takes the remainder.
 const COLUMNS = [
   { key: 'slot_date', label: 'When', sortable: true, width: '8.25rem' },
-  { key: 'name', label: 'Name', sortable: true, width: '4.75rem' },
+  { key: 'name', label: 'Name', sortable: true, width: '9rem' },
   { key: 'email', label: 'Email', sortable: true, width: '11rem' },
   { key: 'type', label: 'Type', sortable: true, width: '4.5rem' },
   { key: 'status', label: 'Status', sortable: true, width: '4.25rem' },
@@ -76,7 +76,7 @@ const statusTone = (s) =>
   s === 'declined' ? 'text-muted line-through' : s === 'new' ? 'text-brand' : 'text-foreground';
 ---
 
-<Base title="Requests — Aliaksei Kozel" description="1:1 requests.">
+<Base title="1:1 / Requests — Aliaksei Kozel" description="1:1 requests.">
   <section class="hair-b">
     <div class="px-[var(--pad)] pt-14 pb-6">
       <p class="mono text-brand">Me</p>

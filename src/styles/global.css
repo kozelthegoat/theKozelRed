@@ -68,6 +68,10 @@
    centres each cell's box — so a 10px mono date beside a 12px sans name reads as two
    different lines (measured 6.6px apart). Align the text cells on their first baseline
    instead; the actions cell holds only buttons and has no baseline, so it stays at the top. */
+/* The pager's top rule already closes the table, so the last row does not also draw one.
+   Scoped to the table: on mobile the cards need the pager's rule to separate the block. */
+.req-table tbody tr:last-child { border-bottom: 0; }
+
 .req-table td { vertical-align: baseline; }
 .req-table td:last-child { vertical-align: top; }
 
