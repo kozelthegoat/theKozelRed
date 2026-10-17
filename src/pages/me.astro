@@ -191,22 +191,16 @@ const pageLink = 'hair mono px-3 py-1.5 transition-colors hover:border-brand hov
                       </td>
                       <td class="w-full py-4 pr-4 text-sm text-secondary">
                         {r.note ? (
-                          <div data-note>
-                            <span class="line-clamp-2" data-note-text title={r.note}>
-                              {r.note}
-                            </span>
-                            <button
-                              type="button"
-                              class="mono mt-1 text-muted transition-colors hover:text-brand"
-                              data-note-toggle
-                              aria-expanded="false"
-                              aria-label="Show the whole note"
-                              title="Show the whole note"
-                              hidden
-                            >
-                              …
-                            </button>
-                          </div>
+                          <span
+                            class="line-clamp-2 cursor-pointer"
+                            data-note
+                            role="button"
+                            tabindex="0"
+                            aria-expanded="false"
+                            title="Show the whole note"
+                          >
+                            {r.note}
+                          </span>
                         ) : (
                           <span class="text-muted">—</span>
                         )}
