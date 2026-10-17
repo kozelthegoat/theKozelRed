@@ -9,6 +9,8 @@ const {
   description = `${site.name} — ${site.role}.`
 } = Astro.props;
 const year = new Date().getFullYear();
+// The footer's Navigation block points at home sections, so it only belongs on home.
+const isHome = Astro.url.pathname === '/';
 const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis Management'];
 ---
 <!doctype html>
@@ -76,16 +78,25 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
 
       <!-- footer -->
       <footer>
-        <div class="grid gap-8 p-[var(--pad)] sm:grid-cols-2 md:grid-cols-4">
-          <div>
-            <p class="mono text-muted">Navigation</p>
-            <ul class="mt-4 grid gap-2 text-sm">
-              <li><a class="hover:text-brand" href="/#help">Expertise</a></li>
-              <li><a class="hover:text-brand" href="/#experience">Experience</a></li>
-              <li><a class="hover:text-brand" href="/#recommendations">Recommendations</a></li>
-              <li><a class="hover:text-brand" href="/#resume">Résumé</a></li>
-            </ul>
-          </div>
+        <div
+          class:list={[
+            'grid gap-8 p-[var(--pad)] sm:grid-cols-2',
+            isHome ? 'md:grid-cols-4' : 'md:grid-cols-3'
+          ]}
+        >
+          {
+            isHome && (
+              <div>
+                <p class="mono text-muted">Navigation</p>
+                <ul class="mt-4 grid gap-2 text-sm">
+                  <li><a class="hover:text-brand" href="/#help">Expertise</a></li>
+                  <li><a class="hover:text-brand" href="/#experience">Experience</a></li>
+                  <li><a class="hover:text-brand" href="/#recommendations">Recommendations</a></li>
+                  <li><a class="hover:text-brand" href="/#resume">Résumé</a></li>
+                </ul>
+              </div>
+            )
+          }
           <div>
             <p class="mono text-muted">Services</p>
             <ul class="mt-4 grid gap-2 text-sm">
