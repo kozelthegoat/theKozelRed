@@ -365,23 +365,31 @@ if (cfgEl && root) {
     return `${local} (${shortTz()})`;
   }
 
+  // The calendar stays mounted: picking a time opens the details form underneath it and picking
+  // another time just rewrites this summary, so the grid is still there to browse.
   function showForm() {
     const t = typeById(state.type);
     form.querySelector('[data-form-when]')?.remove();
     const when = document.createElement('p');
     when.dataset.formWhen = '';
-    when.className = 'mono text-muted';
+    when.className = 'mono flex flex-wrap items-center gap-2 text-muted';
     when.textContent = `${t.name} · ${whenLabel(true)}`;
+
+    const change = document.createElement('button');
+    change.type = 'button';
+    change.className = 'text-brand underline-offset-2 hover:underline';
+    change.textContent = 'Change';
+    change.addEventListener('click', () => {
+      stepForm.classList.add('hidden');
+      stepSlots.scrollIntoView({ block: 'start' });
+    });
+    when.append(change);
+
     form.prepend(when);
     formError.hidden = true;
-    stepSlots.hidden = true;
     stepForm.classList.remove('hidden');
+    stepForm.scrollIntoView({ block: 'nearest' });
   }
-
-  $('[data-form-back]').addEventListener('click', () => {
-    stepForm.classList.add('hidden');
-    stepSlots.hidden = false;
-  });
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -425,6 +433,7 @@ if (cfgEl && root) {
       if (!res.ok) throw new Error(body.error?.message || 'Something went wrong.');
       $('[data-done-summary]').textContent = `${typeById(state.type).name} · ${whenLabel(true)}`;
       stepForm.classList.add('hidden');
+      stepSlots.hidden = true;
       stepDone.classList.remove('hidden');
     } catch (err) {
       formError.textContent = err.message;
