@@ -23,7 +23,7 @@ export const sessionTypes = [
     name: 'Career Review',
     minutes: 45,
     audience: 'For individuals',
-    description: 'Your résumé, portfolio, and where you’re headed.',
+    description: 'Your résumé, your portfolio, and the story they’re not telling yet.',
     bring: [
       'A résumé that isn’t landing interviews',
       'A portfolio that undersells the work',
@@ -41,7 +41,7 @@ export const sessionTypes = [
     name: 'Working Session',
     minutes: 60,
     audience: 'For businesses',
-    description: 'One specific problem, worked through together.',
+    description: 'One specific problem, worked through together — and a plan you can keep.',
     bring: [
       'A launch that keeps slipping',
       'A scope that’s grown out of control',
