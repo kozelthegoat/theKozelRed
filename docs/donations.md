@@ -53,3 +53,25 @@ control. Worth asking them whether the widget is acceptable for a custom site.
 
 So: **technically yes, contractually not yet.** The buttons are the bank contract and those five site items —
 and the Armenian version needs a translator, not a developer.
+
+### Their donation article — what it adds (2026-10-17)
+
+Source: `vpos.am/en/blog/donation-fundraising-payments-armenia/`. It confirms the flow above and sharpens four things.
+
+1. **Campaign context is part of the payment request.** Fix campaign id, amount, currency, request id and an
+   expiration *before* payment, from a controlled form — "amount without campaign id ... does not help close
+   reporting". Even with a single campaign, pass an id (e.g. `donations-2026`) so reports stay separable later.
+2. **One-off only, for now.** Recurring donations need provider tokenization and contract support; their advice
+   otherwise is links, reminders and CRM tasks — and we have no CRM. So v1 is a single payment, and the site must
+   not hint at recurring.
+3. **Privacy-minimal storage, and refunds never delete.** Store the payment id, merchant order id, amount, currency,
+   status and (separately) receipt status — nothing about the donor that is not required, and nothing in the logs
+   that the public layer could leak. A refund is a new state on the original donation, not a deletion.
+   Consequence for the page: the **bank's checkout collects the donor's details**, so `/donate` needs no donor form
+   at all beyond the amount — which is the privacy-minimal design *and* the least code.
+4. **Do not mark a donation received from the return URL** (they repeat this twice), and handle the 3-D Secure
+   mid-states: their related article notes the site must cope with pending, retries and unfinished authentication.
+   So the return page says "checking with the bank", not "thank you" — thanks belongs to the verified webhook.
+
+They also offer a free flow review at `/en/company/contacts/?source=blog&article=donation-fundraising-payments-armenia`,
+which is a better opening than a cold enquiry.
