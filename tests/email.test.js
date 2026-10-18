@@ -8,6 +8,7 @@ import {
   sendBookingEmails,
   sendConfirmEmail
 } from '../src/lib/email.js';
+import { site } from '../src/data/site.js';
 
 const args = {
   name: 'Alex',
@@ -223,6 +224,35 @@ describe('sendBookingEmails', () => {
       expect(all).not.toContain('Berlin');
       expect(all).toContain('UTC+3');
     }
+  });
+});
+
+describe('the configured room', () => {
+  it('is a link, and reaches the confirmation email and the calendar file', async () => {
+    // The site ships with a room configured. Clearing it drops the join link from the email, the
+    // .ics and the dialog copy together — so this failing is the reminder to do that on purpose.
+    expect(site.meetingUrl).toMatch(/^https:\/\//);
+
+    const sent = await withFetch(() =>
+      sendConfirmEmail(
+        { RESEND_API_KEY: 'k' },
+        {
+          id: 7,
+          name: 'Alex',
+          email: 'a@b.c',
+          date: '2026-10-17',
+          time: '16:00',
+          visitorTz: 'Europe/Berlin',
+          type: { name: 'Intro Call', minutes: 30 }
+        }
+      )
+    );
+
+    const mail = sent[0];
+    const ics = Buffer.from(mail.attachments[0].content, 'base64').toString('utf8');
+    expect(mail.text).toContain(site.meetingUrl);
+    expect(mail.html).toContain(site.meetingUrl);
+    expect(ics).toContain(`LOCATION:${site.meetingUrl}`);
   });
 });
 

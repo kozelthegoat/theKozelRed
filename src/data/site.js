@@ -15,9 +15,11 @@ export const site = {
   offClock: ['Meditation', 'Mind–body discipline', 'Volunteering', 'Vibe Coding'],
   // Floating "Donate" button target (external). Empty = button hidden.
   donateUrl: '',
-  // Where a confirmed 1:1 actually happens (a Zoom room, Meet, …). Empty = nothing promises
-  // a link and no email sends one. Set it and the confirmation email and the .ics pick it up.
-  meetingUrl: '',
+  // Where a confirmed 1:1 actually happens. Empty = nothing promises a link and no email sends
+  // one. Set it and the confirmation email, the .ics (LOCATION + URL) and the dialog copy all
+  // follow. This one is a Whereby room, and a vanity room is guessable by design — the access
+  // control is Whereby's room lock, not secrecy, so keep the lock on and admit people by hand.
+  meetingUrl: 'https://whereby.com/kozelthegoat',
   // The words shown after a request lands. The per-session line lives on each session type.
   confirmation: {
     thanks: 'Thank you for asking. It means more than the request suggests.',
