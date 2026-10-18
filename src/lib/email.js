@@ -103,8 +103,8 @@ ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left
   await send(key, {
     from,
     to: req.email,
-    subject: `1:1 — Received · ${req.type.name} · ${req.date} ${req.time} Minsk`,
-    text: `Thanks, ${req.name} — your request is in.\n\n${whenForThem}\n\nI'll reply to confirm. If you'd rather move it, pick another time any time: ${BOOK}\n\n— Aliaksei Kozel`,
+    subject: `1:1 · ${req.type.name} · ${req.date} ${req.time} Minsk`,
+    text: `Thanks, ${req.name} — your request is in.\n\n${whenForThem}\n\nI'll reply to confirm.\n\nI appreciate your trust,\nAliaksei Kozel`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">Thanks, ${esc(req.name)} — your request is in.</p>

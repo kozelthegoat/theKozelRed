@@ -97,7 +97,7 @@ describe('subject shape', () => {
     }
 
     expect(sent[0].subject).toBe('1:1 — New · Alex Berlin · Working Session · 2026-10-17 16:00 Minsk');
-    expect(sent[1].subject).toBe('1:1 — Received · Working Session · 2026-10-17 16:00 Minsk');
+    expect(sent[1].subject).toBe('1:1 · Working Session · 2026-10-17 16:00 Minsk');
 
     const decline = declineCopy({
       name: 'Alex Berlin',
