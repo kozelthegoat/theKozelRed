@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { isPublished, byNewest, published, formatNoteDate } from '../src/lib/notes.js';
+import {
+  isPublished,
+  byNewest,
+  published,
+  langOfId,
+  slugOfId,
+  notesIn,
+  formatNoteDate
+} from '../src/lib/notes.js';
 
 const note = (date, draft = false) => ({ id: date, data: { date: new Date(date), draft } });
 
@@ -32,6 +40,47 @@ describe('byNewest', () => {
     same[0].id = 'first';
     same[1].id = 'second';
     expect([...same].sort(byNewest).map((n) => n.id)).toEqual(['first', 'second']);
+  });
+});
+
+describe('langOfId and slugOfId', () => {
+  it('reads the language from the filename suffix', () => {
+    expect(langOfId('why-benches-rot')).toBe('en');
+    expect(langOfId('why-benches-rot.ru')).toBe('ru');
+    expect(langOfId('why-benches-rot.be')).toBe('be');
+  });
+
+  it('treats an unknown suffix as part of the slug, not as a language', () => {
+    expect(langOfId('notes.xx')).toBe('en');
+    expect(slugOfId('notes.xx')).toBe('notes.xx');
+  });
+
+  it('strips the language back off the slug, so a translation keeps its counterpart’s URL', () => {
+    expect(slugOfId('why-benches-rot')).toBe('why-benches-rot');
+    expect(slugOfId('why-benches-rot.ru')).toBe('why-benches-rot');
+    expect(slugOfId('why-benches-rot.be')).toBe('why-benches-rot');
+  });
+});
+
+describe('notesIn', () => {
+  it('keeps only the requested language, with drafts still out', () => {
+    const entries = [
+      { id: 'a', data: { date: new Date('2026-01-01'), draft: false } },
+      { id: 'a.ru', data: { date: new Date('2026-01-01'), draft: false } },
+      { id: 'b.be', data: { date: new Date('2026-02-01'), draft: false } },
+      { id: 'c', data: { date: new Date('2026-03-01'), draft: true } }
+    ];
+    expect(notesIn(entries, 'en').map((n) => n.id)).toEqual(['a']);
+    expect(notesIn(entries, 'ru').map((n) => n.id)).toEqual(['a.ru']);
+    expect(notesIn(entries, 'be').map((n) => n.id)).toEqual(['b.be']);
+  });
+});
+
+describe('formatNoteDate in another language', () => {
+  it('reads as a date in that language, not as an English month', () => {
+    expect(formatNoteDate(new Date('2026-10-18T00:00:00Z'), 'ru')).toContain('октября');
+    expect(formatNoteDate(new Date('2026-10-18T00:00:00Z'), 'ru')).toContain('2026');
+    expect(formatNoteDate(new Date('2026-10-18T00:00:00Z'), 'en')).toBe('18 October 2026');
   });
 });
 
