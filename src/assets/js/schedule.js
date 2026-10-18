@@ -421,7 +421,7 @@ if (cfgEl && root) {
       $('[data-done-summary]').textContent = `${typeById(state.type).name} · ${whenLabel(true)}`;
       stepForm.classList.add('hidden');
       stepSlots.hidden = true;
-      stepDone.classList.remove('hidden');
+      openDone();
     } catch (err) {
       formError.textContent = err.message;
       formError.hidden = false;
@@ -429,6 +429,40 @@ if (cfgEl && root) {
       submit.textContent = 'Send request';
     }
   });
+
+  // The confirmation is a dialog over an untouched page: the calendar behind it never moved,
+  // so closing it puts you straight back where you were — which is what makes a second request
+  // possible without a reload. Esc, the backdrop and the close button all run the same path.
+  function openDone() {
+    if (stepDone && typeof stepDone.showModal === 'function') stepDone.showModal();
+    else if (stepDone) stepDone.classList.remove('hidden');
+  }
+
+  function resetBooking() {
+    form.reset();
+    formError.hidden = true;
+    const submit = form.querySelector('button[type="submit"]');
+    submit.disabled = false;
+    submit.textContent = 'Send request';
+    stepForm.classList.add('hidden');
+    stepSlots.hidden = false;
+    for (const chip of document.querySelectorAll('[data-time]')) {
+      chip.setAttribute('aria-pressed', 'false');
+    }
+  }
+
+  if (stepDone && typeof stepDone.showModal === 'function') {
+    stepDone.addEventListener('close', () => {
+      const again = stepDone.returnValue === 'again';
+      resetBooking();
+      if (again) stepSlots.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    // A click on the backdrop reports the dialog itself as the target, never its contents.
+    stepDone.addEventListener('click', (event) => {
+      if (event.target === stepDone) stepDone.close('close');
+    });
+    $('[data-done-close]')?.addEventListener('click', () => stepDone.close('close'));
+  }
 
   const firstType = typesEl.querySelector('[data-type]');
   if (firstType) {

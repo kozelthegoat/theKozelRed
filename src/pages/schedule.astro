@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { sessionTypes, availability } from '../data/sessions.js';
+import { site } from '../data/site.js';
 ---
 <Base
   title="Aliaksei Kozel — 1:1 / Schedule"
@@ -210,14 +211,39 @@ import { sessionTypes, availability } from '../data/sessions.js';
           </div>
         </form>
 
-        <div data-step="done" class="hidden">
-          <p class="mono text-brand">Requested</p>
-          <p class="mt-4 max-w-[46ch] text-lg">
-            Thanks — your request is in. I’ll confirm by email shortly, with the Zoom link.
-          </p>
-          <p class="mono mt-4 text-muted" data-done-summary></p>
-          <a class="btn mono mt-6" href="/">← Back home</a>
-        </div>
+        <dialog data-step="done" class="req-done" aria-labelledby="done-heading">
+          <button
+            type="button"
+            class="icon-btn absolute right-3 top-3"
+            data-done-close
+            aria-label="Close"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18"></path>
+            </svg>
+          </button>
+          <form method="dialog" class="grid gap-4">
+            <p class="mono text-brand" id="done-heading">Requested</p>
+            <p class="max-w-[46ch] text-lg">
+              Thanks — your request is in. I’ll confirm by email shortly{site.meetingUrl
+                ? ', with the link to join'
+                : ''}.
+            </p>
+            <p class="mono text-muted" data-done-summary></p>
+            <div class="mt-2 flex flex-wrap gap-3">
+              <button value="again" class="btn btn--solid mono">Book another</button>
+              <a class="btn mono" href="/">← Back home</a>
+            </div>
+          </form>
+        </dialog>
       </div>
     </div>
   </section>

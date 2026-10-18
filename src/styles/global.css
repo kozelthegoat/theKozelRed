@@ -100,6 +100,40 @@ article[data-past],
   }
 }
 
+/* The request confirmation sits over the schedule rather than replacing it, so the calendar
+   underneath is still where you left it and a second request needs no reload. A native <dialog>
+   gives us the top layer, a real backdrop, focus trapping and Esc for free. */
+dialog.req-done {
+  position: relative;
+  margin: auto;
+  width: min(34rem, calc(100vw - 2rem));
+  border: var(--hair) solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+dialog.req-done::backdrop {
+  background: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+dialog.req-done[open] {
+  animation: req-done-in 0.22s var(--ease);
+}
+
+@keyframes req-done-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.req-done[open] {
+    animation: none;
+  }
+}
+
 /* Page title — one size for every page h1, so they can't drift apart.
    The home hero keeps its own, much larger display size. */
 .page-title {
