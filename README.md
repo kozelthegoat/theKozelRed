@@ -1,6 +1,6 @@
 # kozel.red
 
-Personal site and 1:1 booking for **Aliaksei Kozel** — product / operations / production work, plus free (volunteer) 1:1 sessions.
+Personal site and 1:1 booking for **Aliaksei Kozel** — strategy / operations / production work, plus free (volunteer) 1:1 sessions.
 
 **Live:** https://kozel.red
 
