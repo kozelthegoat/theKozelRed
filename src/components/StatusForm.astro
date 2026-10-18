@@ -9,6 +9,11 @@ const BUTTONS = [
   { value: 'confirmed', label: 'Confirm', icon: 'M4 10.5l4 4 8-9.5' },
   { value: 'declined', label: 'Decline', icon: 'M5.5 5.5l9 9M14.5 5.5l-9 9' }
 ];
+
+// A decided request shows only the mark that was chosen — the other half is geometry that says
+// nothing. An unanswered one still shows both, because both are still open.
+const visible =
+  request.status === 'new' ? BUTTONS : BUTTONS.filter((b) => b.value === request.status);
 ---
 
 <form
@@ -26,7 +31,7 @@ const BUTTONS = [
   <input type="hidden" name="past" value={past ? '1' : ''} />
 
   {
-    BUTTONS.map((button) => (
+    visible.map((button) => (
       <button
         class:list={['btn', compact ? 'btn--icon' : 'mono']}
         name="status"

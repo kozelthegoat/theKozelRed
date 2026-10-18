@@ -68,12 +68,14 @@
    centres each cell's box — so a 10px mono date beside a 12px sans name reads as two
    different lines (measured 6.6px apart). Align the text cells on their first baseline
    instead; the actions cell holds only buttons and has no baseline, so it stays at the top. */
-/* The pager's top rule already closes the table, so the last row does not also draw one.
-   Scoped to the table: on mobile the cards need the pager's rule to separate the block. */
-.req-table tbody tr:last-child { border-bottom: 0; }
-
 .req-table td { vertical-align: baseline; }
 .req-table td:last-child { vertical-align: top; }
+
+/* The first column keeps a gutter so the unanswered bar below sits outside the text. */
+.req-table th:first-child,
+.req-table td:first-child {
+  padding-left: 0.75rem;
+}
 
 /* An unanswered request wears the same 3px bar a hovered recommendation does — there it is a
    flourish, here it is the one mark saying the row still asks for an answer. Drawn as an inset
@@ -88,6 +90,14 @@ article[data-new],
 article[data-past],
 .req-table tr[data-past] > td {
   opacity: 0.55;
+}
+
+/* Every row now draws its own rule, so the pager's top border would double the last row's and
+   read as a taller last row. On mobile the cards have no closing rule, so there it stays. */
+@media (min-width: 1024px) {
+  .req-pager {
+    border-top: 0;
+  }
 }
 
 /* Page title — one size for every page h1, so they can't drift apart.
