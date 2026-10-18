@@ -29,7 +29,7 @@ export const sessionTypes = [
     short: 'Career',
     minutes: 30,
     audience: 'For individuals',
-    description: 'Your story, and the first place it’s losing people.',
+    description: 'Your résumé, your portfolio, and the story they’re not telling yet.',
     confirmation: 'You’re not behind. You’re carrying a good story in the wrong order.',
     bring: [
       'A résumé that isn’t landing interviews',
@@ -37,9 +37,10 @@ export const sessionTypes = [
       'A fork in the road — stay, switch, or go it alone'
     ],
     build: [
-      'A sharper way to say what you actually do',
-      'The part of your story that isn’t landing',
-      'The first edit to make, and why'
+      'A sharper story and positioning',
+      'A résumé that reads the way you mean it to',
+      'A set of concrete steps for the next chapter',
+      'The confidence to ask for more without excuse'
     ]
   },
   {
