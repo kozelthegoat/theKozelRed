@@ -43,8 +43,12 @@ export function pathInLocale(pathname, locale) {
   return `${prefixFor(locale)}/${rest}${rest ? '/' : ''}`;
 }
 
-// The prefix is the whole marker on the URL side: nothing is remembered between visits, so every
-// locale stays shareable and indexable. KozelGo goes further and additionally remembers a choice
-// in a cookie and negotiates `/` from Accept-Language — deliberately not carried over yet, so `/`
-// is still English for everyone.
+// The prefix is the whole marker: nothing is remembered between visits, so every locale stays
+// shareable and indexable, and English stays at the root where its URLs already point.
+//
+// KozelGo additionally remembers a choice in a cookie and negotiates `/` from Accept-Language.
+// That is a decision not taken, rather than work outstanding: `/ru/` does not exist, so a redirect
+// would have nowhere to send anyone, and default-language-at-the-root is a pattern hreflang
+// already declares properly. Reconsider if Russian ever covers more than the notes list — and the
+// page registry is what would make it a table edit rather than a rewrite.
 export const isPrefixed = (pathname) => localeFromPath(pathname) !== defaultLocale;
