@@ -7,6 +7,7 @@
 // and a status change is read in the body rather than guessed from the subject line.
 
 import { brandFor } from '../data/palette.js';
+import { site } from '../data/site.js';
 import { wallClockInTz, zonedWallClockToUtc, isValidZone, zoneOffsetLabel } from './tz.js';
 import { buildIcs, icsFilename } from './ics.js';
 
@@ -201,18 +202,19 @@ ${signoff}`,
 }
 
 // Confirmation copy: same subject again, status stated plainly, calendar file alongside.
-export function confirmedCopy({ name, date, time, visitorTz, typeName = '', minutes = 60, brand = brandFor() }) {
+export function confirmedCopy({ name, date, time, visitorTz, typeName = '', minutes = 60, meetingUrl = '', brand = brandFor() }) {
   const m = localMoment({ date, time, visitorTz });
   const whenDisplay = dualTime({ date, time, visitorTz });
   return {
     subject: requesterSubject({ date, time, visitorTz, typeName }),
-    text: `Hi ${name},\n\nYour 1:1 is confirmed.\n\n${whenDisplay} (${typeName}, ${minutes} min)\n\nI've attached a calendar file so it's in your diary.\n\nI appreciate your trust,\n${HOST}`,
+    text: `Hi ${name},\n\nYour 1:1 is confirmed.\n\n${whenDisplay} (${typeName}, ${minutes} min)\n\nI've attached a calendar file so it's in your diary.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}\n\nI appreciate your trust,\n${HOST}`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">Hi ${esc(name)},</p>
 <p style="margin:0 0 20px;">Your 1:1 is confirmed.</p>
 ${momentHtml({ typeName, m })}
 <p style="margin:20px 0 0;">I've attached a calendar file so it's in your diary.</p>
+${meetingUrl ? cta(meetingUrl, 'Join the call', brand) : ''}
 ${signoff}`,
       brand
     )
@@ -240,8 +242,9 @@ export async function sendConfirmEmail(env, { id, name, email, date, time, visit
 
   const typeName = type?.name || '';
   const minutes = type?.minutes || 60;
-  const { subject, text, html } = confirmedCopy({ name, date, time, visitorTz, typeName, minutes });
-  const ics = buildIcs({ date, time, minutes, typeName, uid: `request-${id}@kozel.red` });
+  const meetingUrl = site.meetingUrl || '';
+  const { subject, text, html } = confirmedCopy({ name, date, time, visitorTz, typeName, minutes, meetingUrl });
+  const ics = buildIcs({ date, time, minutes, typeName, meetingUrl, uid: `request-${id}@kozel.red` });
 
   await send(key, {
     from,

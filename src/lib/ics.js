@@ -45,6 +45,7 @@ export function buildIcs({
   minutes = 60,
   typeName = '1:1',
   description = DEFAULT_DESCRIPTION,
+  meetingUrl = '',
   uid,
   now = new Date()
 }) {
@@ -63,7 +64,10 @@ export function buildIcs({
     `DTEND:${formatIcsUtc(end)}`,
     `SUMMARY:${esc(`1:1 · ${typeName}`)}`,
     `DESCRIPTION:${esc(description)}`,
-    'URL:https://kozel.red',
+    // A calendar entry you cannot join from is half an entry: the room goes in LOCATION and
+    // in URL, so both the desktop pop-up and the phone's "join" button land in the right place.
+    ...(meetingUrl ? [`LOCATION:${esc(meetingUrl)}`] : []),
+    `URL:${esc(meetingUrl || 'https://kozel.red')}`,
     'END:VEVENT',
     'END:VCALENDAR'
   ];

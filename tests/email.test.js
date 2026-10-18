@@ -127,6 +127,19 @@ describe('confirmedCopy', () => {
     expect(text).toContain('2026-10-17 15:00 (UTC+2)');
     expect(html).toContain('2026-10-17');
   });
+
+  it('carries the join link when a room is configured', () => {
+    const { text, html } = confirmedCopy({ ...args, meetingUrl: 'https://zoom.us/j/12345' });
+    expect(text).toContain('https://zoom.us/j/12345');
+    expect(html).toContain('https://zoom.us/j/12345');
+    expect(html).toContain('Join the call');
+  });
+
+  it('promises no link when no room is configured', () => {
+    const { text, html } = confirmedCopy(args);
+    expect(text).not.toContain('Join');
+    expect(html).not.toContain('Join the call');
+  });
 });
 
 describe('bold', () => {

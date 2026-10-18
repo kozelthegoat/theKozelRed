@@ -50,6 +50,18 @@ describe('buildIcs', () => {
     expect(buildIcs(base)).toContain('SUMMARY:1:1 · Working Session');
   });
 
+  it('carries the meeting link so the entry can be joined from the calendar', () => {
+    const ics = buildIcs({ ...base, meetingUrl: 'https://zoom.us/j/12345' });
+    expect(ics).toContain('LOCATION:https://zoom.us/j/12345');
+    expect(ics).toContain('URL:https://zoom.us/j/12345');
+  });
+
+  it('does not claim a location when there is no meeting link', () => {
+    const ics = buildIcs(base);
+    expect(ics).not.toContain('LOCATION');
+    expect(ics).toContain('URL:https://kozel.red');
+  });
+
   it('uses CRLF line endings throughout', () => {
     const ics = buildIcs(base);
     expect(ics).not.toMatch(/[^\r]\n/);
