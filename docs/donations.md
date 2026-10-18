@@ -136,3 +136,25 @@ working assumption is **no recurring on vPOS**, and the enquiry question stands:
 
 > Does the merchant agreement support **tokenization for recurring charges**, or do you sell a subscription
 > product separately?
+
+## Correction: no "legal-work-free" donation path (2026-10-18)
+
+Something I said and should not have: that PayPal or GitHub Sponsors would mean donations "without legal
+contracts". Wrong. Using a payment platform means accepting **its** agreement, its KYC and (for business receipts)
+a Business account with the entity's details. What such a route *does* skip is **our bank's merchant-acquiring
+contract and its website review** — because the platform holds the regulated end. Fewer documents, not none.
+
+Two things to verify before relying on it:
+- **Does an Armenian account *receive* funds?** Our earlier note confirmed PayPal *operates* in Armenia, which is
+  mostly about sending. Receiving, and receiving as a business, is unverified. GitHub Sponsors expects an
+  OSS-maintainer profile.
+- **The tax character**, which is an accountant's question, not a website one.
+
+And the trap in the word: if the 1:1s are **paid services**, money for them is **service income** — not a donation —
+and it attracts the bank, fiscal and refund rules. A true voluntary gift with nothing in return is a different
+thing. Calling service payments "donations" is exactly what a regulator looks at, and it is why the pre-check asks
+for prices before payment and a refund policy.
+
+**The move that answers both paths at once:** one conversation with the accountant — *is this income for the IE,
+and does it need fiscal receipts?* Those are the bank's questions too. Until they are answered, `site.donateUrl`
+stays empty and the Donate button stays hidden.
