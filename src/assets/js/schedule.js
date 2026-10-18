@@ -418,7 +418,9 @@ if (cfgEl && root) {
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error?.message || 'Something went wrong.');
-      $('[data-done-summary]').textContent = `${typeById(state.type).name} · ${whenLabel(true)}`;
+      const chose = typeById(state.type);
+      $('[data-done-summary]').textContent = `${chose.name} · ${whenLabel(true)}`;
+      $('[data-done-note]').textContent = chose.confirmation || '';
       stepForm.classList.add('hidden');
       stepSlots.hidden = true;
       openDone();

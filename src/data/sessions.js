@@ -6,6 +6,7 @@ export const sessionTypes = [
     minutes: 30,
     audience: 'For everyone',
     description: 'A short, no-agenda hello — to hear where you are, and what might come next.',
+    confirmation: 'Come as you are. Nothing needs polishing — the rough version is usually the honest one.',
     bring: [
       'A problem you can’t quite name yet',
       'A question you want a straight answer to',
@@ -24,6 +25,7 @@ export const sessionTypes = [
     minutes: 45,
     audience: 'For individuals',
     description: 'Your résumé, your portfolio, and the story they’re not telling yet.',
+    confirmation: 'You’re not behind. You’re carrying a good story in the wrong order.',
     bring: [
       'A résumé that isn’t landing interviews',
       'A portfolio that undersells the work',
@@ -42,6 +44,7 @@ export const sessionTypes = [
     minutes: 60,
     audience: 'For businesses',
     description: 'One specific problem, worked through together — and a plan you can keep.',
+    confirmation: 'You’ve been holding this one alone long enough. Let’s put it on the table.',
     bring: [
       'A launch that keeps slipping',
       'A scope that’s grown out of control',

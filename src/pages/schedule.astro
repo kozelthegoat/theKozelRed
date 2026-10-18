@@ -182,7 +182,7 @@ import { site } from '../data/site.js';
           </div>
         </div>
 
-        <form data-step="form" class="hair-t mt-10 hidden grid gap-4 pt-8" novalidate>
+        <form data-step="form" class="mt-10 hidden grid gap-4" novalidate>
           <p class="mono text-muted">Your details — <span class="text-brand">*</span> required</p>
           <input
             name="name"
@@ -232,10 +232,10 @@ import { site } from '../data/site.js';
           </button>
           <form method="dialog" class="grid gap-4">
             <p class="mono text-brand" id="done-heading">Requested</p>
-            <p class="max-w-[46ch] text-lg">
-              Thanks — your request is in. I’ll confirm by email shortly{site.meetingUrl
-                ? ', with the link to join'
-                : ''}.
+            <p class="max-w-[46ch] text-lg">{site.confirmation.thanks}</p>
+            <p class="max-w-[46ch] text-secondary" data-done-note></p>
+            <p class="max-w-[46ch] text-secondary">
+              {site.confirmation.next}{site.meetingUrl ? ' The link to join comes with it.' : ''}
             </p>
             <p class="mono text-muted" data-done-summary></p>
             <div class="mt-2 flex flex-wrap gap-3">
@@ -252,7 +252,12 @@ import { site } from '../data/site.js';
     type="application/json"
     data-schedule-config
     set:html={JSON.stringify({
-      types: sessionTypes.map((t) => ({ id: t.id, name: t.name, minutes: t.minutes })),
+      types: sessionTypes.map((t) => ({
+        id: t.id,
+        name: t.name,
+        minutes: t.minutes,
+        confirmation: t.confirmation
+      })),
       timezone: availability.timezone
     })}
   ></script>

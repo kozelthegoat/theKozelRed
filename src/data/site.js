@@ -18,6 +18,11 @@ export const site = {
   // Where a confirmed 1:1 actually happens (a Zoom room, Meet, …). Empty = nothing promises
   // a link and no email sends one. Set it and the confirmation email and the .ics pick it up.
   meetingUrl: '',
+  // The words shown after a request lands. The per-session line lives on each session type.
+  confirmation: {
+    thanks: 'Thank you for asking. It means more than the request suggests.',
+    next: 'I’ll give it proper attention, and you’ll hear back by email either way — that part I promise.'
+  },
   socials: [
     // { label: 'LinkedIn', url: 'https://…' },
   ]
