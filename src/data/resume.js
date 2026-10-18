@@ -83,7 +83,7 @@ export const experience = [
     when: 'Mar 2018 – Mar 2022',
     points: [
       'Pioneered & developed educational VR experiences and tools.',
-      'Launched platform + 5 games/apps blending science, education, and latest visionary technologies.'
+      'Developed a platform & 5+ games/apps blending science, education, and latest visionary technologies.'
     ],
     released: [
       'a VR game featuring Atoms and Orbitals + mobile companion app',
@@ -101,8 +101,7 @@ export const experience = [
     when: 'Mar 2016 – Mar 2022',
     points: [
       'Pioneered subscription monetization in mobile gaming, mastered with A/B testing & predictive analytics.',
-      'Spearheaded studio from 1 to 50 employees with zero funding.',
-      'Launched 10+ games/apps blending entertainment, brain science, and mindfulness.'
+      'Developed 10+ games/apps blending entertainment, brain science, and mindfulness.'
     ],
     released: [
       '3 mobile games in the Board game genre',
