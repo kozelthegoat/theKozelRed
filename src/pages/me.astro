@@ -20,8 +20,7 @@ const COLUMNS = [
   { key: 'name', label: 'Name', sortable: true, width: '8rem' },
   { key: 'email', label: 'Email', sortable: true, width: '7.5rem' },
   { key: 'type', label: 'Type', sortable: true, width: '4rem' },
-  { key: 'status', label: 'Status', sortable: true, width: '4.25rem' },
-  { key: 'note', label: 'Body', sortable: false, wide: true },
+  { key: 'note', label: 'Message', sortable: false, wide: true },
   { key: 'created_at', label: 'Requested', sortable: true, width: '6rem' }
 ];
 const SORT_LINKS = COLUMNS.filter((c) => c.sortable);
@@ -170,8 +169,16 @@ const statusTone = (s) =>
                         )}
                       </th>
                     ))}
-                    <th scope="col" class="mono py-3 text-right font-normal text-muted" style="width:5rem;">
-                      Actions
+                    <th
+                      scope="col"
+                      aria-sort={ariaSort('status')}
+                      class="mono py-3 text-right font-normal text-muted"
+                      style="width:5rem;"
+                    >
+                      <a class="relative whitespace-nowrap hover:text-brand" href={sortHref('status')}>
+                        Status
+                        <span class="absolute -right-3.5 text-brand">{mark('status')}</span>
+                      </a>
                     </th>
                   </tr>
                 </thead>
@@ -196,22 +203,6 @@ const statusTone = (s) =>
                       </td>
                       <td class="py-4 pr-4 whitespace-nowrap text-sm text-secondary">
                         <span title={typeName(r.type)}>{typeShort(r.type)}</span>
-                      </td>
-                      <td class="py-4 pr-4">
-                        <span class="sr-only">{r.status}</span>
-                        <span class="inline-flex h-4 w-4 items-center justify-center" aria-hidden="true">
-                          {r.status === 'confirmed' && (
-                            <svg class="text-brand" width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
-                              <path d="M4 10.5l4 4 8-9.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                          )}
-                          {r.status === 'declined' && (
-                            <svg class="text-muted" width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
-                              <path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke-linecap="round" />
-                            </svg>
-                          )}
-                          {r.status === 'new' && <span class="h-2 w-2 rounded-full bg-brand" />}
-                        </span>
                       </td>
                       <td class="w-full py-4 pr-4 text-sm text-secondary">
                         {r.note ? (
