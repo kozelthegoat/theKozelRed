@@ -1,6 +1,7 @@
 ---
 import { site } from '../data/site.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
+import { publishedNotes } from '../lib/note-source.js';
 import '../styles/fonts.css';
 import '../styles/global.css';
 
@@ -11,6 +12,9 @@ const {
 const year = new Date().getFullYear();
 // The footer's Navigation block points at home sections, so it only belongs on home.
 const isHome = Astro.url.pathname === '/';
+// The Notes link appears with the first published note and not before: an empty archive behind a
+// link is worse than no link, and this way nobody has to remember to add one.
+const hasNotes = (await publishedNotes()).length > 0;
 const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis Management'];
 ---
 <!doctype html>
@@ -60,6 +64,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
           <nav class="mono hidden items-center gap-7 text-muted md:flex" aria-label="Primary">
             <a class="transition-colors hover:text-foreground" href="/#help">Expertise</a>
             <a class="transition-colors hover:text-foreground" href="/#experience">Experience</a>
+            {hasNotes && <a class="transition-colors hover:text-foreground" href="/notes/">Notes</a>}
             <a class="transition-colors hover:text-foreground" href="/#contact">Contact</a>
           </nav>
 
@@ -93,6 +98,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
                   <li><a class="hover:text-brand" href="/#experience">Experience</a></li>
                   <li><a class="hover:text-brand" href="/#recommendations">Recommendations</a></li>
                   <li><a class="hover:text-brand" href="/#resume">Résumé</a></li>
+                  {hasNotes && <li><a class="hover:text-brand" href="/notes/">Notes</a></li>}
                 </ul>
               </div>
             )

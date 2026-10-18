@@ -158,6 +158,89 @@ dialog.req-done[open] {
   line-height: 1;
 }
 
+/* Notes, article body. The global h1/h2/h3 rule is a display treatment — uppercase at 0.98
+   leading — which is right for a page title or a section heading and wrong for every subhead
+   inside a piece of writing, where it reads as shouting. So the prose gets its own rhythm: a
+   readable measure, paragraph spacing, and subheads that behave like subheads. Unlayered, so it
+   wins over the base layer exactly as .mono does. */
+.prose {
+  max-width: 68ch;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--secondary);
+}
+.prose > * + * {
+  margin-top: 1.3em;
+}
+.prose h2,
+.prose h3 {
+  text-transform: none;
+  letter-spacing: normal;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+.prose h2 {
+  font-size: 1.4rem;
+  margin-top: 2.4em;
+}
+.prose h3 {
+  font-size: 1.15rem;
+  margin-top: 2em;
+}
+.prose strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.prose a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+}
+.prose ul {
+  list-style: disc;
+}
+.prose ol {
+  list-style: decimal;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+.prose blockquote {
+  border-left: 3px solid var(--brand);
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--brand-tint);
+  padding: 0.1em 0.35em;
+}
+.prose pre {
+  background: #fff;
+  border: var(--hair) solid var(--border);
+  padding: 1rem;
+  overflow-x: auto;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+.prose hr {
+  border: 0;
+  border-top: var(--hair) solid var(--border);
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Selectable tiles (session types, calendar days) */
 .pick-btn {
   border: var(--hair) solid var(--border);
