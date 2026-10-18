@@ -5,15 +5,23 @@
 // and nothing depends on a cookie or an Accept-Language header — which also makes every locale
 // indexable and shareable.
 export const defaultLocale = 'en';
-export const locales = ['en', 'ru', 'be'];
 
-// Each language names itself. A switcher that translates "Russian" into the reader's language is
-// the one place translation is wrong: someone looking for their own tongue scans for its letters.
-export const localeNames = {
-  en: 'English',
-  ru: 'Русский',
-  be: 'Беларуская'
+// Each language carries its own name, its direction and its Intl tag, so nothing downstream has to
+// special-case a locale. Direction lives here rather than being assumed: adding an RTL language
+// should be a data change, not a plumbing change.
+export const localeInfo = {
+  en: { label: 'English', dir: 'ltr', intl: 'en-GB' },
+  ru: { label: 'Русский', dir: 'ltr', intl: 'ru' },
+  be: { label: 'Беларуская', dir: 'ltr', intl: 'be-BY' }
 };
+
+export const locales = Object.keys(localeInfo);
+
+export const labelFor = (locale) => localeInfo[locale]?.label ?? locale;
+export const dirFor = (locale) => localeInfo[locale]?.dir ?? localeInfo[defaultLocale].dir;
+// English maps to en-GB deliberately: plain 'en' gives American order, and the site writes
+// 18 October 2026.
+export const intlTagFor = (locale) => localeInfo[locale]?.intl ?? localeInfo[defaultLocale].intl;
 
 // English is served from the root, so its prefix is empty and its URLs stay unchanged.
 export const prefixFor = (locale) => (locale === defaultLocale ? '' : `/${locale}`);
@@ -35,5 +43,8 @@ export function pathInLocale(pathname, locale) {
   return `${prefixFor(locale)}/${rest}${rest ? '/' : ''}`;
 }
 
-// A locale prefix is the whole marker — no cookie, no redirect, nothing to remember.
+// The prefix is the whole marker on the URL side: nothing is remembered between visits, so every
+// locale stays shareable and indexable. KozelGo goes further and additionally remembers a choice
+// in a cookie and negotiates `/` from Accept-Language — deliberately not carried over yet, so `/`
+// is still English for everyone.
 export const isPrefixed = (pathname) => localeFromPath(pathname) !== defaultLocale;

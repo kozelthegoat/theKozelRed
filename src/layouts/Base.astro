@@ -2,7 +2,7 @@
 import { site } from '../data/site.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
-import { localeFromPath, pathInLocale, prefixFor } from '../i18n/config.mjs';
+import { dirFor, localeFromPath, pathInLocale, prefixFor } from '../i18n/config.mjs';
 import { translator } from '../i18n/ui.mjs';
 import Cta from '../components/Cta.astro';
 import LocaleSwitcher from '../components/LocaleSwitcher.astro';
@@ -33,7 +33,7 @@ const canonical = new URL(Astro.url.pathname, origin).href;
 const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis Management'];
 ---
 <!doctype html>
-<html lang={locale} data-hues={WEEKDAY_HUES.join(',')}>
+<html lang={locale} dir={dirFor(locale)} data-hues={WEEKDAY_HUES.join(',')}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

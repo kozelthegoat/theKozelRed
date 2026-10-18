@@ -10,6 +10,7 @@ export const ui = {
     'nav.experience': 'Experience',
     'nav.notes': 'Notes',
     'nav.contact': 'Contact',
+    'a11y.language': 'Language',
 
     'cta.schedule': 'Schedule 1:1',
     'cta.resume': 'Download Résumé',
@@ -39,6 +40,7 @@ export const ui = {
     'nav.experience': 'Опыт',
     'nav.notes': 'Заметки',
     'nav.contact': 'Связаться',
+    'a11y.language': 'Язык',
 
     'cta.schedule': 'Записаться на 1:1',
     'cta.resume': 'Скачать резюме',
@@ -68,6 +70,7 @@ export const ui = {
     'nav.experience': 'Вопыт',
     'nav.notes': 'Нататкі',
     'nav.contact': 'Сувязь',
+    'a11y.language': 'Мова',
 
     'cta.schedule': 'Запісацца на 1:1',
     'cta.resume': 'Спампаваць рэзюмэ',

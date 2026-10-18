@@ -1,7 +1,7 @@
 // The rules about notes, with no framework in them: what counts as published, what language it is
 // in, what order they come in, and how a date reads. Keeping this free of `astro:content` is what
 // makes it testable — the collection access lives in note-source.js.
-import { defaultLocale, locales } from '../i18n/config.mjs';
+import { defaultLocale, locales, intlTagFor } from '../i18n/config.mjs';
 
 export const isPublished = ({ data }) => !data.draft;
 
@@ -35,12 +35,11 @@ export const localesForSlug = (entries, slug) =>
   );
 
 // Pinned to UTC. A bare YYYY-MM-DD parses as UTC midnight, so formatting it in whatever zone the
-// renderer happens to be in would show the day before for anyone behind UTC. English maps to
-// en-GB deliberately: plain 'en' gives American order, and the site writes 18 October 2026.
-const dateLocales = { en: 'en-GB', ru: 'ru', be: 'be-BY' };
-
+// renderer happens to be in would show the day before for anyone behind UTC. The Intl tag comes
+// from the locale itself, so a new language brings its date format with it rather than needing a
+// second list here to drift out of step.
 export const formatNoteDate = (date, locale = defaultLocale) =>
-  new Intl.DateTimeFormat(dateLocales[locale] || 'en-GB', {
+  new Intl.DateTimeFormat(intlTagFor(locale), {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
