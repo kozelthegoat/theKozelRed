@@ -230,7 +230,7 @@ import { site } from '../data/site.js';
               <path d="M6 6l12 12M18 6L6 18"></path>
             </svg>
           </button>
-          <form method="dialog" class="grid gap-4">
+          <div class="grid gap-4">
             <p class="mono text-brand" id="done-heading">Requested</p>
             <p class="max-w-[46ch] text-lg">{site.confirmation.thanks}</p>
             <p class="max-w-[46ch] text-secondary" data-done-note></p>
@@ -238,11 +238,7 @@ import { site } from '../data/site.js';
               {site.confirmation.next}{site.meetingUrl ? ' The link to join comes with it.' : ''}
             </p>
             <p class="mono text-muted" data-done-summary></p>
-            <div class="mt-2 flex flex-wrap gap-3">
-              <button value="again" class="btn btn--solid mono">Book another</button>
-              <a class="btn mono" href="/">← Back home</a>
-            </div>
-          </form>
+          </div>
         </dialog>
       </div>
     </div>

@@ -454,11 +454,10 @@ if (cfgEl && root) {
   }
 
   if (stepDone && typeof stepDone.showModal === 'function') {
-    stepDone.addEventListener('close', () => {
-      const again = stepDone.returnValue === 'again';
-      resetBooking();
-      if (again) stepSlots.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    // No buttons inside — it says what happened and gets out of the way. Esc, the backdrop and
+    // the × all run the same path, and closing re-arms the flow, so a second request is still
+    // possible without a reload.
+    stepDone.addEventListener('close', resetBooking);
     // A click on the backdrop reports the dialog itself as the target, never its contents.
     stepDone.addEventListener('click', (event) => {
       if (event.target === stepDone) stepDone.close('close');
