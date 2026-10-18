@@ -39,7 +39,7 @@ export const sessionTypes = [
     build: [
       'A sharper story and positioning',
       'A résumé that reads the way you mean it to',
-      'A set of concrete steps for the next chapter',
+      'A portfolio that leads with the work you want more of',
       'The confidence to ask for more without excuse'
     ]
   },
