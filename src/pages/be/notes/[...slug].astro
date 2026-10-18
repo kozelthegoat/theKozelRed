@@ -1,0 +1,17 @@
+---
+import NotePost from '../../../components/pages/NotePost.astro';
+import { publishedNotes, allNotes } from '../../../lib/note-source.js';
+import { slugOfId, localesForSlug } from '../../../lib/notes.js';
+
+export async function getStaticPaths() {
+  const [notes, all] = await Promise.all([publishedNotes('be'), allNotes()]);
+  return notes.map((note) => {
+    const slug = slugOfId(note.id);
+    return { params: { slug }, props: { note, alternates: localesForSlug(all, slug) } };
+  });
+}
+
+const { note, alternates } = Astro.props;
+---
+
+<NotePost locale="be" note={note} alternates={alternates} />

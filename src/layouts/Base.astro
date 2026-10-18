@@ -2,24 +2,38 @@
 import { site } from '../data/site.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
+import { localeFromPath, pathInLocale, prefixFor } from '../i18n/config.mjs';
+import { translator } from '../i18n/ui.mjs';
 import Cta from '../components/Cta.astro';
+import LocaleSwitcher from '../components/LocaleSwitcher.astro';
 import '../styles/fonts.css';
 import '../styles/global.css';
 
 const {
   title = `${site.name} — ${site.role}`,
-  description = `${site.name} — ${site.role}.`
+  description = `${site.name} — ${site.role}.`,
+  // The languages this page actually exists in. Absent means English only, which is most of the
+  // site while the page copy is still untranslated — and a switcher offering dead links is worse
+  // than no switcher at all.
+  alternates = null
 } = Astro.props;
+
+// The language comes from the URL, never a cookie: a prefixed path is self-describing, so every
+// locale is shareable and indexable and nothing has to be remembered between visits.
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
 const year = new Date().getFullYear();
-// The footer's Navigation block points at home sections, so it only belongs on home.
+// The footer's Navigation block points at home sections, so it only belongs on the English home.
 const isHome = Astro.url.pathname === '/';
-// The Notes link appears with the first published note and not before: an empty archive behind a
-// link is worse than no link, and this way nobody has to remember to add one.
-const hasNotes = (await publishedNotes()).length > 0;
+// The Notes link appears with the first published note in this language and not before: an empty
+// archive behind a link is worse than no link, and this way nobody has to remember to add one.
+const hasNotes = (await publishedNotes(locale)).length > 0;
+const origin = Astro.site ?? new URL('https://kozel.red');
+const canonical = new URL(Astro.url.pathname, origin).href;
 const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis Management'];
 ---
 <!doctype html>
-<html lang="en" data-hues={WEEKDAY_HUES.join(',')}>
+<html lang={locale} data-hues={WEEKDAY_HUES.join(',')}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,7 +43,27 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png" />
     <link rel="icon" href="/icon-512.png" sizes="512x512" type="image/png" />
-    <link rel="canonical" href={Astro.site?.href ?? 'https://kozel.red/'} />
+    <!-- This used to point at the site root on every page, which told search engines that every
+         page was a duplicate of the homepage. It now names the page it is on. -->
+    <link rel="canonical" href={canonical} />
+    {
+      alternates?.map((alternate) => (
+        <link
+          rel="alternate"
+          hreflang={alternate}
+          href={new URL(pathInLocale(Astro.url.pathname, alternate), origin).href}
+        />
+      ))
+    }
+    {
+      alternates && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(pathInLocale(Astro.url.pathname, 'en'), origin).href}
+        />
+      )
+    }
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -42,10 +76,10 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
       <div class="marquee hair-b py-3">
         <div class="marquee__track mono text-muted">
           {
-            [...ticker, ...ticker].map((t) => (
+            [...ticker, ...ticker].map((word) => (
               <span class="flex items-center gap-3 whitespace-nowrap">
                 <span class="inline-block h-1 w-1 rounded-full bg-brand" />
-                {t}
+                {word}
               </span>
             ))
           }
@@ -63,13 +97,19 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
           </a>
 
           <nav class="mono hidden items-center gap-7 text-muted md:flex" aria-label="Primary">
-            <a class="transition-colors hover:text-foreground" href="/#help">Expertise</a>
-            <a class="transition-colors hover:text-foreground" href="/#experience">Experience</a>
-            {hasNotes && <a class="transition-colors hover:text-foreground" href="/notes/">Notes</a>}
-            <a class="transition-colors hover:text-foreground" href="/#contact">Contact</a>
+            <a class="transition-colors hover:text-foreground" href="/#help">{t('nav.expertise')}</a>
+            <a class="transition-colors hover:text-foreground" href="/#experience">{t('nav.experience')}</a>
+            {
+              hasNotes && (
+                <a class="transition-colors hover:text-foreground" href={`${prefixFor(locale)}/notes/`}>
+                  {t('nav.notes')}
+                </a>
+              )
+            }
+            <a class="transition-colors hover:text-foreground" href="/#contact">{t('nav.contact')}</a>
           </nav>
 
-          <Cta href="/schedule/" label="Schedule 1:1" variant="solid" />
+          <Cta href="/schedule/" label={t('cta.schedule')} variant="solid" />
         </div>
       </header>
 
@@ -88,22 +128,26 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
           {
             isHome && (
               <div>
-                <p class="mono text-muted">Navigation</p>
+                <p class="mono text-muted">{t('footer.navigation')}</p>
                 <ul class="mt-4 grid gap-2 text-sm">
-                  <li><a class="hover:text-brand" href="/#help">Expertise</a></li>
-                  <li><a class="hover:text-brand" href="/#experience">Experience</a></li>
-                  <li><a class="hover:text-brand" href="/#recommendations">Recommendations</a></li>
-                  <li><a class="hover:text-brand" href="/#resume">Résumé</a></li>
-                  {hasNotes && <li><a class="hover:text-brand" href="/notes/">Notes</a></li>}
+                  <li><a class="hover:text-brand" href="/#help">{t('nav.expertise')}</a></li>
+                  <li><a class="hover:text-brand" href="/#experience">{t('nav.experience')}</a></li>
+                  <li><a class="hover:text-brand" href="/#recommendations">{t('footer.recommendations')}</a></li>
+                  <li><a class="hover:text-brand" href="/#resume">{t('footer.resume')}</a></li>
+                  {
+                    hasNotes && (
+                      <li><a class="hover:text-brand" href={`${prefixFor(locale)}/notes/`}>{t('footer.notes')}</a></li>
+                    )
+                  }
                 </ul>
               </div>
             )
           }
           <div>
-            <p class="mono text-muted">Services</p>
+            <p class="mono text-muted">{t('footer.services')}</p>
             <ul class="mt-4 grid gap-2 text-sm">
               <li>
-                <a class="hover:text-brand" href="/schedule/">Schedule 1:1</a>
+                <a class="hover:text-brand" href="/schedule/">{t('cta.schedule')}</a>
                 <ul class="mt-2 ml-3 grid gap-1 text-muted">
                   <li class="flex gap-2"><span class="text-brand">–</span><span>Intro Call</span></li>
                   <li class="flex gap-2"><span class="text-brand">–</span><span>Career Review</span></li>
@@ -113,22 +157,30 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
             </ul>
           </div>
           <div>
-            <p class="mono text-muted">Location</p>
+            <p class="mono text-muted">{t('footer.location')}</p>
             <ul class="mt-4 grid gap-2 text-sm">
               <li class="whitespace-pre-line text-muted">{site.location}</li>
             </ul>
           </div>
           <div>
-            <p class="mono text-muted">Resources</p>
+            <p class="mono text-muted">{t('footer.resources')}</p>
             <ul class="mt-4 grid gap-2 text-sm">
-              <li><a class="hover:text-brand" href={site.resume} download>Download Résumé</a></li>
+              <li><a class="hover:text-brand" href={site.resume} download>{t('cta.resume')}</a></li>
             </ul>
-            <p class="mono mt-6 text-muted">Legal</p>
+            <p class="mono mt-6 text-muted">{t('footer.legal')}</p>
             <ul class="mt-4 grid gap-2 text-sm">
-              <li><a class="hover:text-brand" href="/privacy/">View Privacy</a></li>
+              <li><a class="hover:text-brand" href="/privacy/">{t('footer.privacy')}</a></li>
             </ul>
           </div>
         </div>
+
+        {
+          alternates && (
+            <div class="px-[var(--pad)] pb-5">
+              <LocaleSwitcher alternates={alternates} />
+            </div>
+          )
+        }
 
         <div class="mono flex flex-col gap-1 px-[var(--pad)] py-5 text-muted">
           <div class="grid w-fit grid-cols-[auto_auto] gap-x-3 gap-y-1">
@@ -144,7 +196,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
     {
       site.donateUrl && (
         <a class="btn btn--solid mono fixed bottom-6 right-6 z-30 shadow-xl" href={site.donateUrl} target="_blank" rel="noopener noreferrer">
-          Donate
+          {t('cta.donate')}
         </a>
       )
     }

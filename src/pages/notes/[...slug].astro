@@ -1,32 +1,18 @@
 ---
-import Base from '../../layouts/Base.astro';
-import { render } from 'astro:content';
-import { publishedNotes } from '../../lib/note-source.js';
-import { formatNoteDate } from '../../lib/notes.js';
+import NotePost from '../../components/pages/NotePost.astro';
+import { publishedNotes, allNotes } from '../../lib/note-source.js';
+import { slugOfId, localesForSlug } from '../../lib/notes.js';
 
 export async function getStaticPaths() {
-  const notes = await publishedNotes();
-  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+  const [notes, all] = await Promise.all([publishedNotes('en'), allNotes()]);
+  return notes.map((note) => {
+    const slug = slugOfId(note.id);
+    // Only the languages this piece actually exists in, so the switcher cannot offer a 404.
+    return { params: { slug }, props: { note, alternates: localesForSlug(all, slug) } };
+  });
 }
 
-const { note } = Astro.props;
-const { Content } = await render(note);
+const { note, alternates } = Astro.props;
 ---
 
-<Base title={`Aliaksei Kozel — ${note.data.title}`} description={note.data.summary}>
-  <article class="hair-b">
-    <div class="px-[var(--pad)] pt-14 pb-10">
-      <p class="mono text-muted">{formatNoteDate(note.data.date)}</p>
-      <h1 class="mt-5 max-w-[26ch] text-[clamp(1.9rem,6vw,4rem)] font-medium">{note.data.title}</h1>
-      <p class="mt-6 max-w-[56ch] text-lg text-secondary">{note.data.summary}</p>
-    </div>
-    <div class="px-[var(--pad)] pb-16">
-      <div class="prose">
-        <Content />
-      </div>
-      <p class="mono mt-16">
-        <a class="text-muted hover:text-brand" href="/notes/">← All notes</a>
-      </p>
-    </div>
-  </article>
-</Base>
+<NotePost locale="en" note={note} alternates={alternates} />

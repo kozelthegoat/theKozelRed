@@ -1,0 +1,33 @@
+---
+// The language menu. It is handed the list of languages the *current* page exists in, so it can
+// never offer a translation that isn't there — the difference between a language menu and a row
+// of 404s. Each language is named in itself: someone looking for their own tongue scans for its
+// letters, not for a translated word.
+import { localeNames, localeFromPath, pathInLocale } from '../i18n/config.mjs';
+
+const { alternates } = Astro.props;
+const current = localeFromPath(Astro.url.pathname);
+---
+
+<ul class="mono flex flex-wrap items-center gap-x-3 gap-y-1 text-muted">
+  {
+    alternates.map((locale) => (
+      <li>
+        {locale === current ? (
+          <span class="text-foreground" aria-current="true">
+            {localeNames[locale]}
+          </span>
+        ) : (
+          <a
+            class="hover:text-brand"
+            href={pathInLocale(Astro.url.pathname, locale)}
+            hreflang={locale}
+            lang={locale}
+          >
+            {localeNames[locale]}
+          </a>
+        )}
+      </li>
+    ))
+  }
+</ul>

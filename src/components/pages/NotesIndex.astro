@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import { publishedNotes } from '../../lib/note-source.js';
+import { formatNoteDate, slugOfId } from '../../lib/notes.js';
+import { locales, prefixFor } from '../../i18n/config.mjs';
+import { translator } from '../../i18n/ui.mjs';
+
+const { locale } = Astro.props;
+const t = translator(locale);
+const notes = await publishedNotes(locale);
+const base = prefixFor(locale);
+---
+
+<Base
+  title={`Aliaksei Kozel — ${t('notes.title')}`}
+  description={t('notes.description')}
+  alternates={locales}
+  lang={locale}
+>
+  <section class="hair-b">
+    <div class="px-[var(--pad)] pt-14 pb-12">
+      <p class="mono text-brand">{t('notes.eyebrow')}</p>
+      <h1 class="page-title mt-4">{t('notes.title')}</h1>
+      <p class="mt-6 max-w-[52ch] text-secondary">{t('notes.intro')}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="px-[var(--pad)] py-4 pb-20">
+      {
+        notes.length === 0 ? (
+          <p class="py-10 text-muted">{t('notes.empty')}</p>
+        ) : (
+          <ul>
+            {notes.map((note) => (
+              <li class="hair-b">
+                <a
+                  class="group grid gap-3 py-9 md:grid-cols-[9rem_1fr] md:gap-10"
+                  href={`${base}/notes/${slugOfId(note.id)}/`}
+                >
+                  <span class="mono text-muted">{formatNoteDate(note.data.date, locale)}</span>
+                  <span class="grid gap-2">
+                    <span class="text-[clamp(1.25rem,2.4vw,1.8rem)] font-medium transition-colors group-hover:text-brand">
+                      {note.data.title}
+                    </span>
+                    <span class="max-w-[62ch] text-secondary">{note.data.summary}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+</Base>
