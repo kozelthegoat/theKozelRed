@@ -110,3 +110,29 @@ integration docs — did not come through a plain fetch. Unverified, not absent.
 
 **Unchanged either way:** the source of truth is the **server-side status lookup**, never the return URL — which is
 what VPOS.am's own article insists on twice, and it matters more with a bank that may not sign webhooks at all.
+
+### Ardshinbank vPOS — read from the screenshots (2026-10-18)
+
+Eight screenshots of the VPOS tab, OCR'd with macOS Vision (no image context spent, text only).
+
+**Fees, from the published tariff** ("Terms and tariffs for non-cash transactions via virtual terminals ... valid
+from 01.03.2026"), split by card issuer and risk class:
+
+| risk class | ArCa (Ardshinbank) | ArCa (other banks) | Visa/MC (Ardshinbank) | Visa/MC (other banks) |
+|---|---|---|---|---|
+| Low | 1% | 1.5% | 1.5% | 1.8% |
+| High | 1.5% | 2% | 2% | ~2.5% |
+
+So the MDR is roughly **1–2.5%**, cheaper for cards issued by Ardshinbank itself — which is a real argument for
+naming the bank in the donate copy, if we ever want to.
+
+**Recurring: no mention anywhere.** A keyword sweep of all eight screenshots for *recurring, subscription, token,
+regular, periodic, monthly, repeat, auto* returns **zero** hits. What the pages do advertise: MasterCard/Visa/ArCa,
+3-D Secure, 24/7 worldwide, and the two connection routes.
+
+That is a strong signal, not proof: the screenshots cover the VPOS tab and the POS-terminal FAQ, not the linked
+tariff document in full nor the merchant-onboarding pages. Banks usually advertise what they support, so the
+working assumption is **no recurring on vPOS**, and the enquiry question stands:
+
+> Does the merchant agreement support **tokenization for recurring charges**, or do you sell a subscription
+> product separately?
