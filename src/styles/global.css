@@ -59,10 +59,18 @@
   }
 }
 
-/* A decided request: the chosen action keeps its mark, the other greys out, and neither
-   takes a click — the answer is a decision, not a toggle. */
-.status-form button:disabled { cursor: default; pointer-events: none; }
-.status-form button:disabled:not([aria-pressed='true']) { opacity: 0.3; }
+/* A decided request keeps only its mark: the button around it is gone and what is left sits at
+   half weight, so attention stays on the rows that still want an answer. It holds the button's
+   own box, so answering a row does not shift the column. */
+.status-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--muted);
+  opacity: 0.5;
+}
 
 /* Requests table. Everything inside the table inherits `vertical-align: middle`, which
    centres each cell's box — so a 10px mono date beside a 12px sans name reads as two
@@ -292,14 +300,6 @@ dialog.req-done[open] {
    label and border keep the raw accent. Deepening them was tried and read worse — leave it. */
 .btn--solid::after { background: var(--background); }
 .btn--solid:hover { color: var(--brand); border-color: var(--brand); }
-
-/* Selected state (admin rows). Same specificity as .btn:hover but later in source,
-   so it must exclude hover — otherwise the label takes the fill's colour and vanishes. */
-.btn[aria-pressed="true"]:not(:hover) {
-  border-color: var(--brand);
-  background: var(--brand-tint);
-  color: var(--brand);
-}
 
 .arrow { transition: transform 0.45s var(--ease); }
 .btn:hover .arrow { transform: translateX(0.25rem); }

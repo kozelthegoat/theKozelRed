@@ -10,53 +10,68 @@ const BUTTONS = [
   { value: 'declined', label: 'Decline', icon: 'M5.5 5.5l9 9M14.5 5.5l-9 9' }
 ];
 
-// A decided request shows only the mark that was chosen — the other half is geometry that says
-// nothing. An unanswered one still shows both, because both are still open.
-const visible =
-  request.status === 'new' ? BUTTONS : BUTTONS.filter((b) => b.value === request.status);
+// An answered request keeps only the mark that was chosen, and keeps it as a mark: the outline
+// around it was geometry that said nothing, and at half weight the eye stays on the rows that
+// still want an answer. An unanswered one still shows both, because both are still open.
+const decided = request.status !== 'new';
+const chosen = BUTTONS.find((b) => b.value === request.status);
 ---
 
-<form
-  method="post"
-  action="/api/me/status"
-  class:list={[
-    'status-form flex items-center gap-2',
-    compact ? 'flex-nowrap justify-end' : 'flex-wrap'
-  ]}
->
-  <input type="hidden" name="id" value={request.id} />
-  <input type="hidden" name="sort" value={sort} />
-  <input type="hidden" name="dir" value={dir} />
-  <input type="hidden" name="page" value={page} />
-  <input type="hidden" name="past" value={past ? '1' : ''} />
-
-  {
-    visible.map((button) => (
-      <button
-        class:list={['btn', compact ? 'btn--icon' : 'mono']}
-        name="status"
-        value={button.value}
-        aria-pressed={request.status === button.value}
-        disabled={request.status !== 'new'}
-        aria-label={compact ? button.label : undefined}
-        title={compact ? button.label : undefined}
+{
+  decided ? (
+    <span class="status-mark" role="img" aria-label={chosen?.label} title={chosen?.label}>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        aria-hidden="true"
       >
-        {compact ? (
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            aria-hidden="true"
-          >
-            <path d={button.icon} stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        ) : (
-          <span>{button.label}</span>
-        )}
-      </button>
-    ))
-  }
-</form>
+        <path d={chosen?.icon} stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+  ) : (
+    <form
+      method="post"
+      action="/api/me/status"
+      class:list={[
+        'status-form flex items-center gap-2',
+        compact ? 'flex-nowrap justify-end' : 'flex-wrap'
+      ]}
+    >
+      <input type="hidden" name="id" value={request.id} />
+      <input type="hidden" name="sort" value={sort} />
+      <input type="hidden" name="dir" value={dir} />
+      <input type="hidden" name="page" value={page} />
+      <input type="hidden" name="past" value={past ? '1' : ''} />
+
+      {BUTTONS.map((button) => (
+        <button
+          class:list={['btn', compact ? 'btn--icon' : 'mono']}
+          name="status"
+          value={button.value}
+          aria-label={compact ? button.label : undefined}
+          title={compact ? button.label : undefined}
+        >
+          {compact ? (
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              aria-hidden="true"
+            >
+              <path d={button.icon} stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          ) : (
+            <span>{button.label}</span>
+          )}
+        </button>
+      ))}
+    </form>
+  )
+}
