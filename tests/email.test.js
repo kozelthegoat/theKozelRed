@@ -1,18 +1,69 @@
 import { describe, it, expect } from 'vitest';
-import { declineCopy, dualTime, sendBookingEmails } from '../src/lib/email.js';
+import {
+  declineCopy,
+  confirmedCopy,
+  dualTime,
+  requesterSubject,
+  hostSubject,
+  sendBookingEmails,
+  sendConfirmEmail
+} from '../src/lib/email.js';
 
 const args = {
   name: 'Alex',
-  when: '2026-10-17 16:00 · Working Session',
+  date: '2026-10-17',
+  time: '16:00',
+  visitorTz: 'Europe/Berlin',
+  typeName: 'Working Session',
+  minutes: 60,
   brand: '#fa3600'
 };
 
+const withFetch = async (run) => {
+  const sent = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async (_url, opts) => {
+    sent.push(JSON.parse(opts.body));
+    return { ok: true };
+  };
+  try {
+    await run();
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+  return sent;
+};
+
+describe('subjects', () => {
+  it('names the counterparty, the session, the date and the local time', () => {
+    expect(hostSubject({ name: 'Alex Berlin', date: '2026-10-17', time: '16:00', typeName: 'Working Session' })).toBe(
+      '1:1 · Alex Berlin · Working Session · 2026-10-17 · 16:00 Minsk'
+    );
+    expect(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Berlin', typeName: 'Working Session' })).toBe(
+      '1:1 · Aliaksei Kozel · Working Session · 2026-10-17 · 15:00 Berlin'
+    );
+  });
+
+  it('falls back to Minsk when the zone is unknown or junk', () => {
+    expect(requesterSubject({ date: '2026-10-17', time: '16:00', typeName: 'Intro Call' })).toBe(
+      '1:1 · Aliaksei Kozel · Intro Call · 2026-10-17 · 16:00 Minsk'
+    );
+    expect(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Not/AZone', typeName: 'Intro Call' })).toBe(
+      '1:1 · Aliaksei Kozel · Intro Call · 2026-10-17 · 16:00 Minsk'
+    );
+  });
+});
+
 describe('declineCopy', () => {
-  it('names the declined time in the subject and the body', () => {
-    const { subject, text, html } = declineCopy(args);
-    expect(subject).toContain(args.when);
-    expect(text).toContain(args.when);
-    expect(html).toContain(args.when);
+  it('keeps the requester thread subject, so the whole exchange threads together', () => {
+    const { subject } = declineCopy(args);
+    expect(subject).toBe(requesterSubject(args));
+  });
+
+  it('states the status change in the body', () => {
+    const { text, html } = declineCopy(args);
+    expect(text).toContain('An update on your request');
+    expect(html).toContain('An update on your request');
   });
 
   it('thanks them for the opportunity', () => {
@@ -21,23 +72,31 @@ describe('declineCopy', () => {
     expect(html).toContain('grateful for the opportunity');
   });
 
-  it('says the time is off the table, with the race-condition line', () => {
+  it('drops the race-condition line and the off-the-table phrasing', () => {
     const { text, html } = declineCopy(args);
-    expect(text).toContain('off the table now');
-    expect(text).toContain('Call it a race condition — the calendar won this round.');
-    expect(html).toContain('the calendar won this round.');
+    for (const s of [text, html]) {
+      expect(s).not.toContain('race condition');
+      expect(s).not.toContain('off the table');
+      expect(s).not.toContain('calendar won');
+    }
   });
 
-  it('invites another time as theirs to take', () => {
+  it('does not apologise with the disappoint line', () => {
     const { text, html } = declineCopy(args);
-    expect(text).toContain("you're welcome to pick another time");
-    expect(html).toContain("you're welcome to pick another time");
+    expect(text).not.toContain('sorry to disappoint');
+    expect(html).not.toContain('sorry to disappoint');
   });
 
-  it('promises no reply clock', () => {
+  it('leaves another time as theirs to take, with a standard button label', () => {
     const { text, html } = declineCopy(args);
-    expect(text).not.toContain('confirm right away');
-    expect(html).not.toContain('confirm right away');
+    expect(text).toContain("you're welcome to choose another time");
+    expect(html).toContain('Choose another time');
+    expect(html).not.toContain('Pick another time');
+  });
+
+  it('quotes the local clock and the Minsk anchor the time was booked in', () => {
+    const { text } = declineCopy(args);
+    expect(text).toContain('2026-10-17 15:00 (Europe/Berlin) — 2026-10-17 16:00 (Europe/Minsk)');
   });
 
   it('escapes the name and carries the brand accent', () => {
@@ -45,6 +104,34 @@ describe('declineCopy', () => {
     expect(html).toContain('&lt;b&gt;Alex&lt;/b&gt;');
     expect(html).not.toContain('<b>Alex</b>');
     expect(html).toContain(args.brand);
+  });
+});
+
+describe('confirmedCopy', () => {
+  it('reuses the same subject, so a confirmation threads with the request', () => {
+    const { subject } = confirmedCopy(args);
+    expect(subject).toBe(requesterSubject(args));
+  });
+
+  it('says it is confirmed and names the moment', () => {
+    const { text, html } = confirmedCopy(args);
+    expect(text).toContain('confirmed');
+    expect(text).toContain('2026-10-17 15:00 (Europe/Berlin)');
+    expect(html).toContain('2026-10-17');
+  });
+});
+
+describe('bold', () => {
+  it('emphasises the session type, date and time in the html body', () => {
+    const host = declineCopy(args).html;
+    expect(host).toContain('<strong>Working Session</strong>');
+    expect(host).toContain('<strong>2026-10-17</strong>');
+  });
+
+  it('emphasises them in the confirmation too', () => {
+    const { html } = confirmedCopy(args);
+    expect(html).toContain('<strong>Working Session</strong>');
+    expect(html).toContain('<strong>2026-10-17</strong>');
   });
 });
 
@@ -72,38 +159,61 @@ describe('dualTime', () => {
   });
 });
 
-describe('subject shape', () => {
-  it('reads the same way for every email about a request', async () => {
-    const sent = [];
-    const realFetch = globalThis.fetch;
-    globalThis.fetch = async (_url, opts) => {
-      sent.push(JSON.parse(opts.body));
-      return { ok: true };
-    };
-    try {
-      await sendBookingEmails(
+describe('sendBookingEmails', () => {
+  it('sends the host subject to me and the requester subject to them', async () => {
+    const sent = await withFetch(() =>
+      sendBookingEmails(
         { RESEND_API_KEY: 'k', BOOKING_TO: 'me@kozel.red' },
         {
           type: { name: 'Working Session', minutes: 60 },
           date: '2026-10-17',
           time: '16:00',
+          visitorTz: 'Europe/Berlin',
           name: 'Alex Berlin',
           email: 'alex@example.com',
           note: 'hi'
         }
-      );
-    } finally {
-      globalThis.fetch = realFetch;
-    }
+      )
+    );
 
-    expect(sent[0].subject).toBe('1:1 — New · Alex Berlin · Working Session · 2026-10-17 16:00 Minsk');
-    expect(sent[1].subject).toBe('1:1 · Working Session · 2026-10-17 16:00 Minsk');
+    expect(sent[0].subject).toBe(hostSubject({ name: 'Alex Berlin', date: '2026-10-17', time: '16:00', typeName: 'Working Session' }));
+    expect(sent[1].subject).toBe(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Berlin', typeName: 'Working Session' }));
+  });
+});
 
-    const decline = declineCopy({
-      name: 'Alex Berlin',
-      when: '2026-10-17 16:00 Minsk',
-      typeName: 'Working Session'
-    });
-    expect(decline.subject).toBe('1:1 — Declined · Working Session · 2026-10-17 16:00 Minsk');
+describe('sendConfirmEmail', () => {
+  it('attaches an .ics that decodes to a calendar', async () => {
+    const sent = await withFetch(() =>
+      sendConfirmEmail(
+        { RESEND_API_KEY: 'k' },
+        {
+          id: 42,
+          name: 'Alex Berlin',
+          email: 'alex@example.com',
+          date: '2026-10-17',
+          time: '16:00',
+          visitorTz: 'Europe/Berlin',
+          type: { name: 'Working Session', minutes: 60 }
+        }
+      )
+    );
+
+    expect(sent).toHaveLength(1);
+    expect(sent[0].to).toBe('alex@example.com');
+    expect(sent[0].subject).toBe(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Berlin', typeName: 'Working Session' }));
+
+    const attachment = sent[0].attachments[0];
+    expect(attachment.filename).toBe('1-1-working-session-2026-10-17.ics');
+    const decoded = Buffer.from(attachment.content, 'base64').toString('utf8');
+    expect(decoded).toContain('BEGIN:VCALENDAR');
+    expect(decoded).toContain('DTSTART:20261017T130000Z');
+    expect(decoded).toContain('UID:request-42@kozel.red');
+  });
+
+  it('skips quietly without a key', async () => {
+    const sent = await withFetch(() =>
+      sendConfirmEmail({}, { id: 1, name: 'A', email: 'a@b.c', date: '2026-10-17', time: '16:00', type: { name: 'Intro Call', minutes: 30 } })
+    );
+    expect(sent).toHaveLength(0);
   });
 });
