@@ -28,22 +28,34 @@ export function parsePage(params = new URLSearchParams()) {
   return Number.isFinite(page) && page >= 1 ? page : 1;
 }
 
+// Past rows are out of the listing unless the URL asks for them. One list, one sort —
+// the filter changes what is in it, never how it is read.
+export function parsePast(params = new URLSearchParams()) {
+  return String(params?.get?.('past') ?? '') === '1';
+}
+
 export function listParams(searchParams, total, pageSize = PAGE_SIZE) {
   const { sort, dir } = parseSort(searchParams);
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const page = Math.min(parsePage(searchParams), pages);
-  return { sort, dir, page, pages, pageSize, offset: (page - 1) * pageSize };
+  return { sort, dir, page, pages, pageSize, offset: (page - 1) * pageSize, past: parsePast(searchParams) };
 }
 
-export function listSql(sort, dir) {
+// `email_count` is how many requests share the address on that row — the repeat badge.
+// A correlated subquery rather than a join: it cannot multiply rows, so it cannot
+// disturb the ordering or the pagination.
+export function listSql(sort, dir, { includePast = false } = {}) {
   const column = COLUMNS[sort] || DEFAULT_SORT;
   const direction = dir === 'desc' ? 'DESC' : 'ASC';
-  return `SELECT id, type, slot_date, slot_time, name, email, note, status, created_at FROM requests ORDER BY ${column} ${direction}, id ${direction} LIMIT ? OFFSET ?`;
+  const where = includePast ? '' : ' WHERE slot_date >= ?';
+  return `SELECT id, type, slot_date, slot_time, name, email, note, status, created_at, (SELECT COUNT(*) FROM requests r WHERE r.email = requests.email) AS email_count FROM requests${where} ORDER BY ${column} ${direction}, id ${direction} LIMIT ? OFFSET ?`;
 }
 
-export function listHref({ sort, dir, page }, overrides = {}) {
-  const next = { sort, dir, page, ...overrides };
-  return `/me?${new URLSearchParams({ sort: next.sort, dir: next.dir, page: String(next.page) })}`;
+export function listHref({ sort, dir, page, past }, overrides = {}) {
+  const next = { sort, dir, page, past, ...overrides };
+  const params = new URLSearchParams({ sort: next.sort, dir: next.dir, page: String(next.page) });
+  if (next.past) params.set('past', '1');
+  return `/me?${params}`;
 }
 
 // The decline notice goes out on the transition only. Without this, declining an
@@ -51,4 +63,10 @@ export function listHref({ sort, dir, page }, overrides = {}) {
 // confirm/decline toggling, so a few clicks meant a few emails.
 export function shouldSendDecline(prevStatus, nextStatus) {
   return nextStatus === 'declined' && prevStatus !== 'declined';
+}
+
+// The confirmation goes out on the transition only, so re-confirming does not post the
+// same calendar invite to the requester a second time.
+export function shouldSendConfirm(prevStatus, nextStatus) {
+  return nextStatus === 'confirmed' && prevStatus !== 'confirmed';
 }

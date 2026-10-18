@@ -2,7 +2,7 @@
 // Confirm/Decline for one request, shared by the two layouts on /me: labelled buttons in the
 // mobile card, icon-only ones in the table row. The hidden fields carry the current view so
 // the POST lands back on the same page and sort.
-const { request, sort, dir, page, variant = 'label' } = Astro.props;
+const { request, sort, dir, page, past = false, variant = 'label' } = Astro.props;
 const compact = variant === 'icon';
 
 const BUTTONS = [
@@ -23,6 +23,7 @@ const BUTTONS = [
   <input type="hidden" name="sort" value={sort} />
   <input type="hidden" name="dir" value={dir} />
   <input type="hidden" name="page" value={page} />
+  <input type="hidden" name="past" value={past ? '1' : ''} />
 
   {
     BUTTONS.map((button) => (

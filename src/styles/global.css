@@ -75,6 +75,21 @@
 .req-table td { vertical-align: baseline; }
 .req-table td:last-child { vertical-align: top; }
 
+/* An unanswered request wears the same 3px bar a hovered recommendation does — there it is a
+   flourish, here it is the one mark saying the row still asks for an answer. Drawn as an inset
+   shadow on the first cell (or the mobile card) so it needs no extra markup and, being inside
+   the box, cannot shift the table. */
+article[data-new],
+.req-table tr[data-new] > td:first-child {
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+/* Past rows, when the filter shows them, sit behind the live ones. */
+article[data-past],
+.req-table tr[data-past] > td {
+  opacity: 0.55;
+}
+
 /* Page title — one size for every page h1, so they can't drift apart.
    The home hero keeps its own, much larger display size. */
 .page-title {

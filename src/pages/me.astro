@@ -1,9 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import { env } from 'cloudflare:workers';
-import { listParams, listSql, listHref } from '../lib/requests.js';
+import { listParams, listSql, listHref, parsePast } from '../lib/requests.js';
 import { availability, sessionTypes } from '../data/sessions.js';
-import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel } from '../lib/tz.js';
+import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel, nowInTz } from '../lib/tz.js';
 import StatusForm from '../components/StatusForm.astro';
 import { linkify } from '../lib/linkify.js';
 
@@ -35,25 +35,42 @@ const nameLines = (full) => {
 const db = env?.DB;
 const params = Astro.url.searchParams;
 
+// "Today" is the schedule's day, not the server's, and it is the single date the filter
+// and the rows are both compared against — so the counts and the list cannot disagree.
+const today = nowInTz(availability.timezone).date;
+
 let rows = [];
 let total = 0;
+let pastCount = 0;
 let pending = 0;
 let list = listParams(params, 0);
 
 if (db) {
-  const totals = await db
+  const counts = await db
     .prepare(
-      "SELECT COUNT(*) AS total, COALESCE(SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END), 0) AS pending FROM requests"
+      `SELECT
+         COALESCE(SUM(CASE WHEN slot_date >= ? THEN 1 ELSE 0 END), 0) AS upcoming,
+         COALESCE(SUM(CASE WHEN slot_date < ? THEN 1 ELSE 0 END), 0) AS past,
+         COALESCE(SUM(CASE WHEN status = 'new' AND slot_date >= ? THEN 1 ELSE 0 END), 0) AS pending_upcoming,
+         COALESCE(SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END), 0) AS pending_all
+       FROM requests`
     )
+    .bind(today, today, today)
     .first();
-  total = Number(totals?.total ?? 0);
-  pending = Number(totals?.pending ?? 0);
+
+  const upcoming = Number(counts?.upcoming ?? 0);
+  pastCount = Number(counts?.past ?? 0);
+  // Every number on the page describes what is on the page: past rows are counted only
+  // once the filter is on, so `to review` can never point at something you cannot see.
+  total = list.past ? upcoming + pastCount : upcoming;
+  pending = list.past ? Number(counts?.pending_all ?? 0) : Number(counts?.pending_upcoming ?? 0);
 
   list = listParams(params, total);
-  const { results } = await db
-    .prepare(listSql(list.sort, list.dir))
-    .bind(list.pageSize, list.offset)
-    .all();
+  const stmt = db.prepare(listSql(list.sort, list.dir, { includePast: list.past }));
+  const { results } = await (list.past
+    ? stmt.bind(list.pageSize, list.offset)
+    : stmt.bind(today, list.pageSize, list.offset)
+  ).all();
   // created_at is a UTC instant; the slot columns are already Minsk wall clock. Show both
   // in the zone the site runs on, so a row can be read without converting in your head.
   rows = (results || []).map((r) => ({
@@ -72,7 +89,7 @@ const typeName = (id) => TYPE_NAMES[id] || id;
 // session data, so the numbers live in one place.
 const TYPE_LABELS = Object.fromEntries(sessionTypes.map((t) => [t.id, `${t.minutes}m`]));
 const typeShort = (id) => TYPE_LABELS[id] || id;
-const isPast = (d) => d < new Date().toISOString().slice(0, 10);
+const isPast = (d) => d < today;
 
 // Clicking the active column flips direction; a new column starts ascending. Either way
 // we go back to page 1, otherwise the page can land past the end of the new order.
@@ -91,11 +108,20 @@ const statusTone = (s) =>
       <p class="mono text-brand">Me</p>
       <h1 class="page-title mt-4">1:1 / Requests</h1>
       <p class="mono mt-3 text-muted">{pending} to review · {total} total</p>
+      {(pastCount > 0 || list.past) && (
+        <p class="mono mt-2 text-muted">
+          <a class="hover:text-brand" href={listHref(list, { past: !list.past, page: 1 })}>
+            {list.past ? 'Hide past' : `Show past (${pastCount})`}
+          </a>
+        </p>
+      )}
       <p class="mono mt-2 text-muted">Times in {tzLabel}</p>
     </div>
 
     <div class="px-[var(--pad)] pb-16">
-      {total === 0 && <p class="text-muted">Nothing yet.</p>}
+      {total === 0 && (
+        <p class="text-muted">{!list.past && pastCount > 0 ? 'Nothing upcoming.' : 'Nothing yet.'}</p>
+      )}
 
       {
         total > 0 && (
@@ -120,7 +146,11 @@ const statusTone = (s) =>
 
             <div id="list" class="grid gap-4 lg:hidden">
               {rows.map((r) => (
-                <article class="hair grid gap-4 p-5">
+                <article
+                  class="hair grid gap-4 p-5"
+                  data-new={r.status === 'new' ? 'true' : undefined}
+                  data-past={isPast(r.slot_date) ? 'true' : undefined}
+                >
                   <div class="grid gap-1">
                     <p class="mono text-muted">
                       <span class={r.status === 'declined' ? 'line-through' : ''}>
@@ -128,9 +158,18 @@ const statusTone = (s) =>
                       </span>
                       {' · '}
                       {typeName(r.type)}
-                      {isPast(r.slot_date) && ' · past'}
                     </p>
-                    <p class="text-lg font-medium">{r.name}</p>
+                    <p class="text-lg font-medium">
+                      {r.name}
+                      {Number(r.email_count) > 1 && (
+                        <span
+                          class="mono ml-2 align-middle text-brand"
+                          title={`${r.email_count} requests from this address`}
+                        >
+                          ×{r.email_count}
+                        </span>
+                      )}
+                    </p>
                     <p class="text-sm">
                       <a class="text-secondary hover:text-brand" href={`mailto:${r.email}`}>
                         {r.email}
@@ -139,7 +178,13 @@ const statusTone = (s) =>
                     <p class={`mono mt-1 ${statusTone(r.status)}`}>{r.status}</p>
                     {r.note && <p class="mt-1 text-sm text-secondary" set:html={linkify(r.note)} />}
                   </div>
-                  <StatusForm request={r} sort={list.sort} dir={list.dir} page={list.page} />
+                  <StatusForm
+                    request={r}
+                    sort={list.sort}
+                    dir={list.dir}
+                    page={list.page}
+                    past={list.past}
+                  />
                 </article>
               ))}
             </div>
@@ -184,16 +229,29 @@ const statusTone = (s) =>
                 </thead>
                 <tbody>
                   {rows.map((r) => (
-                    <tr class="hair-b">
+                    <tr
+                      class="hair-b"
+                      data-new={r.status === 'new' ? 'true' : undefined}
+                      data-past={isPast(r.slot_date) ? 'true' : undefined}
+                    >
                       <td class="py-4 pr-4 text-sm leading-tight whitespace-nowrap">
                         <span class={r.status === 'declined' ? 'text-muted line-through' : ''}>
                           {r.slot_date}
                         </span>
-                        {isPast(r.slot_date) && <span class="ml-2 text-muted">past</span>}
                         <span class="block text-muted">{r.slot_time}</span>
                       </td>
                       <td class="py-4 pr-4 text-sm text-secondary" title={r.name}>
-                        <span class="block truncate">{r.nameParts.first}</span>
+                        <span class="flex items-baseline gap-1.5">
+                          <span class="truncate">{r.nameParts.first}</span>
+                          {Number(r.email_count) > 1 && (
+                            <span
+                              class="mono shrink-0 text-brand"
+                              title={`${r.email_count} requests from this address`}
+                            >
+                              ×{r.email_count}
+                            </span>
+                          )}
+                        </span>
                         {r.nameParts.rest && <span class="block truncate">{r.nameParts.rest}</span>}
                       </td>
                       <td class="truncate py-4 pr-4 text-sm" title={r.email}>
@@ -231,6 +289,7 @@ const statusTone = (s) =>
                           sort={list.sort}
                           dir={list.dir}
                           page={list.page}
+                          past={list.past}
                           variant="icon"
                         />
                       </td>

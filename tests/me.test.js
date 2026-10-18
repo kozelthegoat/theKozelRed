@@ -3,14 +3,19 @@ import {
   PAGE_SIZE,
   parseSort,
   parsePage,
+  parsePast,
   listParams,
   listSql,
   listHref,
   shouldSendDecline,
+  shouldSendConfirm,
   SORTABLE
 } from '../src/lib/requests.js';
 
 const q = (s) => new URLSearchParams(s);
+
+const SELECT =
+  'SELECT id, type, slot_date, slot_time, name, email, note, status, created_at, (SELECT COUNT(*) FROM requests r WHERE r.email = requests.email) AS email_count FROM requests';
 
 describe('parseSort', () => {
   it('defaults to when-ascending', () => {
@@ -50,10 +55,35 @@ describe('parsePage', () => {
   });
 });
 
+describe('parsePast', () => {
+  it('is off unless the URL asks for it', () => {
+    expect(parsePast(q(''))).toBe(false);
+    expect(parsePast(q('past=0'))).toBe(false);
+    expect(parsePast(q('past=true'))).toBe(false);
+    expect(parsePast(q('past=yes'))).toBe(false);
+  });
+
+  it('turns on only for past=1', () => {
+    expect(parsePast(q('past=1'))).toBe(true);
+  });
+
+  it('tolerates a missing searchParams object', () => {
+    expect(parsePast()).toBe(false);
+  });
+});
+
 describe('listParams', () => {
   it('computes pages and offset for a full page', () => {
     const p = listParams(q('page=2'), 45);
-    expect(p).toEqual({ sort: 'slot_date', dir: 'asc', page: 2, pages: 3, pageSize: PAGE_SIZE, offset: 20 });
+    expect(p).toEqual({
+      sort: 'slot_date',
+      dir: 'asc',
+      page: 2,
+      pages: 3,
+      pageSize: PAGE_SIZE,
+      offset: 20,
+      past: false
+    });
   });
 
   it('clamps a page past the end', () => {
@@ -72,13 +102,30 @@ describe('listParams', () => {
     expect(listParams(q(''), 21).pages).toBe(2);
     expect(listParams(q(''), 20).pages).toBe(1);
   });
+
+  it('carries the past filter', () => {
+    expect(listParams(q('past=1'), 45).past).toBe(true);
+    expect(listParams(q(''), 45).past).toBe(false);
+  });
 });
 
 describe('listSql', () => {
   it('orders by the whitelisted column, with id as the tie-breaker', () => {
     expect(listSql('name', 'desc')).toBe(
-      'SELECT id, type, slot_date, slot_time, name, email, note, status, created_at FROM requests ORDER BY name DESC, id DESC LIMIT ? OFFSET ?'
+      `${SELECT} WHERE slot_date >= ? ORDER BY name DESC, id DESC LIMIT ? OFFSET ?`
     );
+  });
+
+  it('drops the date filter when past rows are asked for', () => {
+    expect(listSql('name', 'desc', { includePast: true })).toBe(
+      `${SELECT} ORDER BY name DESC, id DESC LIMIT ? OFFSET ?`
+    );
+    expect(listSql('name', 'desc', { includePast: true })).not.toContain('slot_date >= ?');
+  });
+
+  it('counts every request from the same address, for the repeat badge', () => {
+    expect(listSql('name', 'asc')).toContain('AS email_count');
+    expect(listSql('name', 'asc')).toContain('r.email = requests.email');
   });
 
   it('never lets a hostile value reach the SQL', () => {
@@ -104,6 +151,19 @@ describe('listHref', () => {
       '/me?sort=name&dir=desc&page=4'
     );
   });
+
+  it('carries the past filter through sort and page links', () => {
+    expect(listHref({ sort: 'name', dir: 'asc', page: 2, past: true })).toBe(
+      '/me?sort=name&dir=asc&page=2&past=1'
+    );
+    expect(listHref({ sort: 'name', dir: 'asc', page: 2, past: false })).toBe(
+      '/me?sort=name&dir=asc&page=2'
+    );
+  });
+
+  it('leaves past out when it is not in the view', () => {
+    expect(listHref({ sort: 'name', dir: 'asc', page: 1 })).not.toContain('past');
+  });
 });
 
 describe('SORTABLE', () => {
@@ -122,5 +182,18 @@ describe('shouldSendDecline', () => {
     expect(shouldSendDecline('declined', 'declined')).toBe(false);
     expect(shouldSendDecline('new', 'confirmed')).toBe(false);
     expect(shouldSendDecline('declined', 'confirmed')).toBe(false);
+  });
+});
+
+describe('shouldSendConfirm', () => {
+  it('fires only on the move into confirmed', () => {
+    expect(shouldSendConfirm('new', 'confirmed')).toBe(true);
+    expect(shouldSendConfirm('declined', 'confirmed')).toBe(true);
+  });
+
+  it('stays quiet on a re-confirm, or when not confirming', () => {
+    expect(shouldSendConfirm('confirmed', 'confirmed')).toBe(false);
+    expect(shouldSendConfirm('new', 'declined')).toBe(false);
+    expect(shouldSendConfirm('confirmed', 'declined')).toBe(false);
   });
 });
