@@ -145,11 +145,6 @@
   select {
     font-size: 16px;
   }
-  /* The booking form opts out of the 16px guard too: name, email and note match the timezone
-     picker's compact size on phones. iOS zooms the page when one of them takes focus. */
-  .field {
-    font-size: 0.875rem;
-  }
 }
 
 /* The timezone picker is the exception: it stays compact at every width, so the search box is
@@ -181,6 +176,9 @@
 .field {
   border: var(--hair) solid var(--border);
   background: transparent;
+  /* Matches the calendar's chips and the picker at every width, not just on phones; the
+     fields opt out of the 16px iOS-zoom guard, which is why iOS zooms on focus. */
+  font-size: 0.875rem;
   transition: border-color 0.15s ease;
 }
 .field:focus {
