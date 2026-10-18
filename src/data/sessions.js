@@ -1,8 +1,12 @@
 // 1:1 session types.
+// Every session is 30 minutes. Short enough to fit inside a free Zoom room with ten minutes
+// of slack, and short enough that a request has to arrive specific to be worth booking. What
+// separates the three types is what each one sets out to do, not how long it takes.
 export const sessionTypes = [
   {
     id: 'intro',
     name: 'Intro Call',
+    short: 'Intro',
     minutes: 30,
     audience: 'For everyone',
     description: 'A short, no-agenda hello — to hear where you are, and what might come next.',
@@ -22,9 +26,10 @@ export const sessionTypes = [
   {
     id: 'career',
     name: 'Career Review',
-    minutes: 45,
+    short: 'Career',
+    minutes: 30,
     audience: 'For individuals',
-    description: 'Your résumé, your portfolio, and the story they’re not telling yet.',
+    description: 'Your story, and the first place it’s losing people.',
     confirmation: 'You’re not behind. You’re carrying a good story in the wrong order.',
     bring: [
       'A résumé that isn’t landing interviews',
@@ -32,18 +37,18 @@ export const sessionTypes = [
       'A fork in the road — stay, switch, or go it alone'
     ],
     build: [
-      'A sharper story and positioning',
-      'A résumé that reads the way you mean it to',
-      'A set of concrete steps for the next chapter',
-      'The confidence to ask for more without excuse'
+      'A sharper way to say what you actually do',
+      'The part of your story that isn’t landing',
+      'The first edit to make, and why'
     ]
   },
   {
     id: 'work',
     name: 'Working Session',
-    minutes: 60,
+    short: 'Work',
+    minutes: 30,
     audience: 'For businesses',
-    description: 'One specific problem, worked through together — and a plan you can keep.',
+    description: 'One specific problem, taken apart together — and the first move you can make.',
     confirmation: 'You’ve been holding this one alone long enough. Let’s put it on the table.',
     bring: [
       'A launch that keeps slipping',
@@ -52,12 +57,10 @@ export const sessionTypes = [
       'A plan that doesn’t survive contact with reality'
     ],
     build: [
-      'A concrete plan you can act on Monday',
+      'The problem underneath the problem',
       'The trade-offs spelled out, not hidden',
-      'Decision points, and what to do at each',
-      'The first three moves, in order',
-      'Short written notes afterwards',
-      'Confidence that the plan holds when it meets reality'
+      'Your first move, and what it unlocks',
+      'Short written notes afterwards'
     ]
   }
 ];

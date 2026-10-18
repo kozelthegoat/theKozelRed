@@ -84,10 +84,10 @@ if (db) {
 const tzLabel = `${availability.timezone} (${zoneOffsetLabel(availability.timezone)})`;
 
 const typeName = (id) => TYPE_NAMES[id] || id;
-// Table-only label: the duration. 30/45/60 identify the three types one-to-one, need no lookup
-// key to read, and take almost no width; the full name is in the title. Derived from the
-// session data, so the numbers live in one place.
-const TYPE_LABELS = Object.fromEntries(sessionTypes.map((t) => [t.id, `${t.minutes}m`]));
+// Table-only label. It used to be the duration — 30/45/60 told the three types apart in almost
+// no width — but with every session at 30 minutes that column said the same thing on every row.
+// The short name takes the same space and still needs no lookup key; the full name is in the title.
+const TYPE_LABELS = Object.fromEntries(sessionTypes.map((t) => [t.id, t.short]));
 const typeShort = (id) => TYPE_LABELS[id] || id;
 const isPast = (d) => d < today;
 
