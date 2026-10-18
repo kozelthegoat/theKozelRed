@@ -12,7 +12,7 @@ export const site = {
   // button is the action, and a second call to action in the same block would compete.
   availability: 'Open to part-time roles and contracts',
   email: 'aliaksei.pashkel@gmail.com',
-  resume: '/kozel-resume-2026-10-16.pdf',
+  resume: '/kozel-resume-2026-10-18.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],
   education: ['BA, English Literature', 'Minsk State Linguistic University'],
   offClock: ['Meditation', 'Mind–body discipline', 'Volunteering', 'Vibe Coding'],
