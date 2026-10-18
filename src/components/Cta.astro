@@ -1,0 +1,25 @@
+---
+// The site's one call-to-action button. Five of these were being hand-written, which is how the
+// hero's Schedule button drifted into the filled style while the Résumé button beside it stayed
+// outlined. The arrow is opt-in: a go-here action gets one, a download does not.
+const { href, label, variant = 'outline', arrow = true, download = false } = Astro.props;
+---
+
+<a
+  class:list={['btn mono', variant === 'solid' && 'btn--solid']}
+  href={href}
+  download={download || undefined}
+>
+  <span>{label}</span>
+  {
+    arrow && (
+      <svg class="arrow" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path
+          d="M11.875 14.375L16.25 9.93818L11.875 5.625M16.25 9.93818H2.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+        />
+      </svg>
+    )
+  }
+</a>

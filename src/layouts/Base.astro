@@ -2,6 +2,7 @@
 import { site } from '../data/site.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
+import Cta from '../components/Cta.astro';
 import '../styles/fonts.css';
 import '../styles/global.css';
 
@@ -68,12 +69,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
             <a class="transition-colors hover:text-foreground" href="/#contact">Contact</a>
           </nav>
 
-          <a class="btn btn--solid mono" href="/schedule/">
-            <span>Schedule 1:1</span>
-            <svg class="arrow" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M11.875 14.375L16.25 9.93818L11.875 5.625M16.25 9.93818H2.5" stroke="currentColor" stroke-width="1.5"></path>
-            </svg>
-          </a>
+          <Cta href="/schedule/" label="Schedule 1:1" variant="solid" />
         </div>
       </header>
 
