@@ -76,15 +76,12 @@ function localMoment({ date, time, visitorTz }) {
   return { date: local.date, time: local.time, zone: zoneOffsetLabel(visitorTz, instant) };
 }
 
-// The booked time in the requester's own clock, with the anchor we run on kept alongside —
-// the zone is a browser guess, so never state their time without the one it was booked in.
-export function dualTime({ date, time, visitorTz, tz = MINSK }) {
-  const instant = zonedWallClockToUtc(date, time, tz).getTime();
-  const anchor = `${date} ${time} (${zoneOffsetLabel(tz, instant)})`;
-  if (!visitorTz || visitorTz === tz || !isValidZone(visitorTz)) return anchor;
-  const local = wallClockInTz(instant, visitorTz);
-  return `${local.date} ${local.time} (${zoneOffsetLabel(visitorTz, instant)}) — ${anchor}`;
-}
+// A greeting wants the given name and the form asks for one field, so the first word is the
+// best guess available. The full name stays intact wherever it identifies the person.
+const firstName = (name) => String(name || '').trim().split(/\s+/)[0] || '';
+
+// A moment as a person reads it: "2026-10-20 · 15:00 UTC+2".
+const momentLine = ({ date, time, zone }) => `${date} · ${time} ${zone}`;
 
 // Each side's subject names the other party, then the session, the date and the time.
 export function hostSubject({ name, date, time, typeName }) {
@@ -127,48 +124,66 @@ export async function sendBookingEmails(env, req) {
 
   const brand = brandFor();
   const m = localMoment({ date: req.date, time: req.time, visitorTz: req.visitorTz });
-  const theirs = dualTime({ date: req.date, time: req.time, visitorTz: req.visitorTz });
   const typeName = req.type.name;
   const hostZone = zoneOffsetLabel(MINSK, zonedWallClockToUtc(req.date, req.time, MINSK).getTime());
+  const myClock = momentLine({ date: req.date, time: req.time, zone: hostZone });
+  const theirClock = momentLine(m);
+  // wallClockInTz returns a date and a time but no zone, so the offset is added here.
+  const requestedWall = wallClockInTz(Number(req.requestedAt ?? Date.now()), MINSK);
+  const requestedLine = `${requestedWall.date} · ${requestedWall.time} ${hostZone}`;
+  const sameClock = theirClock === myClock;
+
+  // Everything the request holds, laid out as label → value, so it can be read at a glance
+  // instead of picked out of a sentence. When their clock is the same as mine, one line says
+  // it rather than two that agree.
+  const rows = [
+    ['Name', req.name],
+    ['Email', req.email],
+    ['Session', `${typeName} · ${req.type.minutes} min`],
+    ...(sameClock ? [['Time', myClock]] : [['Their clock', theirClock], ['My clock', myClock]]),
+    ['Requested', requestedLine],
+    ['Request', `#${req.id ?? '—'}`]
+  ];
+  const pad = Math.max(...rows.map(([k]) => k.length));
+  const tableText = rows.map(([k, v]) => `${k.padEnd(pad)}  ${v}`).join('\n');
+  const tableHtml = rows
+    .map(
+      ([k, v]) =>
+        `<tr><td class="muted" style="padding:5px 20px 5px 0;color:${MUTED};font-family:${MONO};font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;vertical-align:top;">${esc(k)}</td><td style="padding:5px 0;vertical-align:top;">${esc(v)}</td></tr>`
+    )
+    .join('');
 
   await send(key, {
     from,
     to,
     reply_to: req.email,
     subject: hostSubject({ name: req.name, date: req.date, time: req.time, typeName }),
-    text: `New 1:1 request.\n\n${req.name} <${req.email}>\n${req.date} at ${req.time} ${hostZone} (${typeName}, ${req.type.minutes} min)\n\n${req.note || '(no note)'}\n\nReply to this email to answer them.`,
+    text: `New 1:1 request.\n\n${tableText}\n\nMessage\n${req.note || '(no note)'}`,
     html: wrap(
       `
-<p style="margin:0 0 20px;">New 1:1 request.</p>
-<p style="margin:0 0 8px;"><strong>${esc(req.name)}</strong> · <a href="mailto:${esc(req.email)}" style="color:${brand};">${esc(req.email)}</a></p>
-<p style="margin:0;"><strong>${esc(typeName)}</strong> · <strong>${esc(req.date)}</strong> · <strong>${esc(req.time)} ${esc(hostZone)}</strong></p>
-${req.visitorTz ? `<p class="muted" style="margin:6px 0 0;font-size:14px;color:${MUTED};">Their clock: ${esc(theirs)}</p>` : ''}
-${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left:3px solid ${brand};">${esc(req.note)}</p>` : ''}
-<p class="muted" style="margin:24px 0 0;font-size:14px;color:${MUTED};">Reply to this email to answer them.</p>`,
+<p style="margin:0 0 22px;">New 1:1 request.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:15px;line-height:1.5;">${tableHtml}</table>
+${
+  req.note
+    ? `<p class="muted" style="margin:24px 0 6px;color:${MUTED};font-family:${MONO};font-size:12px;letter-spacing:.06em;text-transform:uppercase;">Message</p>
+<p style="margin:0;padding:16px;background:#fff;color:${INK};border-left:3px solid ${brand};">${esc(req.note)}</p>`
+    : ''
+}`,
       brand
     )
   });
-
-  // The visitor's zone is a browser guess, so their clock is never stated alone — but when the
-  // two clocks match, a second line saying so is noise.
-  const anchorLine =
-    m.zone === hostZone ? '' : `\n\nIn my time zone: ${req.date} ${req.time} (${hostZone})`;
-  const anchorHtml =
-    m.zone === hostZone
-      ? ''
-      : `<p class="muted" style="margin:6px 0 0;font-size:14px;color:${MUTED};">In my time zone: ${esc(req.date)} ${esc(req.time)} (${esc(hostZone)})</p>`;
 
   await send(key, {
     from,
     to: req.email,
     subject: requesterSubject({ date: req.date, time: req.time, visitorTz: req.visitorTz, typeName }),
-    text: `Thanks, ${req.name} — your request is in.\n\n${typeName} · ${m.date} · ${m.time} ${m.zone} (${req.type.minutes} min)${anchorLine}\n\nI'll reply to confirm.\n\nI appreciate your trust,\n${HOST}`,
+    text: `Hi ${firstName(req.name)},\n\nThank you for your request.\n\n${typeName} · ${theirClock} (${req.type.minutes} min)\n\nI'll see what's on my plate, and come back to you either way.\n\nI appreciate your trust,\n${HOST}`,
     html: wrap(
       `
-<p style="margin:0 0 20px;">Thanks, ${esc(req.name)} — your request is in.</p>
+<p style="margin:0 0 20px;">Hi ${esc(firstName(req.name))},</p>
+<p style="margin:0 0 20px;">Thank you for your request.</p>
 ${momentHtml({ typeName, m })}
-${anchorHtml}
-<p style="margin:20px 0 0;">I'll reply to confirm.</p>
+<p style="margin:20px 0 0;">I'll see what's on my plate, and come back to you either way.</p>
 ${signoff}`,
       brand
     )
@@ -183,13 +198,12 @@ ${signoff}`,
 // theirs to take — true whether the reason was the calendar or a no.
 export function declineCopy({ name, date, time, visitorTz, typeName = '', brand = brandFor() }) {
   const m = localMoment({ date, time, visitorTz });
-  const whenDisplay = dualTime({ date, time, visitorTz });
   return {
     subject: requesterSubject({ date, time, visitorTz, typeName }),
-    text: `Hi ${name},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nAn update on your request: I'm not able to take the time you picked — ${whenDisplay}.\n\nIf you'd still like to talk, you're welcome to choose another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\n${HOST}`,
+    text: `Hi ${firstName(name)},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nAn update on your request: I'm not able to take the time you picked.\n\n${typeName} · ${momentLine(m)}\n\nIf you'd still like to talk, you're welcome to choose another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\n${HOST}`,
     html: wrap(
       `
-<p style="margin:0 0 20px;">Hi ${esc(name)},</p>
+<p style="margin:0 0 20px;">Hi ${esc(firstName(name))},</p>
 <p style="margin:0 0 20px;">Thank you for reaching out — I'm grateful for the opportunity.</p>
 <p style="margin:0 0 12px;">An update on your request: I'm not able to take the time you picked.</p>
 ${momentHtml({ typeName, m })}
@@ -201,17 +215,18 @@ ${signoff}`,
   };
 }
 
-// Confirmation copy: same subject again, status stated plainly, calendar file alongside.
+// Confirmation copy: same subject again, the confirmation stated in the first person, calendar
+// file alongside.
 export function confirmedCopy({ name, date, time, visitorTz, typeName = '', minutes = 60, meetingUrl = '', brand = brandFor() }) {
   const m = localMoment({ date, time, visitorTz });
-  const whenDisplay = dualTime({ date, time, visitorTz });
   return {
     subject: requesterSubject({ date, time, visitorTz, typeName }),
-    text: `Hi ${name},\n\nYour 1:1 is confirmed.\n\n${whenDisplay} (${typeName}, ${minutes} min)\n\nI've attached a calendar file so it's in your diary.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}\n\nI appreciate your trust,\n${HOST}`,
+    text: `Hi ${firstName(name)},\n\nThank you for your request.\n\nI confirm your 1:1.\n\n${typeName} · ${momentLine(m)} (${minutes} min)\n\nI've attached a calendar file so it's in your diary.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}\n\nI appreciate your trust,\n${HOST}`,
     html: wrap(
       `
-<p style="margin:0 0 20px;">Hi ${esc(name)},</p>
-<p style="margin:0 0 20px;">Your 1:1 is confirmed.</p>
+<p style="margin:0 0 20px;">Hi ${esc(firstName(name))},</p>
+<p style="margin:0 0 20px;">Thank you for your request.</p>
+<p style="margin:0 0 20px;">I confirm your 1:1.</p>
 ${momentHtml({ typeName, m })}
 <p style="margin:20px 0 0;">I've attached a calendar file so it's in your diary.</p>
 ${meetingUrl ? cta(meetingUrl, 'Join the call', brand) : ''}

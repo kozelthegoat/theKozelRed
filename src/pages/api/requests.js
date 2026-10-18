@@ -54,13 +54,15 @@ export const POST = async ({ request, locals }) => {
     return jsonError('slot_unavailable', 'That time is no longer available.', 409);
   }
 
+  let id;
   try {
-    await db
+    const info = await db
       .prepare(
         'INSERT INTO requests (type, slot_date, slot_time, name, email, note, visitor_tz) VALUES (?, ?, ?, ?, ?, ?, ?)'
       )
       .bind(type.id, date, time, name, email, note || null, visitorTz)
       .run();
+    id = info?.meta?.last_row_id;
   } catch (e) {
     if (/unique/i.test(String(e && e.message))) {
       return jsonError('slot_taken', 'That time was just taken.', 409);
@@ -68,7 +70,18 @@ export const POST = async ({ request, locals }) => {
     throw e;
   }
 
-  await sendBookingEmails(env, { type, date, time, name, email, note, visitorTz }).catch(() => {});
+  // The host notification is a record, so it carries the id and the moment the request arrived.
+  await sendBookingEmails(env, {
+    id,
+    requestedAt: Date.now(),
+    type,
+    date,
+    time,
+    name,
+    email,
+    note,
+    visitorTz
+  }).catch(() => {});
 
   return json({ ok: true });
 };

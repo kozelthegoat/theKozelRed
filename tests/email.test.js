@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   declineCopy,
   confirmedCopy,
-  dualTime,
   requesterSubject,
   hostSubject,
   sendBookingEmails,
@@ -103,9 +102,17 @@ describe('declineCopy', () => {
     expect(html).not.toContain('Pick another time');
   });
 
-  it('quotes the local clock and the anchor the time was booked in, as offsets', () => {
+  it('gives the moment its own line, in their clock only', () => {
     const { text } = declineCopy(args);
-    expect(text).toContain('2026-10-17 15:00 (UTC+2) — 2026-10-17 16:00 (UTC+3)');
+    expect(text).toContain('Working Session · 2026-10-17 · 15:00 UTC+2');
+    expect(text).not.toContain('UTC+3');
+  });
+
+  it('greets by first name and thanks them', () => {
+    const { text, html } = declineCopy({ ...args, name: 'Alex Berlin' });
+    expect(text).toContain('Hi Alex,');
+    expect(html).toContain('Hi Alex,');
+    expect(text).toContain('Thank you');
   });
 
   it('escapes the name and carries the brand accent', () => {
@@ -122,11 +129,19 @@ describe('confirmedCopy', () => {
     expect(subject).toBe(requesterSubject(args));
   });
 
-  it('says it is confirmed and names the moment', () => {
+  it('confirms in the first person, and names the moment in their clock', () => {
     const { text, html } = confirmedCopy(args);
-    expect(text).toContain('confirmed');
-    expect(text).toContain('2026-10-17 15:00 (UTC+2)');
+    expect(text).toContain('I confirm');
+    expect(text).toContain('Working Session · 2026-10-17 · 15:00 UTC+2');
+    expect(text).not.toContain('UTC+3');
     expect(html).toContain('2026-10-17');
+  });
+
+  it('greets by first name and thanks them', () => {
+    const { text, html } = confirmedCopy({ ...args, name: 'Alex Berlin' });
+    expect(text).toContain('Hi Alex,');
+    expect(html).toContain('Hi Alex,');
+    expect(text).toContain('Thank you');
   });
 
   it('carries the join link when a room is configured', () => {
@@ -157,30 +172,6 @@ describe('bold', () => {
   });
 });
 
-describe('dualTime', () => {
-  const base = { date: '2026-10-17', time: '16:00' };
-
-  it('states the offset alone when the zone is unknown', () => {
-    expect(dualTime(base)).toBe('2026-10-17 16:00 (UTC+3)');
-    expect(dualTime({ ...base, visitorTz: null })).toBe('2026-10-17 16:00 (UTC+3)');
-  });
-
-  it('quotes their clock first and keeps the anchor, when known', () => {
-    // Berlin is still on summer time in mid-October (UTC+2), so 16:00 UTC+3 is 15:00 there
-    expect(dualTime({ ...base, visitorTz: 'Europe/Berlin' })).toBe(
-      '2026-10-17 15:00 (UTC+2) — 2026-10-17 16:00 (UTC+3)'
-    );
-  });
-
-  it('does not repeat itself when they are already on the site clock', () => {
-    expect(dualTime({ ...base, visitorTz: 'Europe/Minsk' })).toBe('2026-10-17 16:00 (UTC+3)');
-  });
-
-  it('falls back to the anchor rather than throwing on a junk zone', () => {
-    expect(dualTime({ ...base, visitorTz: 'Not/AZone' })).toBe('2026-10-17 16:00 (UTC+3)');
-  });
-});
-
 describe('sendBookingEmails', () => {
   it('sends the host subject to me and the requester subject to them', async () => {
     const sent = await withFetch(() =>
@@ -207,7 +198,7 @@ describe('sendBookingEmails', () => {
       sendBookingEmails(
         { RESEND_API_KEY: 'k', BOOKING_TO: 'me@kozel.red' },
         {
-          type: { name: 'Working Session', minutes: 60 },
+          type: { name: 'Working Session', minutes: 30 },
           date: '2026-10-17',
           time: '16:00',
           visitorTz: 'Europe/Berlin',
@@ -222,8 +213,60 @@ describe('sendBookingEmails', () => {
       const all = `${mail.subject}${mail.text}${mail.html}`;
       expect(all).not.toContain('Minsk');
       expect(all).not.toContain('Berlin');
-      expect(all).toContain('UTC+3');
     }
+    // Mine carries both clocks; theirs carries only the one they booked in.
+    expect(`${sent[0].text}${sent[0].html}`).toContain('UTC+3');
+    expect(`${sent[1].text}${sent[1].html}`).not.toContain('UTC+3');
+    expect(`${sent[1].text}${sent[1].html}`).toContain('UTC+2');
+  });
+
+  it('lays the request out as a labelled block, with everything we hold', async () => {
+    const sent = await withFetch(() =>
+      sendBookingEmails(
+        { RESEND_API_KEY: 'k', BOOKING_TO: 'me@kozel.red' },
+        {
+          id: 42,
+          requestedAt: Date.parse('2026-10-01T09:30:00Z'),
+          type: { name: 'Working Session', minutes: 30 },
+          date: '2026-10-17',
+          time: '16:00',
+          visitorTz: 'Europe/Berlin',
+          name: 'Robin Alvarez',
+          email: 'alex@example.com',
+          note: 'the crisp one'
+        }
+      )
+    );
+
+    const mail = sent[0];
+    for (const label of ['Name', 'Email', 'Session', 'Their clock', 'Requested', 'Request', 'Message']) {
+      expect(mail.text).toContain(label);
+    }
+    expect(mail.text).toContain('#42');
+    expect(mail.text).toContain('2026-10-17 · 15:00 UTC+2'); // their clock
+    expect(mail.text).toContain('2026-10-17 · 16:00 UTC+3'); // mine
+    expect(mail.text).toContain('2026-10-01 · 12:30 UTC+3'); // requested, in my clock
+    expect(mail.text).toContain('the crisp one');
+  });
+
+  it('does not tell me to reply by email — answers happen in the admin table', async () => {
+    const sent = await withFetch(() =>
+      sendBookingEmails(
+        { RESEND_API_KEY: 'k', BOOKING_TO: 'me@kozel.red' },
+        {
+          type: { name: 'Working Session', minutes: 30 },
+          date: '2026-10-17',
+          time: '16:00',
+          visitorTz: 'Europe/Berlin',
+          name: 'Robin Alvarez',
+          email: 'alex@example.com',
+          note: 'hi'
+        }
+      )
+    );
+
+    expect(sent[0].text).not.toContain('Reply to this email');
+    expect(sent[0].html).not.toContain('Reply to this email');
   });
 });
 
