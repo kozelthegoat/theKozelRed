@@ -37,19 +37,27 @@ const withFetch = async (run) => {
 describe('subjects', () => {
   it('names the counterparty, the session, the date and the local time', () => {
     expect(hostSubject({ name: 'Alex Berlin', date: '2026-10-17', time: '16:00', typeName: 'Working Session' })).toBe(
-      '1:1 · Alex Berlin · Working Session · 2026-10-17 · 16:00 Minsk'
+      '1:1 · Alex Berlin · Working Session · 2026-10-17 · 16:00 UTC+3'
     );
     expect(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Berlin', typeName: 'Working Session' })).toBe(
-      '1:1 · Aliaksei Kozel · Working Session · 2026-10-17 · 15:00 Berlin'
+      '1:1 · Aliaksei Kozel · Working Session · 2026-10-17 · 15:00 UTC+2'
     );
   });
 
-  it('falls back to Minsk when the zone is unknown or junk', () => {
+  it('names the offset, not a city — another city on the same clock reads the same', () => {
+    // Paris and Berlin share a zone in October; the subject must not say either one
+    expect(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Paris', typeName: 'Intro Call' })).toBe(
+      requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Berlin', typeName: 'Intro Call' })
+    );
+    expect(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Paris', typeName: 'Intro Call' })).toContain('UTC+2');
+  });
+
+  it('falls back to the site offset when the zone is unknown or junk', () => {
     expect(requesterSubject({ date: '2026-10-17', time: '16:00', typeName: 'Intro Call' })).toBe(
-      '1:1 · Aliaksei Kozel · Intro Call · 2026-10-17 · 16:00 Minsk'
+      '1:1 · Aliaksei Kozel · Intro Call · 2026-10-17 · 16:00 UTC+3'
     );
     expect(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Not/AZone', typeName: 'Intro Call' })).toBe(
-      '1:1 · Aliaksei Kozel · Intro Call · 2026-10-17 · 16:00 Minsk'
+      '1:1 · Aliaksei Kozel · Intro Call · 2026-10-17 · 16:00 UTC+3'
     );
   });
 });
@@ -94,9 +102,9 @@ describe('declineCopy', () => {
     expect(html).not.toContain('Pick another time');
   });
 
-  it('quotes the local clock and the Minsk anchor the time was booked in', () => {
+  it('quotes the local clock and the anchor the time was booked in, as offsets', () => {
     const { text } = declineCopy(args);
-    expect(text).toContain('2026-10-17 15:00 (Europe/Berlin) — 2026-10-17 16:00 (Europe/Minsk)');
+    expect(text).toContain('2026-10-17 15:00 (UTC+2) — 2026-10-17 16:00 (UTC+3)');
   });
 
   it('escapes the name and carries the brand accent', () => {
@@ -116,7 +124,7 @@ describe('confirmedCopy', () => {
   it('says it is confirmed and names the moment', () => {
     const { text, html } = confirmedCopy(args);
     expect(text).toContain('confirmed');
-    expect(text).toContain('2026-10-17 15:00 (Europe/Berlin)');
+    expect(text).toContain('2026-10-17 15:00 (UTC+2)');
     expect(html).toContain('2026-10-17');
   });
 });
@@ -138,24 +146,24 @@ describe('bold', () => {
 describe('dualTime', () => {
   const base = { date: '2026-10-17', time: '16:00' };
 
-  it('states Minsk alone when the zone is unknown', () => {
-    expect(dualTime(base)).toBe('2026-10-17 16:00 (Europe/Minsk)');
-    expect(dualTime({ ...base, visitorTz: null })).toBe('2026-10-17 16:00 (Europe/Minsk)');
+  it('states the offset alone when the zone is unknown', () => {
+    expect(dualTime(base)).toBe('2026-10-17 16:00 (UTC+3)');
+    expect(dualTime({ ...base, visitorTz: null })).toBe('2026-10-17 16:00 (UTC+3)');
   });
 
-  it('quotes their clock first and keeps the Minsk anchor, when known', () => {
-    // Berlin is still on summer time in mid-October (UTC+2), so 16:00 Minsk is 15:00 there
+  it('quotes their clock first and keeps the anchor, when known', () => {
+    // Berlin is still on summer time in mid-October (UTC+2), so 16:00 UTC+3 is 15:00 there
     expect(dualTime({ ...base, visitorTz: 'Europe/Berlin' })).toBe(
-      '2026-10-17 15:00 (Europe/Berlin) — 2026-10-17 16:00 (Europe/Minsk)'
+      '2026-10-17 15:00 (UTC+2) — 2026-10-17 16:00 (UTC+3)'
     );
   });
 
-  it('does not repeat itself when they are already on Minsk', () => {
-    expect(dualTime({ ...base, visitorTz: 'Europe/Minsk' })).toBe('2026-10-17 16:00 (Europe/Minsk)');
+  it('does not repeat itself when they are already on the site clock', () => {
+    expect(dualTime({ ...base, visitorTz: 'Europe/Minsk' })).toBe('2026-10-17 16:00 (UTC+3)');
   });
 
   it('falls back to the anchor rather than throwing on a junk zone', () => {
-    expect(dualTime({ ...base, visitorTz: 'Not/AZone' })).toBe('2026-10-17 16:00 (Europe/Minsk)');
+    expect(dualTime({ ...base, visitorTz: 'Not/AZone' })).toBe('2026-10-17 16:00 (UTC+3)');
   });
 });
 
@@ -178,6 +186,30 @@ describe('sendBookingEmails', () => {
 
     expect(sent[0].subject).toBe(hostSubject({ name: 'Alex Berlin', date: '2026-10-17', time: '16:00', typeName: 'Working Session' }));
     expect(sent[1].subject).toBe(requesterSubject({ date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Berlin', typeName: 'Working Session' }));
+  });
+
+  it('never names a city in either email — offsets only', async () => {
+    const sent = await withFetch(() =>
+      sendBookingEmails(
+        { RESEND_API_KEY: 'k', BOOKING_TO: 'me@kozel.red' },
+        {
+          type: { name: 'Working Session', minutes: 60 },
+          date: '2026-10-17',
+          time: '16:00',
+          visitorTz: 'Europe/Berlin',
+          name: 'Robin Alvarez',
+          email: 'alex@example.com',
+          note: 'hi'
+        }
+      )
+    );
+
+    for (const mail of sent) {
+      const all = `${mail.subject}${mail.text}${mail.html}`;
+      expect(all).not.toContain('Minsk');
+      expect(all).not.toContain('Berlin');
+      expect(all).toContain('UTC+3');
+    }
   });
 });
 

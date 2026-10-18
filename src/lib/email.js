@@ -7,7 +7,7 @@
 // and a status change is read in the body rather than guessed from the subject line.
 
 import { brandFor } from '../data/palette.js';
-import { wallClockInTz, zonedWallClockToUtc, isValidZone } from './tz.js';
+import { wallClockInTz, zonedWallClockToUtc, isValidZone, zoneOffsetLabel } from './tz.js';
 import { buildIcs, icsFilename } from './ics.js';
 
 const INK = '#282828';
@@ -60,31 +60,35 @@ const wrap = (body, brand) => `<!doctype html>
 const cta = (href, label, brand) =>
   `<p style="margin:28px 0;"><a class="cta" href="${href}" style="display:inline-block;background-color:${brand};color:#ffffff;text-decoration:none;padding:12px 20px;font-family:${MONO};font-size:13px;letter-spacing:.06em;text-transform:uppercase;">${esc(label)}</a></p>`;
 
-// "Europe/Berlin" reads as "Berlin" — the subject names a city, the body keeps the full zone.
-const zoneCity = (tz) => String(tz).split('/').filter(Boolean).pop().replace(/_/g, ' ');
+// Times are labelled by offset, never by city: someone in Paris and someone in Berlin keep the
+// same clock, and neither should be told they booked in the other's town. The offset is taken
+// at the booked instant, so it follows the zone's rules rather than a fixed number.
 
-// The booked moment in the requester's own clock, falling back to Minsk when we never
+// The booked moment in the requester's own clock, falling back to the site's when we never
 // learned their zone (or it came back junk).
 function localMoment({ date, time, visitorTz }) {
+  const instant = zonedWallClockToUtc(date, time, MINSK).getTime();
   if (!visitorTz || visitorTz === MINSK || !isValidZone(visitorTz)) {
-    return { date, time, zone: 'Minsk' };
+    return { date, time, zone: zoneOffsetLabel(MINSK, instant) };
   }
-  const local = wallClockInTz(zonedWallClockToUtc(date, time, MINSK).getTime(), visitorTz);
-  return { date: local.date, time: local.time, zone: zoneCity(visitorTz) };
+  const local = wallClockInTz(instant, visitorTz);
+  return { date: local.date, time: local.time, zone: zoneOffsetLabel(visitorTz, instant) };
 }
 
-// The booked time in the requester's own clock, with the Minsk anchor kept alongside —
-// the zone is a browser guess, so never state their time without the one we run on.
+// The booked time in the requester's own clock, with the anchor we run on kept alongside —
+// the zone is a browser guess, so never state their time without the one it was booked in.
 export function dualTime({ date, time, visitorTz, tz = MINSK }) {
-  const anchor = `${date} ${time} (${tz})`;
+  const instant = zonedWallClockToUtc(date, time, tz).getTime();
+  const anchor = `${date} ${time} (${zoneOffsetLabel(tz, instant)})`;
   if (!visitorTz || visitorTz === tz || !isValidZone(visitorTz)) return anchor;
-  const local = wallClockInTz(zonedWallClockToUtc(date, time, tz).getTime(), visitorTz);
-  return `${local.date} ${local.time} (${visitorTz}) — ${anchor}`;
+  const local = wallClockInTz(instant, visitorTz);
+  return `${local.date} ${local.time} (${zoneOffsetLabel(visitorTz, instant)}) — ${anchor}`;
 }
 
 // Each side's subject names the other party, then the session, the date and the time.
 export function hostSubject({ name, date, time, typeName }) {
-  return `1:1 · ${name} · ${typeName} · ${date} · ${time} Minsk`;
+  const instant = zonedWallClockToUtc(date, time, MINSK).getTime();
+  return `1:1 · ${name} · ${typeName} · ${date} · ${time} ${zoneOffsetLabel(MINSK, instant)}`;
 }
 
 export function requesterSubject({ date, time, visitorTz, typeName }) {
@@ -124,18 +128,19 @@ export async function sendBookingEmails(env, req) {
   const m = localMoment({ date: req.date, time: req.time, visitorTz: req.visitorTz });
   const theirs = dualTime({ date: req.date, time: req.time, visitorTz: req.visitorTz });
   const typeName = req.type.name;
+  const hostZone = zoneOffsetLabel(MINSK, zonedWallClockToUtc(req.date, req.time, MINSK).getTime());
 
   await send(key, {
     from,
     to,
     reply_to: req.email,
     subject: hostSubject({ name: req.name, date: req.date, time: req.time, typeName }),
-    text: `New 1:1 request.\n\n${req.name} <${req.email}>\n${req.date} at ${req.time} Minsk (${typeName}, ${req.type.minutes} min)\n\n${req.note || '(no note)'}\n\nReply to this email to answer them.`,
+    text: `New 1:1 request.\n\n${req.name} <${req.email}>\n${req.date} at ${req.time} ${hostZone} (${typeName}, ${req.type.minutes} min)\n\n${req.note || '(no note)'}\n\nReply to this email to answer them.`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">New 1:1 request.</p>
 <p style="margin:0 0 8px;"><strong>${esc(req.name)}</strong> · <a href="mailto:${esc(req.email)}" style="color:${brand};">${esc(req.email)}</a></p>
-<p style="margin:0;"><strong>${esc(typeName)}</strong> · <strong>${esc(req.date)}</strong> · <strong>${esc(req.time)} Minsk</strong></p>
+<p style="margin:0;"><strong>${esc(typeName)}</strong> · <strong>${esc(req.date)}</strong> · <strong>${esc(req.time)} ${esc(hostZone)}</strong></p>
 ${req.visitorTz ? `<p class="muted" style="margin:6px 0 0;font-size:14px;color:${MUTED};">Their clock: ${esc(theirs)}</p>` : ''}
 ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left:3px solid ${brand};">${esc(req.note)}</p>` : ''}
 <p class="muted" style="margin:24px 0 0;font-size:14px;color:${MUTED};">Reply to this email to answer them.</p>`,
@@ -143,15 +148,25 @@ ${req.note ? `<p style="margin:20px 0 0;padding:16px;background:#fff;border-left
     )
   });
 
+  // The visitor's zone is a browser guess, so their clock is never stated alone — but when the
+  // two clocks match, a second line saying so is noise.
+  const anchorLine =
+    m.zone === hostZone ? '' : `\n\nIn my time zone: ${req.date} ${req.time} (${hostZone})`;
+  const anchorHtml =
+    m.zone === hostZone
+      ? ''
+      : `<p class="muted" style="margin:6px 0 0;font-size:14px;color:${MUTED};">In my time zone: ${esc(req.date)} ${esc(req.time)} (${esc(hostZone)})</p>`;
+
   await send(key, {
     from,
     to: req.email,
     subject: requesterSubject({ date: req.date, time: req.time, visitorTz: req.visitorTz, typeName }),
-    text: `Thanks, ${req.name} — your request is in.\n\n${typeName} · ${m.date} · ${m.time} ${m.zone} (${req.type.minutes} min)\n\nI'll reply to confirm.\n\nI appreciate your trust,\n${HOST}`,
+    text: `Thanks, ${req.name} — your request is in.\n\n${typeName} · ${m.date} · ${m.time} ${m.zone} (${req.type.minutes} min)${anchorLine}\n\nI'll reply to confirm.\n\nI appreciate your trust,\n${HOST}`,
     html: wrap(
       `
 <p style="margin:0 0 20px;">Thanks, ${esc(req.name)} — your request is in.</p>
 ${momentHtml({ typeName, m })}
+${anchorHtml}
 <p style="margin:20px 0 0;">I'll reply to confirm.</p>
 ${signoff}`,
       brand
