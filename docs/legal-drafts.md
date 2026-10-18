@@ -22,8 +22,8 @@ shown before you pay. Sessions take place online, by video call; a link is sent 
 | session | duration | price |
 |---|---|---|
 | Intro Call | 30 min | «AMD / USD / EUR» |
-| Career Review | 45 min | «AMD / USD / EUR» |
-| Working Session | 60 min | «AMD / USD / EUR» |
+| Career Review | 30 min | «AMD / USD / EUR» |
+| Working Session | 30 min | «AMD / USD / EUR» |
 
 Prices are shown before payment and are not changed after a booking is confirmed. Any bank or card fees charged by
 your bank are outside my control.
