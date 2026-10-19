@@ -236,10 +236,9 @@ import { site } from '../../data/site.js';
           </div>
           <!-- Quiet, and a line rather than a checkbox: the request is free, so a tick box would
                read as a contract being signed. It still says plainly where the details go. -->
-          <p class="text-sm text-muted">
-            By sending, you agree to how your details are handled —
-            <a class="hover:text-brand" href="/privacy/">Privacy</a>.
-          </p>
+          <!-- One line on purpose: Astro strips the whitespace at a line break, which glued the
+               link to the dash. -->
+          <p class="text-sm text-muted">By sending, you agree to how your details are handled — <a class="hover:text-brand" href="/privacy/">Privacy</a>.</p>
         </form>
 
         <dialog data-step="done" class="req-done" aria-labelledby="done-heading">
