@@ -6,7 +6,10 @@
 // because the sticky element is one viewport tall and stays stuck for whatever is left.
 export function slideState({ scrollY, top, stickLength, count }) {
   if (!count) return { index: 0, progress: 0 };
-  const raw = stickLength > 0 ? (scrollY - top) / stickLength : 1;
+  // No stick length means there is nothing to scroll through, so show the first quote rather than
+  // the last: a section that failed to lay out should look like it has not been reached, which is
+  // also what a scroll position above it resolves to.
+  const raw = stickLength > 0 ? (scrollY - top) / stickLength : 0;
   const progress = Math.min(1, Math.max(0, raw));
   // Clamped at the last quote rather than running off the end, because progress reaches exactly 1
   // at the foot of the section and floor(1 * count) is count.

@@ -47,8 +47,11 @@ if (section && !reduced) {
   };
 
   const start = () => {
-    measure();
+    // Reveal before measuring. While the section is display:none it has no height, so measuring
+    // first yields a stick length of zero — which reads as past-the-end and pins every scroll
+    // position to the last quote. That was the bug: one quote on screen, always number twelve.
     section.setAttribute('data-ready', '');
+    measure();
     draw();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });

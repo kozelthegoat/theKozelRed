@@ -36,7 +36,12 @@ describe('slideState', () => {
   });
 
   it('survives a section with no scroll length, and a list with no quotes', () => {
-    expect(slideState({ scrollY: 0, top: 0, stickLength: 0, count: 3 }).index).toBe(2);
+    // No stick length is not "past the end" — it is a section that did not lay out, so it should
+    // read as not yet reached rather than pinning to the last quote.
+    expect(slideState({ scrollY: 0, top: 0, stickLength: 0, count: 3 })).toEqual({
+      index: 0,
+      progress: 0
+    });
     expect(slideState({ scrollY: 0, top: 0, stickLength: 100, count: 0 })).toEqual({
       index: 0,
       progress: 0
