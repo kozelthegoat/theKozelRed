@@ -176,7 +176,7 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
             {
               job.released && (
                 <div class="mt-5">
-                  <p class="mono text-muted">Released</p>
+                  <p class="mono text-muted">{t('home.released')}</p>
                   <ul class="mt-2 grid gap-2 text-[0.92rem] text-secondary">
                     {job.released.map((item) => {
                       const title = typeof item === 'string' ? item : item.title;

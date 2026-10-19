@@ -117,6 +117,7 @@ export const ui = {
       'Free, and no strings — this is time set aside to help, not a service being sold. All I ask is something real to work on.',
     'fact.languages': 'Languages',
     'fact.offClock': 'Off the clock',
+    'home.released': 'Released',
 
     'privacy.eyebrow': 'Privacy',
     'privacy.title': 'Privacy',
@@ -237,6 +238,7 @@ export const ui = {
       'Бесплатно и без условий — это время, отведённое, чтобы помочь, а не услуга на продажу. Прошу об одном: чтобы было над чем работать по-настоящему.',
     'fact.languages': 'Языки',
     'fact.offClock': 'Вне работы',
+    'home.released': 'Выпущено',
 
     'privacy.eyebrow': 'Конфиденциальность',
     'privacy.title': 'Конфиденциальность',
@@ -358,6 +360,7 @@ export const ui = {
       'Бясплатна і без умоваў — гэта час, адведзены, каб дапамагчы, а не паслуга на продаж. Прашу толькі аднаго: каб было над чым працаваць па-сапраўднаму.',
     'fact.languages': 'Мовы',
     'fact.offClock': 'Па-за працай',
+    'home.released': 'Выпушчана',
 
     'privacy.eyebrow': 'Прыватнасць',
     'privacy.title': 'Прыватнасць',
