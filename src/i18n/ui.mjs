@@ -9,7 +9,7 @@ export const ui = {
     'nav.expertise': 'Expertise',
     'nav.experience': 'Experience',
     'nav.notes': 'Notes',
-    'nav.contact': 'Contact',
+    'nav.contact': 'Contacts',
     'a11y.language': 'Language',
 
     'cta.schedule': 'Schedule 1:1',
@@ -22,7 +22,7 @@ export const ui = {
     'footer.availability': 'Availability',
     'footer.resources': 'Resources',
     'footer.legal': 'Legal',
-    'footer.contact': 'Contact',
+    'footer.contact': 'Contacts',
     'footer.privacy': 'View Privacy',
     'footer.recommendations': 'Recommendations',
     'footer.resume': 'Résumé',
