@@ -92,6 +92,11 @@ if (cfgEl && root) {
   function selectType(id) {
     state.type = id;
     typesEl.querySelectorAll('[data-type]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.type === id ? 'true' : 'false'));
+    // Keep the radio in step with the panel. A click on the lists inside a panel is a click on the
+    // panel but not on its label, so the radio has to be set here; the change handler below covers
+    // the other direction, when someone arrows between radios from the keyboard.
+    const radio = typesEl.querySelector(`input[type="radio"][value="${id}"]`);
+    if (radio && !radio.checked) radio.checked = true;
   }
   function goToCurrentMonth(tz) {
     const [y, m] = dateInTz(tz, new Date()).split('-').map(Number);
@@ -103,6 +108,15 @@ if (cfgEl && root) {
     const btn = event.target.closest('[data-type]');
     if (!btn) return;
     selectType(btn.dataset.type);
+    if (!state.slots.length) load();
+  });
+
+  // Arrowing through the radios fires change and never click, so without this the chosen type and
+  // the checked radio would quietly disagree.
+  typesEl.addEventListener('change', (event) => {
+    const radio = event.target;
+    if (!radio || radio.type !== 'radio' || !radio.value) return;
+    selectType(radio.value);
     if (!state.slots.length) load();
   });
 
@@ -381,6 +395,13 @@ if (cfgEl && root) {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     formError.hidden = true;
+    // The form used to be hidden until a time was picked, so a submit without one was impossible.
+    // It is visible from the start now — it sits in its own column — so this has to say so.
+    if (!state.slot) {
+      formError.textContent = 'Pick a time first.';
+      formError.hidden = false;
+      return;
+    }
     const data = new FormData(form);
     const name = String(data.get('name') || '').trim();
     const email = String(data.get('email') || '').trim();

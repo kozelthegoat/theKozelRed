@@ -26,16 +26,40 @@ import { site } from '../../data/site.js';
     <div class="px-[var(--pad)] pt-14">
       <p class="mono text-brand">In detail</p>
       <h2 class="mt-4 max-w-[16ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what you leave with</h2>
+      <p class="mono mt-4 text-muted">Pick one — the calendar below takes it from there</p>
     </div>
-    <div class="grid gap-10 px-[var(--pad)] pt-8 pb-16 md:grid-cols-3 md:gap-y-5">
+    <!--
+      The chooser. Each panel is a <label> wrapping its own radio rather than a <button>, because a
+      button may only contain phrasing content and these hold lists. The radios carry form="request"
+      so they submit with the details form below, which is in another section entirely.
+    -->
+    <div
+      class="grid gap-5 px-[var(--pad)] pt-8 pb-16 md:grid-cols-3 md:gap-y-5"
+      data-schedule-types
+      role="radiogroup"
+    >
       {
-        sessionTypes.map((t) => (
-          <div class="grid content-start gap-5 md:row-span-4 md:grid-rows-subgrid">
-            <div class="flex items-baseline justify-between gap-4">
-              <h3 class="text-xl font-medium">{t.audience}</h3>
-              <span class="mono text-muted">{t.minutes} min</span>
-            </div>
-            <p class="text-secondary">{t.description}</p>
+        sessionTypes.map((t, i) => (
+          <div
+            class="pick-btn grid content-start gap-5 p-5 md:row-span-4 md:grid-rows-subgrid"
+            data-type={t.id}
+            aria-pressed="false"
+          >
+            <label class="grid cursor-pointer content-start gap-3">
+              <input
+                class="sr-only"
+                type="radio"
+                name="type"
+                value={t.id}
+                form="request"
+                checked={i === 0}
+              />
+              <span class="flex items-baseline justify-between gap-4">
+                <span class="text-xl font-medium uppercase">{t.audience}</span>
+                <span class="mono text-muted">{t.minutes} min</span>
+              </span>
+              <span class="text-secondary">{t.description}</span>
+            </label>
             <div>
               <p class="mono text-muted">You bring</p>
               <ul class="mt-2 grid gap-1 text-secondary">
@@ -65,32 +89,9 @@ import { site } from '../../data/site.js';
   </section>
 
   <section class="hair-b">
-    <!-- The area is one thing made of two parts — the session types and the calendar itself — so its
-         label sits above both rather than over the right-hand column alone. -->
+    <!-- The calendar, and beside it the details. The type is chosen up in "In detail". -->
     <p class="mono px-[var(--pad)] pt-14 text-brand">Calendar</p>
-    <div class="grid gap-10 px-[var(--pad)] py-14 md:grid-cols-[0.85fr_1.9fr]" data-schedule>
-      <div>
-        <p class="mono text-muted">Session</p>
-        <div class="mt-4 grid gap-3" data-schedule-types>
-          {
-            sessionTypes.map((t) => (
-              <button
-                type="button"
-                class="pick-btn p-5 text-left"
-                data-type={t.id}
-                aria-pressed="false"
-              >
-                <span class="flex items-baseline justify-between gap-4">
-                  <span class="text-lg font-medium uppercase" data-type-name>{t.audience}</span>
-                  <span class="mono text-muted">{t.minutes} min</span>
-                </span>
-                <span class="mt-2 block text-sm text-secondary">{t.description}</span>
-              </button>
-            ))
-          }
-        </div>
-      </div>
-
+    <div class="grid gap-10 px-[var(--pad)] py-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
       <div>
         <div data-step="slots">
           <div class="flex items-center justify-between gap-4">
@@ -180,7 +181,10 @@ import { site } from '../../data/site.js';
           </div>
         </div>
 
-        <form data-step="form" class="mt-10 hidden grid gap-4" novalidate>
+      </div>
+
+      <div>
+        <form id="request" data-step="form" class="grid gap-4" novalidate>
           <p class="mono text-muted">Details — <span class="text-brand">*</span> required</p>
           <input
             name="name"
