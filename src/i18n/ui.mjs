@@ -17,7 +17,7 @@ export const ui = {
     'cta.donate': 'Donate',
 
     'footer.navigation': 'Navigation',
-    'footer.services': 'Services',
+    'footer.proBono': 'Pro Bono',
     'footer.location': 'Location',
     'footer.availability': 'Availability',
     'footer.resources': 'Resources',
@@ -49,7 +49,7 @@ export const ui = {
     'cta.donate': 'Поддержать',
 
     'footer.navigation': 'Навигация',
-    'footer.services': 'Услуги',
+    'footer.proBono': 'Pro Bono',
     'footer.location': 'Локация',
     'footer.availability': 'Доступность',
     'footer.resources': 'Материалы',
@@ -81,7 +81,7 @@ export const ui = {
     'cta.donate': 'Падтрымаць',
 
     'footer.navigation': 'Навігацыя',
-    'footer.services': 'Паслугі',
+    'footer.proBono': 'Pro Bono',
     'footer.location': 'Месцазнаходжанне',
     'footer.availability': 'Даступнасць',
     'footer.resources': 'Матэрыялы',
