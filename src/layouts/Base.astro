@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site.js';
+import { sessionTypes } from '../data/sessions.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
 import { dirFor, localeFromPath, pathInLocale, prefixFor } from '../i18n/config.mjs';
@@ -151,9 +152,14 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
               <li>
                 <a class="hover:text-brand" href="/schedule/">{t('cta.schedule')}</a>
                 <ul class="mt-2 ml-3 grid gap-1 text-muted">
-                  <li class="flex gap-2"><span class="text-brand">–</span><span>Intro Call</span></li>
-                  <li class="flex gap-2"><span class="text-brand">–</span><span>Career Review</span></li>
-                  <li class="flex gap-2"><span class="text-brand">–</span><span>Working Session</span></li>
+                  {
+                    sessionTypes.map((s) => (
+                      <li class="flex gap-2">
+                        <span class="text-brand">–</span>
+                        <span>{s.audience}</span>
+                      </li>
+                    ))
+                  }
                 </ul>
               </li>
             </ul>
