@@ -449,18 +449,18 @@ dialog.req-done[open] {
 .reco-slides[data-ready] { display: block; }
 .reco-slides[data-ready] + .reco-list { display: none; }
 
-/* No pinning and no extra scrolling: the quote area holds its place and the bullets below move
-   between quotes. The min-height is what stops the page jumping as quotes change length. */
+/* One grid cell, every quote stacked inside it. That makes the container exactly as tall as the
+   tallest quote, which is what keeps a long one from spilling down over the bullets below — and
+   what keeps the page from jumping as you move between them. Absolute positioning (the obvious way
+   to stack things) takes them out of flow, so the container cannot size to its content and the
+   tallest quote overflows onto whatever comes next. Which is exactly what it did. */
 .reco-viewport {
   position: relative;
-  min-height: clamp(20rem, 46vh, 30rem);
   display: grid;
-  place-items: center;
 }
 
 .slide {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
   display: grid;
   align-content: center;
   justify-items: center;
