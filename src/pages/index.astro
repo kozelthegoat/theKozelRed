@@ -31,10 +31,7 @@ const pad = (n) => String(n).padStart(2, '0');
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.availability.map((item) => (
-                  <li class="flex gap-2">
-                    <span class="text-brand">–</span>
-                    <span>{item}</span>
-                  </li>
+                  <li>{item}</li>
                 ))}
               </ul>
             </dd>
@@ -44,10 +41,7 @@ const pad = (n) => String(n).padStart(2, '0');
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.languages.map((lang) => (
-                  <li class="flex gap-2">
-                    <span class="text-brand">–</span>
-                    <span>{lang}</span>
-                  </li>
+                  <li>{lang}</li>
                 ))}
               </ul>
             </dd>
@@ -57,10 +51,7 @@ const pad = (n) => String(n).padStart(2, '0');
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.offClock.map((item) => (
-                  <li class="flex gap-2">
-                    <span class="text-brand">–</span>
-                    <span>{item}</span>
-                  </li>
+                  <li>{item}</li>
                 ))}
               </ul>
             </dd>
@@ -154,7 +145,7 @@ const pad = (n) => String(n).padStart(2, '0');
             <ul class="grid gap-2 text-[0.98rem] text-secondary">
               {job.points.map((point) => (
                 <li class="flex gap-3">
-                  <span class="text-brand">—</span>
+                  <span class="text-brand">–</span>
                   <span>{point}</span>
                 </li>
               ))}
