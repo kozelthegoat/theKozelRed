@@ -27,7 +27,6 @@ export const ui = {
     'footer.contacts': 'Contacts',
     'footer.privacy': 'View Privacy',
     'footer.recommendations': 'Recommendations',
-    'footer.resume': 'Résumé',
     'footer.notes': 'Notes',
 
     'notes.eyebrow': 'Notes',
@@ -77,7 +76,6 @@ export const ui = {
     'footer.contacts': 'Контакты',
     'footer.privacy': 'Политика конфиденциальности',
     'footer.recommendations': 'Рекомендации',
-    'footer.resume': 'Резюме',
     'footer.notes': 'Заметки',
 
     'notes.eyebrow': 'Заметки',
@@ -126,7 +124,6 @@ export const ui = {
     'footer.contacts': 'Кантакты',
     'footer.privacy': 'Палітыка прыватнасці',
     'footer.recommendations': 'Рэкамендацыі',
-    'footer.resume': 'Рэзюмэ',
     'footer.notes': 'Нататкі',
 
     'notes.eyebrow': 'Нататкі',
