@@ -49,7 +49,7 @@ export const sessionTypes = [
     short: 'Work',
     minutes: 30,
     audience: 'For businesses',
-    description: 'One specific problem, taken apart together — and the first move you can make.',
+    description: 'Your products, your teams, your tools, and the value you’re willing to deliver.',
     confirmation: 'You’ve been holding this one alone long enough. Let’s put it on the table.',
     bring: [
       'A launch that keeps slipping',
