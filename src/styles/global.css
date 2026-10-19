@@ -16,9 +16,10 @@
 :root {
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  /* Google's light surface (#f8f9fa) rather than the warm bone (#f5f5ed) this was built on. The
-     hairlines and tints below were chosen against the warm one, so they may want to follow. */
-  --background: #f8f9fa;
+  /* Google's search-page white. It began as the warm bone (#f5f5ed) this was built on, then their
+     grey-50 (#f8f9fa), and is now the page itself. The hairlines (#dadce0) are theirs too, picked
+     to sit on this. */
+  --background: #ffffff;
   --foreground: #282828;
   --secondary: #414140;
   --muted: #72726f;
