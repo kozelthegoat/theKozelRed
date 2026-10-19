@@ -399,6 +399,19 @@ dialog.req-done[open] {
 
 .arrow { transition: transform 0.45s var(--ease); }
 
+/* Touch has no hover, so the rules above give a tap no feedback at all — which reads as a button
+   that did nothing but leave the page. The press is its own state: the fill goes up instantly
+   rather than sliding, because a tap is brief and a 0.45s transition would finish after the
+   finger had gone. */
+@media (hover: none) {
+  .btn:active { color: var(--on-brand); border-color: var(--brand); }
+  .btn:active::after { transform: translateY(0); transition: none; }
+  .btn--solid:active { color: var(--brand); border-color: var(--brand); }
+  .pick-btn:active { border-color: var(--brand); }
+  .seg-btn:active { color: var(--brand); }
+  .icon-btn:not(:disabled):active { color: var(--brand); background: var(--brand-tint); }
+}
+
 /* Square icon-only button (table row actions) — drops .btn's 12rem min-width so the
    row's other columns keep the space. Label comes from aria-label/title. */
 .btn--icon {
