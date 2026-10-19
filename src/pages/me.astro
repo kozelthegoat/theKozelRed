@@ -9,7 +9,8 @@ import { linkify } from '../lib/linkify.js';
 
 export const prerender = false;
 
-const TYPE_NAMES = { intro: 'Intro Call', career: 'Career Review', work: 'Working Session' };
+// Read from the session types themselves, so the table cannot fall out of step with the labels.
+const TYPE_NAMES = Object.fromEntries(sessionTypes.map((t) => [t.id, t.name]));
 
 // Display columns, left to right. `sortable` ones come from the whitelist in lib/requests.js.
 // Widths are declared, not measured from the page: with content-sized columns the layout moved
