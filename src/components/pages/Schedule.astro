@@ -95,10 +95,9 @@ const sessionTypes = sessionTypesFor(locale);
     <div class="grid gap-10 px-[var(--pad)] pt-8 pb-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
       <div>
         <div data-step="slots">
-          <!-- Top-aligned, not centred: this row is 26px tall because of the nav buttons, and a
-               centred label sat 8px below the Session label that opens the other column. Aligning
-               them is what makes the two headings read as one line across the page. -->
-          <div class="flex items-start justify-between gap-4">
+          <!-- Shares .col-head with the Session label that opens the other column, so the two
+               headings sit on one line and each is centred against its own controls. -->
+          <div class="col-head justify-between gap-4">
             <p class="mono text-muted" data-month-label></p>
             <div class="flex items-center gap-3">
               <div class="flex items-center gap-0.5" data-month-nav>
@@ -201,7 +200,7 @@ const sessionTypes = sessionTypesFor(locale);
             details. Radios, so the browser carries the choice and the keyboard carries it too.
           -->
           <div class="grid gap-2" data-schedule-types>
-            <p class="mono text-muted">{t('sched.session')}</p>
+            <div class="col-head"><p class="mono text-muted">{t('sched.session')}</p></div>
             <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
               {
         sessionTypes.map((session, i) => (

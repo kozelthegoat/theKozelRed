@@ -248,6 +248,18 @@ dialog.req-done[open] {
   height: auto;
 }
 
+/* The heading row of each schedule column — the month beside its nav buttons on the left, the
+   Session label that opens the form on the right. One class for both, and a shared height, because
+   an icon button keeps its glyph centred inside its box: top-align the month and the words line up
+   but the icons sit 8px below them; centre the month without the shared height and it rides 8px
+   above the Session label. With the height, both headings centre on one line, and so do the icons.
+   The value is the height of a row of icon buttons (p-1.5 around a 16px glyph). */
+.col-head {
+  display: flex;
+  align-items: center;
+  min-height: 1.9rem;
+}
+
 /* Selectable tiles (session types, calendar days) */
 .pick-btn {
   border: var(--hair) solid var(--border);
