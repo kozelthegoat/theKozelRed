@@ -66,6 +66,9 @@ import { site } from '../../data/site.js';
   </section>
 
   <section class="hair-b">
+    <!-- The area is one thing made of two parts — the session types and the calendar itself — so its
+         label sits above both rather than over the right-hand column alone. -->
+    <p class="mono px-[var(--pad)] pt-14 text-brand">Calendar</p>
     <div class="grid gap-10 px-[var(--pad)] py-14 md:grid-cols-[0.85fr_1.9fr]" data-schedule>
       <div>
         <p class="mono text-muted">Session</p>
@@ -91,8 +94,7 @@ import { site } from '../../data/site.js';
       </div>
 
       <div>
-        <p class="mono text-muted">Calendar</p>
-        <div class="mt-4" data-step="slots">
+        <div data-step="slots">
           <div class="flex items-center justify-between gap-4">
             <p class="mono text-muted" data-month-label></p>
             <div class="flex items-center gap-3">
