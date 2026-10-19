@@ -12,7 +12,12 @@ export const site = {
   // button is the action, and a second call to action in the same block would compete. An array
   // rather than a line-broken string, so each one renders as its own bullet.
   availability: ['Part-time roles and contracts', 'Full-time roles with relocation'],
+  // The business address: for the record, for anything formal, and the one on the domain. Not
+  // published anywhere on the site.
   email: 'aliaksei@kozel.red',
+  // The address the site actually shows, in the footer. Published on purpose, and the one a
+  // stranger should write to.
+  contactEmail: 'hello@kozel.red',
   resume: '/kozel-resume-2026-10-18.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],
   offClock: ['Meditation', 'Mind–body discipline', 'Volunteering', 'Vibe Coding'],

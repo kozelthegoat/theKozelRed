@@ -182,6 +182,12 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
             <ul class="mt-4 grid gap-2 text-sm">
               <li><a class="hover:text-brand" href="/privacy/">{t('footer.privacy')}</a></li>
             </ul>
+            <p class="mono mt-6 text-muted">{t('footer.contact')}</p>
+            <ul class="mt-4 grid gap-2 text-sm">
+              <li>
+                <a class="hover:text-brand" href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+              </li>
+            </ul>
           </div>
         </div>
 
