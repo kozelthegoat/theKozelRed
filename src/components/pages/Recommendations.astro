@@ -1,6 +1,12 @@
 ---
 import Recommendation from '../Recommendation.astro';
 import { recommendations, recommenderUrls, homeRecommendations } from '../../data/resume.js';
+import { localeFromPath } from '../../i18n/config.mjs';
+import { fill, translator } from '../../i18n/ui.mjs';
+
+// Reads the language from the path itself, exactly as Base does, so one component serves all three
+// routes. The quotes are other people's words and are never translated — only the frame around them.
+const t = translator(localeFromPath(Astro.url.pathname));
 
 // Mike leads: the one chosen for the homepage, and the strongest sentence for someone hiring.
 // Everyone else keeps the order they are already in.
@@ -17,12 +23,9 @@ const ordered = [
 -->
 <section>
   <div class="px-[var(--pad)] pt-14 pb-12">
-    <p class="mono text-brand">Recommendations</p>
-    <h1 class="page-title mt-4">In their words</h1>
-    <p class="mt-6 max-w-[52ch] text-secondary">
-      None of this is my own writing. It's theirs, and it makes the case better than I could. My
-      thanks to each of them.
-    </p>
+    <p class="mono text-brand">{t('reco.eyebrow')}</p>
+    <h1 class="page-title mt-4">{t('reco.title')}</h1>
+    <p class="mt-6 max-w-[52ch] text-secondary">{t('reco.intro')}</p>
   </div>
 </section>
 
@@ -53,7 +56,7 @@ const ordered = [
           class="reco-bullet"
           data-bullet={i}
           aria-pressed={i === 0 ? 'true' : 'false'}
-          aria-label={`Recommendation ${i + 1} of ${ordered.length}, ${r.author}`}
+          aria-label={fill(t('reco.bullet'), { n: i + 1, total: ordered.length, author: r.author })}
         >
           {String(i + 1).padStart(2, '0')}
         </button>

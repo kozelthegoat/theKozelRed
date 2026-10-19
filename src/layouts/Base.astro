@@ -4,16 +4,16 @@ import { sessionTypes } from '../data/sessions.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
 import { dirFor, localeFromPath, pathInLocale, prefixFor } from '../i18n/config.mjs';
-import { alternatesForPath } from '../i18n/pages.mjs';
-import { translator } from '../i18n/ui.mjs';
+import { alternatesForPath, pageKeyForPath } from '../i18n/pages.mjs';
+import { lookup, translator } from '../i18n/ui.mjs';
 import Cta from '../components/Cta.astro';
 import LocaleSwitcher from '../components/LocaleSwitcher.astro';
 import '../styles/fonts.css';
 import '../styles/global.css';
 
 const {
-  title = `${site.name} — ${site.role}`,
-  description = `${site.name} — ${site.role}.`,
+  title: explicitTitle,
+  description: explicitDescription,
   // A page can name its own languages — a note varies per slug — and otherwise the registry knows.
   // Null means nothing to switch to, so the menu never offers a link that isn't there.
   alternates: explicitAlternates = null
@@ -25,6 +25,15 @@ const alternates = explicitAlternates ?? alternatesForPath(Astro.url.pathname);
 // locale is shareable and indexable and nothing has to be remembered between visits.
 const locale = localeFromPath(Astro.url.pathname);
 const t = translator(locale);
+
+// Named from the registry and the dictionary, not from the route file that renders the page. The
+// three wrappers that serve one page in three languages used to each carry the same English title,
+// so /ru/privacy/ had a translated body under an English <title>. A note names itself, so it still
+// passes one; everything else resolves from the path.
+const pageKey = pageKeyForPath(Astro.url.pathname);
+const title = explicitTitle ?? (pageKey && lookup(locale, `page.${pageKey}`)) ?? `${site.name} — ${site.role}`;
+const description =
+  explicitDescription ?? (pageKey && lookup(locale, `page.${pageKey}.description`)) ?? `${site.name} — ${site.role}.`;
 const year = new Date().getFullYear();
 // The footer's Navigation block points at home sections, so it only belongs on the English home.
 const isHome = Astro.url.pathname === '/';

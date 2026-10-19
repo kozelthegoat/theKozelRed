@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { locales } from '../src/i18n/config.mjs';
 import { pages, urlFor, pageKeyForPath, alternatesForPath } from '../src/i18n/pages.mjs';
-import { matchTag, pickLocale, readCookie } from '../src/lib/locale-preference.js';
+import { ui } from '../src/i18n/ui.mjs';
 
 const root = new URL('../', import.meta.url);
 
@@ -83,39 +83,21 @@ describe('the registry against the routes on disk', () => {
   });
 });
 
-describe('matchTag', () => {
-  it('drops the region, because ru-RU is served perfectly well by ru', () => {
-    expect(matchTag('ru-RU', ['en', 'ru'])).toBe('ru');
-    expect(matchTag('ru', ['en', 'ru'])).toBe('ru');
-    expect(matchTag('BE-BY', ['en', 'be'])).toBe('be');
-  });
+describe('the registry against the dictionary', () => {
+  // Base names a page from `page.<key>`, resolved out of the path. A missing key does not throw —
+  // it silently falls back to English, which is exactly how /ru/privacy/ served a translated body
+  // under an English <title> for as long as the route wrappers held their own copy.
+  //
+  // Notes are excluded because the notes index and each note name themselves: a note's title is the
+  // note's, and the index sets `Aliaksei Kozel — Notes` from notes.title.
+  const named = Object.keys(pages).filter((key) => key !== 'notFound' && key !== 'notes');
 
-  it('returns nothing for a language we do not speak', () => {
-    expect(matchTag('de', ['en', 'ru', 'be'])).toBeNull();
-    expect(matchTag('', ['en'])).toBeNull();
-    expect(matchTag(undefined, ['en'])).toBeNull();
-  });
-});
-
-describe('pickLocale', () => {
-  it('takes the first language the visitor prefers that we actually have', () => {
-    expect(pickLocale(['de-DE', 'ru-RU', 'en'], ['en', 'ru', 'be'])).toBe('ru');
-    expect(pickLocale(['en-GB', 'ru'], ['en', 'ru'])).toBe('en');
-  });
-
-  it('falls back when we speak none of them', () => {
-    expect(pickLocale(['de', 'fr'], ['en', 'ru'], 'en')).toBe('en');
-    expect(pickLocale([], ['en', 'ru'], 'ru')).toBe('ru');
-    expect(pickLocale(undefined, ['en', 'ru'])).toBe('en');
-  });
-});
-
-describe('readCookie', () => {
-  it('finds one cookie among several and decodes it', () => {
-    expect(readCookie('a=1; locale=ru; b=2')).toBe('ru');
-    expect(readCookie('locale=be')).toBe('be');
-    expect(readCookie('locales=ru')).toBeNull();
-    expect(readCookie('')).toBeNull();
-    expect(readCookie(undefined)).toBeNull();
+  it('gives every page a title and a description in every language it exists in', () => {
+    for (const key of named) {
+      for (const locale of pages[key].locales) {
+        expect(ui[locale][`page.${key}`], `page.${key} / ${locale}`).toBeTruthy();
+        expect(ui[locale][`page.${key}.description`], `page.${key}.description / ${locale}`).toBeTruthy();
+      }
+    }
   });
 });

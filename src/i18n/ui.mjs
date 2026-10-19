@@ -1,6 +1,6 @@
 // The chrome, in every language the site speaks. Only the shared furniture lives here — nav,
-// footer, buttons, and the notes surfaces — because that is what changes when someone switches
-// language. Page bodies are still English, which is the known gap in this pass.
+// footer, buttons, page titles, and the notes and recommendations surfaces — because that is what
+// changes when someone switches language.
 //
 // Missing keys fall back to English rather than rendering blank, so a half-finished translation
 // degrades into the original language instead of into nothing.
@@ -37,9 +37,27 @@ export const ui = {
     'notes.empty': 'Nothing published yet.',
     'notes.back': '← All notes',
 
+    // Titles and descriptions, named once per page per language. Base resolves them from the path,
+    // so the route files stay free of copy instead of each carrying their own English title.
+    'page.home': 'Aliaksei Kozel — Strategy / Operations / Production',
+    'page.home.description': 'Aliaksei Kozel — Strategy / Operations / Production.',
+    'page.schedule': 'Aliaksei Kozel — 1:1 / Schedule',
+    'page.schedule.description':
+      'Book a free 30-minute 1:1 with Aliaksei Kozel — strategy, operations and production, from scope to ship.',
+    'page.recommendations': 'Aliaksei Kozel — Recommendations',
+    'page.recommendations.description':
+      'What colleagues and clients have said about working with Aliaksei Kozel.',
+    'page.privacy': 'Aliaksei Kozel — Privacy',
+    'page.privacy.description': 'What this site stores, and what it doesn’t.',
+
     // Page copy. Each page's strings live under its own section, so a page can be translated whole
     // rather than half — which is what happened when only the layout's chrome was in here.
-    'page.privacy': 'Aliaksei Kozel — Privacy',
+    'reco.eyebrow': 'Recommendations',
+    'reco.title': 'In their words',
+    'reco.intro':
+      'None of this is my own writing. It’s theirs, and it makes the case better than I could. My thanks to each of them.',
+    'reco.bullet': 'Recommendation {n} of {total}, {author}',
+
     'privacy.eyebrow': 'Privacy',
     'privacy.title': 'Privacy',
     'privacy.intro': 'I keep only what I need to reply to you, and nothing here tracks you.',
@@ -86,7 +104,22 @@ export const ui = {
     'notes.empty': 'Пока ничего не опубликовано.',
     'notes.back': '← Все заметки',
 
+    'page.home': 'Aliaksei Kozel — Стратегия / Операции / Производство',
+    'page.home.description': 'Aliaksei Kozel — Стратегия / Операции / Производство.',
+    'page.schedule': 'Aliaksei Kozel — 1:1 / Schedule',
+    'page.schedule.description':
+      'Бесплатная встреча 1:1 на 30 минут с Aliaksei Kozel — стратегия, операции и производство, от замысла до выпуска.',
+    'page.recommendations': 'Aliaksei Kozel — Рекомендации',
+    'page.recommendations.description': 'Что коллеги и клиенты говорят о работе с Aliaksei Kozel.',
     'page.privacy': 'Aliaksei Kozel — Конфиденциальность',
+    'page.privacy.description': 'Что этот сайт хранит, а что — нет.',
+
+    'reco.eyebrow': 'Рекомендации',
+    'reco.title': 'Их словами',
+    'reco.intro':
+      'Здесь нет ничего моего. Это их слова, и они убеждают лучше, чем сумел бы я. Спасибо каждому из них.',
+    'reco.bullet': 'Рекомендация {n} из {total}, {author}',
+
     'privacy.eyebrow': 'Конфиденциальность',
     'privacy.title': 'Конфиденциальность',
     'privacy.intro':
@@ -134,7 +167,22 @@ export const ui = {
     'notes.empty': 'Пакуль нічога не апублікавана.',
     'notes.back': '← Усе нататкі',
 
+    'page.home': 'Aliaksei Kozel — Стратэгія / Аперацыі / Вытворчасць',
+    'page.home.description': 'Aliaksei Kozel — Стратэгія / Аперацыі / Вытворчасць.',
+    'page.schedule': 'Aliaksei Kozel — 1:1 / Schedule',
+    'page.schedule.description':
+      'Бясплатная 30-хвілінная сустрэча 1:1 з Aliaksei Kozel — стратэгія, аперацыі і вытворчасць, ад задумы да выпуску.',
+    'page.recommendations': 'Aliaksei Kozel — Рэкамендацыі',
+    'page.recommendations.description': 'Што калегі і кліенты кажуць пра працу з Aliaksei Kozel.',
     'page.privacy': 'Aliaksei Kozel — Прыватнасць',
+    'page.privacy.description': 'Што гэты сайт трымае, а што — не.',
+
+    'reco.eyebrow': 'Рэкамендацыі',
+    'reco.title': 'Іх словамі',
+    'reco.intro':
+      'Тут няма нічога майго. Гэта іх словы, і яны пераконваюць лепш, чым сказаў бы я. Дзякуй кожнаму з іх.',
+    'reco.bullet': 'Рэкамендацыя {n} з {total}, {author}',
+
     'privacy.eyebrow': 'Прыватнасць',
     'privacy.title': 'Прыватнасць',
     'privacy.intro': 'Я захоўваю толькі тое, што патрэбна, каб вам адказаць, і тут нічога вас не адсочвае.',
@@ -154,4 +202,17 @@ export const ui = {
 export function translator(locale) {
   const table = ui[locale] || ui.en;
   return (key) => table[key] ?? ui.en[key] ?? key;
+}
+
+// The same lookup, but undefined when a key is genuinely absent — for the places that need to tell
+// "not translated yet" from "translated to the key itself", such as a page title falling back.
+export function lookup(locale, key) {
+  const table = ui[locale] || ui.en;
+  return table[key] ?? ui.en[key];
+}
+
+// Fills {placeholders} in a translated string, so a sentence with a name or a count in it stays one
+// string per language instead of being assembled from fragments in the wrong order.
+export function fill(template, vars) {
+  return String(template).replace(/\{(\w+)\}/g, (_, key) => (vars[key] ?? ''));
 }
