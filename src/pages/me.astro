@@ -122,18 +122,22 @@ const statusTone = (s) =>
       {total === 0 && (
         <div class="grid min-h-[52vh] place-items-center pb-16">
           <div class="grid max-w-[38ch] justify-items-center gap-4 text-center">
-            <!-- The site's own mark, outlined and hairline rather than filled: an illustration at
-                 the size of an illustration, not a logo. -->
-            <svg width="64" height="64" viewBox="0 0 20 20" aria-hidden="true" class="mb-1">
-              <rect
-                x="3.5"
-                y="3.5"
-                width="13"
-                height="13"
-                fill="none"
-                stroke="var(--border)"
-                stroke-width="1"
-                transform="rotate(45 10 10)"></rect>
+            <!-- Lucide's inbox mark (lucide-static, ISC — no attribution required). An empty tray
+                 says "nothing has arrived" better than the site's own logo does. -->
+            <svg
+              width="80"
+              height="80"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--muted)"
+              stroke-width="1.25"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              class="mb-1"
+            >
+              <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+              <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
             </svg>
             {
               !list.past && pastCount > 0 ? (
@@ -153,18 +157,7 @@ const statusTone = (s) =>
                   </p>
                 </>
               ) : (
-                <>
-                  <p class="mono text-brand">No requests yet</p>
-                  <p class="text-secondary">
-                    When someone books a 1:1 it lands here with everything they wrote — and you
-                    answer it from this page rather than from an inbox.
-                  </p>
-                  <p class="mono mt-1">
-                    <a class="text-muted hover:text-brand" href="/schedule/">
-                      See the booking page →
-                    </a>
-                  </p>
-                </>
+                <p class="mono text-brand">No requests yet</p>
               )
             }
           </div>
