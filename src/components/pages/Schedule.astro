@@ -1,20 +1,29 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { sessionTypes, availability } from '../../data/sessions.js';
+import { sessionTypesFor, availability } from '../../data/sessions.js';
 import { site } from '../../data/site.js';
+import { intlTagFor, localeFromPath } from '../../i18n/config.mjs';
+import { urlFor } from '../../i18n/pages.mjs';
+import { translator } from '../../i18n/ui.mjs';
+
+// Reads the language from the path, exactly as Base does, so one component serves all three routes.
+// The session copy comes per language; the labels ("RE: Anything") do not, being names.
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const sessionTypes = sessionTypesFor(locale);
 ---
 
   <section>
     <div class="px-[var(--pad)] py-14">
-      <p class="mono text-brand">Pro Bono</p>
-      <h1 class="page-title mt-4 max-w-[20ch]">1:1 / Schedule</h1>
+      <p class="mono text-brand">{t('sched.eyebrow')}</p>
+      <h1 class="page-title mt-4 max-w-[20ch]">{t('sched.title')}</h1>
       <p class="mt-6 max-w-[52ch] text-secondary">
-        You’re welcome to pick a session type, a date, a time, and a bit of context to share.<br />
-        I’ll see what’s on my plate, and come back to you either way.
+        {t('sched.intro1')}<br />
+        {t('sched.intro2')}
       </p>
       <ul class="mt-5 flex flex-wrap gap-2">
           {
-            ['Free', 'Volunteering', 'No strings'].map((tag) => (
+            [t('sched.tag.free'), t('sched.tag.volunteering'), t('sched.tag.nostrings')].map((tag) => (
             <li class="tag mono px-3 py-1.5">{tag}</li>
           ))
         }
@@ -24,8 +33,8 @@ import { site } from '../../data/site.js';
 
   <section>
     <div class="px-[var(--pad)] pt-14">
-      <p class="mono text-brand">Sessions</p>
-      <h2 class="mt-4 max-w-[24ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what we build</h2>
+      <p class="mono text-brand">{t('sched.sessions')}</p>
+      <h2 class="mt-4 max-w-[24ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">{t('sched.sessions.title')}</h2>
     </div>
     <!--
       Descriptions, not a control. Three ways to use the time, each saying what it asks of you and
@@ -38,7 +47,7 @@ import { site } from '../../data/site.js';
     -->
     <div class="grid md:grid-cols-3 md:gap-y-5">
       {
-        sessionTypes.map((t, i) => (
+        sessionTypes.map((session, i) => (
           <div
             class:list={[
               'group relative grid content-start gap-5 p-[var(--pad)] transition-transform duration-300 ease-out hover:-translate-y-1 md:row-span-4 md:grid-rows-subgrid',
@@ -48,14 +57,14 @@ import { site } from '../../data/site.js';
           >
             <span class="pointer-events-none absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 bg-brand transition-transform duration-300 ease-out group-hover:scale-y-100"></span>
             <div class="flex items-baseline justify-between gap-4">
-              <span class="text-xl font-medium uppercase">{t.audience}</span>
-              <span class="mono text-muted">{t.minutes} min</span>
+              <span class="text-xl font-medium uppercase">{session.audience}</span>
+              <span class="mono text-muted">{session.minutes} min</span>
             </div>
-            <p class="text-secondary">{t.description}</p>
+            <p class="text-secondary">{session.description}</p>
             <div>
-              <p class="mono text-muted">You bring</p>
+              <p class="mono text-muted">{t('sched.youBring')}</p>
               <ul class="mt-2 grid gap-1 text-secondary">
-                {t.bring.map((item) => (
+                {session.bring.map((item) => (
                   <li class="flex gap-3">
                     <span class="text-brand">–</span>
                     <span>{item}</span>
@@ -64,9 +73,9 @@ import { site } from '../../data/site.js';
               </ul>
             </div>
             <div>
-              <p class="mono text-muted">We build</p>
+              <p class="mono text-muted">{t('sched.weBuild')}</p>
               <ul class="mt-2 grid gap-1 text-secondary">
-                {t.build.map((item) => (
+                {session.build.map((item) => (
                   <li class="flex gap-3">
                     <span class="text-brand">–</span>
                     <span>{item}</span>
@@ -82,7 +91,7 @@ import { site } from '../../data/site.js';
 
   <section>
     <!-- The calendar, and beside it the details, where the session and the rest are chosen. -->
-    <p class="mono px-[var(--pad)] pt-14 text-brand">Calendar</p>
+    <p class="mono px-[var(--pad)] pt-14 text-brand">{t('sched.calendar')}</p>
     <div class="grid gap-10 px-[var(--pad)] pt-8 pb-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
       <div>
         <div data-step="slots">
@@ -93,31 +102,31 @@ import { site } from '../../data/site.js';
             <p class="mono text-muted" data-month-label></p>
             <div class="flex items-center gap-3">
               <div class="flex items-center gap-0.5" data-month-nav>
-                <button type="button" class="icon-btn p-1.5" data-month-prev aria-label="Previous month">
+                <button type="button" class="icon-btn p-1.5" data-month-prev aria-label={t('sched.prevMonth')}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                     <path d="M15 18l-6-6 6-6"></path>
                   </svg>
                 </button>
-                <button type="button" class="icon-btn p-1.5" data-month-next aria-label="Next month">
+                <button type="button" class="icon-btn p-1.5" data-month-next aria-label={t('sched.nextMonth')}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                     <path d="M9 6l6 6-6 6"></path>
                   </svg>
                 </button>
               </div>
-              <div class="flex gap-0.5" data-layout-switch role="group" aria-label="Layout">
-                <button type="button" class="seg-btn p-1.5" data-layout="month" aria-pressed="true" aria-label="Month view" title="Month">
+              <div class="flex gap-0.5" data-layout-switch role="group" aria-label={t('sched.layout')}>
+                <button type="button" class="seg-btn p-1.5" data-layout="month" aria-pressed="true" aria-label={t('sched.view.month')} title={t('sched.view.month')}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                     <rect x="3" y="4" width="18" height="17" rx="2"></rect>
                     <path d="M3 9h18M8 2v4M16 2v4"></path>
                   </svg>
                 </button>
-                <button type="button" class="seg-btn p-1.5" data-layout="week" aria-pressed="false" aria-label="Week view" title="Week">
+                <button type="button" class="seg-btn p-1.5" data-layout="week" aria-pressed="false" aria-label={t('sched.view.week')} title={t('sched.view.week')}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                     <rect x="3" y="4" width="18" height="17" rx="2"></rect>
                     <path d="M3 9h18M9 9v12M15 9v12"></path>
                   </svg>
                 </button>
-                <button type="button" class="seg-btn p-1.5" data-layout="list" aria-pressed="false" aria-label="List view" title="List">
+                <button type="button" class="seg-btn p-1.5" data-layout="list" aria-pressed="false" aria-label={t('sched.view.list')} title={t('sched.view.list')}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                     <path d="M4 6h16M4 12h16M4 18h16"></path>
                   </svg>
@@ -126,7 +135,7 @@ import { site } from '../../data/site.js';
             </div>
           </div>
           <div class="mt-4 flex flex-wrap items-center gap-2">
-            <span class="mono text-muted">Times in</span>
+            <span class="mono text-muted">{t('sched.timesIn')}</span>
             <div class="relative" data-tz-picker>
               <button
                 type="button"
@@ -146,12 +155,12 @@ import { site } from '../../data/site.js';
                   <input
                     type="text"
                     class="field w-full px-3 py-1.5 text-sm"
-                    placeholder="Search a city…"
+                    placeholder={t('sched.searchCity')}
                     data-tz-search
-                    aria-label="Search timezones"
+                    aria-label={t('sched.searchTimezones')}
                   />
                 </div>
-                <ul class="max-h-64 overflow-auto" data-tz-options role="listbox" aria-label="Timezones"></ul>
+                <ul class="max-h-64 overflow-auto" data-tz-options role="listbox" aria-label={t('sched.timezones')}></ul>
               </div>
             </div>
           </div>
@@ -192,33 +201,33 @@ import { site } from '../../data/site.js';
             details. Radios, so the browser carries the choice and the keyboard carries it too.
           -->
           <div class="grid gap-2" data-schedule-types>
-            <p class="mono text-muted">Session</p>
+            <p class="mono text-muted">{t('sched.session')}</p>
             <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
               {
-                sessionTypes.map((t, i) => (
+        sessionTypes.map((session, i) => (
                   <label class="flex cursor-pointer items-center gap-2 text-sm">
                     <input
                       type="radio"
                       name="session-type"
-                      value={t.id}
-                      data-type={t.id}
+                      value={session.id}
+                      data-type={session.id}
                       class="radio-dot"
                       checked={i === 0}
                     />
-                    <span>{t.audience}</span>
+                    <span>{session.audience}</span>
                   </label>
                 ))
               }
             </div>
           </div>
-          <p class="mono text-muted">Details</p>
+          <p class="mono text-muted">{t('sched.details')}</p>
           <div class="relative">
             <input
               name="name"
               type="text"
               required
               autocomplete="name"
-              placeholder="Name"
+              placeholder={t('sched.name')}
               class="field w-full px-4 py-3"
               style="padding-inline-end: 2.25rem"
             />
@@ -230,7 +239,7 @@ import { site } from '../../data/site.js';
               type="email"
               required
               autocomplete="email"
-              placeholder="Email"
+              placeholder={t('sched.email')}
               class="field w-full px-4 py-3"
               style="padding-inline-end: 2.25rem"
             />
@@ -239,17 +248,17 @@ import { site } from '../../data/site.js';
           <textarea
             name="note"
             rows="3"
-            placeholder="What’s on your mind?"
+            placeholder={t('sched.message')}
             class="field min-h-[6rem] w-full flex-1 resize-none px-4 py-3"></textarea>
           <p class="text-sm text-brand" data-form-error hidden></p>
           <div class="flex flex-wrap gap-3">
-            <button type="submit" class="btn mono">Send request</button>
+            <button type="submit" class="btn mono">{t('sched.send')}</button>
           </div>
           <!-- Quiet, and a line rather than a checkbox: the request is free, so a tick box would
                read as a contract being signed. It still says plainly where the details go. -->
           <!-- One line on purpose: Astro strips the whitespace at a line break, which glued the
                link to the dash. -->
-          <p class="text-sm text-muted">By sending, you agree to how your details are handled — <a class="hover:text-brand" href="/privacy/">Privacy</a>.</p>
+          <p class="text-sm text-muted">{t('sched.consentBefore')}<a class="hover:text-brand" href={urlFor('privacy', locale)}>{t('sched.consentLink')}</a>.</p>
         </form>
 
         <dialog data-step="done" class="req-done" aria-labelledby="done-heading">
@@ -257,7 +266,7 @@ import { site } from '../../data/site.js';
             type="button"
             class="icon-btn absolute right-3 top-3"
             data-done-close
-            aria-label="Close"
+            aria-label={t('sched.close')}
           >
             <svg
               width="16"
@@ -272,11 +281,11 @@ import { site } from '../../data/site.js';
             </svg>
           </button>
           <div class="grid gap-4">
-            <p class="mono text-brand" id="done-heading">Requested</p>
-            <p class="max-w-[46ch] text-lg">{site.confirmation.thanks}</p>
+            <p class="mono text-brand" id="done-heading">{t('sched.done.heading')}</p>
+            <p class="max-w-[46ch] text-lg">{t('sched.done.thanks')}</p>
             <p class="max-w-[46ch] text-secondary" data-done-note></p>
             <p class="max-w-[46ch] text-secondary">
-              {site.confirmation.next}{site.meetingUrl ? ' The link to join comes with it.' : ''}
+              {t('sched.done.next')}{site.meetingUrl ? t('sched.done.join') : ''}
             </p>
             <p class="mono text-muted" data-done-summary></p>
           </div>
@@ -289,13 +298,28 @@ import { site } from '../../data/site.js';
     type="application/json"
     data-schedule-config
     set:html={JSON.stringify({
-      types: sessionTypes.map((t) => ({
-        id: t.id,
-        audience: t.audience,
-        minutes: t.minutes,
-        confirmation: t.confirmation
+      types: sessionTypesFor(locale).map((session) => ({
+        id: session.id,
+        audience: session.audience,
+        minutes: session.minutes,
+        confirmation: session.confirmation
       })),
-      timezone: availability.timezone
+      timezone: availability.timezone,
+      // The browser writes part of this page — the loading state, the error lines, the button while
+      // it sends — so the words it needs travel with it, and the dates it formats use the page's
+      // language rather than whatever the visitor's machine happens to be set to.
+      intl: intlTagFor(locale),
+      strings: {
+        loading: t('sched.loading'),
+        loadError: t('sched.loadError'),
+        noTimes: t('sched.noTimes'),
+        sending: t('sched.sending'),
+        send: t('sched.send'),
+        generic: t('sched.err.generic'),
+        time: t('sched.err.time'),
+        name: t('sched.err.name'),
+        email: t('sched.err.email')
+      }
     })}
   ></script>
   <script>

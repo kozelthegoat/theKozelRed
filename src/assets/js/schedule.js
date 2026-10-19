@@ -10,6 +10,10 @@ if (cfgEl && root) {
   const cfg = JSON.parse(cfgEl.textContent);
   const $ = (sel) => root.querySelector(sel);
   const pad = (n) => String(n).padStart(2, '0');
+  // The words this script writes, and the language it writes dates in, arrive with the config: the
+  // page is translated server-side and this script cannot see the dictionary.
+  const s = cfg.strings || {};
+  const intl = cfg.intl || undefined;
 
   // Document-wide rather than scoped to `root`. The picker moves with the design — it sits in the
   // details form now — and a scoped lookup once silently returned null when it lived elsewhere,
@@ -63,9 +67,9 @@ if (cfgEl && root) {
     tzOffsetEl.textContent = tzOffset(tz);
   };
   setTzDisplay(detected);
-  const monthName = (y, m) => new Date(y, m - 1, 1).toLocaleString(undefined, { month: 'long', year: 'numeric' });
+  const monthName = (y, m) => new Date(y, m - 1, 1).toLocaleString(intl, { month: 'long', year: 'numeric' });
   const dayName = (y, m, d) =>
-    new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+    new Date(y, m - 1, d).toLocaleDateString(intl, { weekday: 'long', day: 'numeric', month: 'long' });
   const addDays = (ymd, n) => {
     const [y, m, d] = ymd.split('-').map(Number);
     const dt = new Date(Date.UTC(y, m - 1, d));
@@ -230,7 +234,7 @@ if (cfgEl && root) {
     timesWrap.hidden = true;
     timesEl.innerHTML = '';
     monthLabel.textContent = monthName(state.year, state.month);
-    daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Loading…</span>';
+    daysEl.innerHTML = `<span class="mono col-span-7 py-8 text-center text-muted">${s.loading}</span>`;
     const from = dateInTz(cfg.timezone, new Date());
     const to = addDays(from, 180);
     try {
@@ -245,7 +249,7 @@ if (cfgEl && root) {
       if (state.localDate && state.byDate.get(state.localDate)?.length) showTimes(state.localDate);
     } catch (e) {
       console.error('schedule: failed to load slots', e);
-      daysEl.innerHTML = '<span class="mono col-span-7 py-8 text-center text-muted">Couldn’t load times — try again.</span>';
+      daysEl.innerHTML = `<span class="mono col-span-7 py-8 text-center text-muted">${s.loadError}</span>`;
     }
   }
 
@@ -303,15 +307,15 @@ if (cfgEl && root) {
       .filter((d) => d >= from)
       .sort()
       .slice(0, 7);
-    listEl.innerHTML = days.map(dayBlock).join('') || '<p class="mono text-muted">No times yet.</p>';
-    monthLabel.textContent = days.length ? rangeLabel(days) : 'No times yet';
+    listEl.innerHTML = days.map(dayBlock).join('') || `<p class="mono text-muted">${s.noTimes}</p>`;
+    monthLabel.textContent = days.length ? rangeLabel(days) : s.noTimes;
     updateNav();
   }
 
   function rangeLabel(list) {
     const fmt = (ymd) => {
       const [y, m, d] = ymd.split('-').map(Number);
-      return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+      return new Date(y, m - 1, d).toLocaleDateString(intl, { day: 'numeric', month: 'short' });
     };
     if (list.length === 1) return fmt(list[0]);
     return `${fmt(list[0])} – ${fmt(list[list.length - 1])}`;
@@ -320,12 +324,12 @@ if (cfgEl && root) {
   function dayBlock(local) {
     const slots = state.byDate.get(local) || [];
     const [y, m, d] = local.split('-').map(Number);
-    const label = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+    const label = new Date(y, m - 1, d).toLocaleDateString(intl, { weekday: 'short', day: 'numeric', month: 'short' });
     return `<div class="grid content-start gap-2"><p class="mono text-muted">${label}</p><div class="flex flex-wrap gap-2">${slots.map(timeChip).join('')}</div></div>`;
   }
 
   function timeChip(s) {
-    const label = new Intl.DateTimeFormat(undefined, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at));
+    const label = new Intl.DateTimeFormat(intl, { timeZone: state.tz, hour: '2-digit', minute: '2-digit' }).format(new Date(s.at));
     const pressed = state.slot && state.slot.date === s.date && state.slot.time === s.time;
     return `<button type="button" class="hair px-2.5 py-1.5 text-sm whitespace-nowrap tabular-nums transition hover:border-brand" data-time="${s.time}" data-date="${s.date}" data-at="${s.at}" aria-pressed="${pressed ? 'true' : 'false'}">${label}</button>`;
   }
@@ -370,7 +374,7 @@ if (cfgEl && root) {
 
   function whenLabel(withWeekday) {
     const at = new Date(state.slot.at);
-    const local = new Intl.DateTimeFormat(undefined, {
+    const local = new Intl.DateTimeFormat(intl, {
       timeZone: state.tz,
       weekday: withWeekday ? 'short' : undefined,
       day: 'numeric',
@@ -396,7 +400,7 @@ if (cfgEl && root) {
     // The form used to be hidden until a time was picked, so a submit without one was impossible.
     // It is visible from the start now — it sits in its own column — so this has to say so.
     if (!state.slot) {
-      formError.textContent = 'Pick a time first.';
+      formError.textContent = s.time;
       formError.hidden = false;
       return;
     }
@@ -405,13 +409,13 @@ if (cfgEl && root) {
     const email = String(data.get('email') || '').trim();
     const note = String(data.get('note') || '').trim();
     if (name.length < 2) {
-      formError.textContent = 'Please add your name.';
+      formError.textContent = s.name;
       formError.hidden = false;
       form.querySelector('[name="name"]').focus();
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      formError.textContent = 'Please add a valid email.';
+      formError.textContent = s.email;
       formError.hidden = false;
       form.querySelector('[name="email"]').focus();
       return;
@@ -428,7 +432,7 @@ if (cfgEl && root) {
     };
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;
-    submit.textContent = 'Sending…';
+    submit.textContent = s.sending;
     try {
       const res = await fetch('/api/requests', {
         method: 'POST',
@@ -436,7 +440,7 @@ if (cfgEl && root) {
         body: JSON.stringify(payload)
       });
       const body = await res.json();
-      if (!res.ok) throw new Error(body.error?.message || 'Something went wrong.');
+      if (!res.ok) throw new Error(body.error?.message || s.generic);
       const chose = typeById(state.type);
       $('[data-done-summary]').textContent = `${chose.audience} · ${whenLabel(true)}`;
       $('[data-done-note]').textContent = chose.confirmation || '';
@@ -447,7 +451,7 @@ if (cfgEl && root) {
       formError.textContent = err.message;
       formError.hidden = false;
       submit.disabled = false;
-      submit.textContent = 'Send request';
+      submit.textContent = s.send;
     }
   });
 
@@ -464,7 +468,7 @@ if (cfgEl && root) {
     formError.hidden = true;
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = false;
-    submit.textContent = 'Send request';
+    submit.textContent = s.send;
     stepForm.classList.add('hidden');
     stepSlots.hidden = false;
     for (const chip of document.querySelectorAll('[data-time]')) {

@@ -28,11 +28,6 @@ export const site = {
   // follow. This one is a Whereby room, and a vanity room is guessable by design — the access
   // control is Whereby's room lock, not secrecy, so keep the lock on and admit people by hand.
   meetingUrl: 'https://whereby.com/kozelthegoat',
-  // The words shown after a request lands. The per-session line lives on each session type.
-  confirmation: {
-    thanks: 'Thank you for asking. It means more than the request suggests.',
-    next: 'I’ll give it proper attention, and you’ll hear back by email either way — that part I promise.'
-  },
   socials: [
     // { label: 'LinkedIn', url: 'https://…' },
   ]
