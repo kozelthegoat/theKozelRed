@@ -149,21 +149,21 @@ const types = [
     },
     build: {
       en: [
-        'A deep dive into root cause underneath the problem',
-        'A discussion on trade-offs of decisions made',
-        'An upgrade on vision towards first move, and what it unlocks',
+        'A deep dive into the root cause underlying the problem',
+        'A discussion on the trade-offs of decisions made',
+        'A clearer vision for the next move, and what it unlocks',
         'The confidence to adapt and face reality with eyes open'
       ],
       ru: [
-        'Глубокое погружение в первопричину под проблемой',
+        'Глубокое погружение в первопричину, лежащую в основе проблемы',
         'Разговор о компромиссах принятых решений',
-        'Прокачка видения первого шага и того, что он открывает',
+        'Более ясное видение следующего шага и того, что он открывает',
         'Уверенность адаптироваться и смотреть реальности в глаза'
       ],
       be: [
-        'Глыбокае пагружэнне ў першапрычыну пад праблемай',
+        'Глыбокае пагружэнне ў першапрычыну, што ляжыць у аснове праблемы',
         'Размова пра кампрамісы прынятых рашэнняў',
-        'Пракачка бачання першага кроку і таго, што ён адкрывае',
+        'Больш яснае бачанне наступнага кроку і таго, што ён адкрывае',
         'Упэўненасць адаптавацца і глядзець рэальнасці ў вочы'
       ]
     }
