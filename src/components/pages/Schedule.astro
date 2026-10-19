@@ -254,7 +254,7 @@ const sessionTypes = sessionTypesFor(locale);
                to, not a note about what happens afterwards. -->
           <label class="flex items-start gap-2 text-sm text-muted">
             <input type="checkbox" name="consent" required class="control" />
-            <span>{t('sched.consentBefore')}<a class="hover:text-brand" href={urlFor('privacy', locale)}>{t('sched.consentLink')}</a>.</span>
+            <span>{t('sched.consentBefore')}<a class="text-foreground hover:text-brand" href={urlFor('privacy', locale)}>{t('sched.consentLink')}</a>.</span>
           </label>
           <div class="flex flex-wrap gap-3">
             <button type="submit" class="btn mono">{t('sched.send')}</button>
