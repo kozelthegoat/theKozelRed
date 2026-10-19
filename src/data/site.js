@@ -12,7 +12,7 @@ export const site = {
   // button is the action, and a second call to action in the same block would compete. The break
   // is deliberate and rendered with whitespace-pre-line, as the location above it is.
   availability: 'Open to part-time roles and contracts\nOpen to full-time roles with relocation',
-  email: 'aliaksei.pashkel@gmail.com',
+  email: 'aliaksei@kozel.red',
   resume: '/kozel-resume-2026-10-18.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],
   education: ['BA, English Literature', 'Minsk State Linguistic University'],
