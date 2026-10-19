@@ -6,14 +6,27 @@ Personal site and 1:1 booking for **Aliaksei Kozel** — strategy / operations /
 
 ## What's here
 
-- `/` — home: expertise, experience, recommendations, résumé download
+- `/` — home: hero, expertise, experience, the featured recommendations, and the pro-bono 1:1 invitation
+- `/recommendations/` — the full set of quotes, each with an original / translation toggle
 - `/schedule/` — 1:1 booking: pick a session type → a time → leave a note
-- `/notes/` — writing, dated by when it was written (also `/ru/notes/`, `/be/notes/`)
+- `/notes/` — writing, dated by when it was written
 - `/privacy/` — what's stored and why
 - `/me` — the requests table, where a request is confirmed or declined (behind Cloudflare Access in production)
-- `404` — styled not-found page
+- `404` — styled not-found page (English only)
 
-Booking is **request-based and free**: pick a slot, send a request, and I answer either way. Every session is **30 minutes** — `Intro Call`, `Career Review`, `Working Session`.
+Booking is **request-based and free**: pick a slot, send a request, and I answer either way. Every session is **30 minutes** — `RE: Anything`, `RE: Career`, `RE: Business`. What separates the three is what each sets out to do, not how long it takes.
+
+## Where this sits — the `kozel.red` umbrella
+
+This repo is the **apex** of one domain, not a stand-alone site. The `kozel.red` zone carries three layers:
+
+| Host | Serves | Codebase |
+|---|---|---|
+| `kozel.red` · `www.kozel.red` | this personal site | **this repo** (Worker `kozel-red`) |
+| `go.kozel.red` | **KozelGo** — websites and apps for energy healers (the product) | `@theKozelGo` (Pages project `kozel-red-go`) |
+| `NNN.go.kozel.red` (e.g. `001`) | one client's instance of that product | the product repo, one host per client |
+
+The apex is deliberately the *person*; the product sits under `go.`. **KozelGo's `docs/routing.md` is the source of truth for the hostname map** — read it before adding a host. Nothing links the two sites publicly today; whether the personal site should point at the product is an open question, not an oversight (see `docs/ideas.md`).
 
 ## Booking emails
 
@@ -23,7 +36,7 @@ Sent through **Resend**, best-effort: with no key the request is still stored an
 
 ## Languages
 
-English is at the root, Russian at `/ru/`, Belarusian at `/be/`. Path prefixes and never a cookie, so every locale stays shareable and indexable. The chrome is translated in `src/i18n/ui.mjs`, and `src/i18n/pages.mjs` is the registry of which slugs a page uses per language and which languages it exists in. A switcher appears only on pages that exist in more than one language — today that means the notes.
+English is at the root, Russian at `/ru/`, Belarusian at `/be/`. Path prefixes and never a cookie, so every locale stays shareable and indexable. Nearly every page exists in all three languages — home, recommendations, schedule, privacy and notes — and only `404` is English-only, so the footer switcher appears almost everywhere. The chrome is translated in `src/i18n/ui.mjs`, the email copy in `src/i18n/mail.mjs`, and page prose lives beside its data (the CV, the session copy, the recommendation quotes). `src/i18n/pages.mjs` is the registry of which slugs a page uses per language and which languages it exists in, and a test keeps it in step with the routes on disk.
 
 ## Stack
 
@@ -62,7 +75,8 @@ Email is skipped without secrets, which is the normal state locally — to exerc
 - `src/data/resume.js` — expertise, experience, recommendations
 - `src/data/sessions.js` — session types + weekly availability
 - `src/content/notes/` — markdown notes; `name.ru.md` / `name.be.md` are the translations
-- `src/i18n/ui.mjs` — the chrome in every language
+- `src/i18n/ui.mjs` — the chrome in every language; `mail.mjs` — the email copy
+- `src/i18n/pages.mjs` — which languages each page exists in (edit this to add a page or a locale)
 - `src/styles/global.css` — design tokens and shared component styles
 - `public/fonts/` — self-hosted Geist / Geist Mono
 
@@ -72,16 +86,17 @@ A note is published by dropping a `.md` file in `src/content/notes/`: frontmatte
 ## Repo layout
 
 ```
-src/pages/      routes (index, schedule, privacy, me, notes, 404, api/, ru/, be/)
-src/layouts/    Base layout (header, footer, language switcher slot)
-src/components/ Cta, LocaleSwitcher, StatusForm, page bodies
+src/pages/      routes (index, schedule, recommendations, privacy, me, notes, 404, api/, ru/, be/)
+src/layouts/    Base layout (ticker, header, footer, language switcher)
+src/components/ Cta, LocaleSwitcher, StatusForm, Recommendation, page bodies
 src/content/    notes (markdown)
-src/i18n/       locales, the page registry, the chrome dictionary
+src/i18n/       locales, the page registry, the chrome dictionary, email copy
 src/data/       content (site, résumé, sessions, palette)
-src/lib/        slots, timezone, email, .ics, requests, headers, notes, locale preference
-src/assets/js/  client scripts (schedule, reveal, notes)
+src/lib/        slots, timezone, email, .ics, requests, headers, notes, linkify, api
+src/assets/js/  client scripts (schedule, reveal, notes, recommendations, press)
 migrations/     D1 schema
-public/         fonts, images, résumé PDF, _headers, accent.js
+public/         fonts, images, résumé PDF, bimi logo, _headers, accent.js
+scripts/        local dev bootstrap + icon generation
 docs/           design, ideas, DNS, donations and legal notes
 ```
 

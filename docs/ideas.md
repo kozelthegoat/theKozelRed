@@ -1,17 +1,32 @@
 # Ideas & backlog — living doc
 
-Status: **Living document** · Last updated: 2026-10-15
+Status: **Living document** · Last updated: 2026-10-19
 
-Parked / out-of-scope for v1.
+Parked, decided-against, or not yet built.
 
-## Out of scope (v1)
+## Shipped since v1 (no longer backlog)
 
-- **Blog / thoughts.**
+- **Multilingual** — English at the root, Russian at `/ru/`, Belarusian at `/be/`; path prefixes,
+  never a cookie, so every locale stays shareable and indexable. Every page but `404`.
+- **Notes** — the writing archive, with per-note translations.
+- **Recommendations page** — every quote on a page of its own, with a translation toggle.
+- **Donate button** — wired to `site.donateUrl`, still hidden while that is empty (see
+  `donations.md`).
+
+## Out of scope
+
 - **Family history.**
-- **i18n** — English only for now; add languages once content is stable.
-- **Donation provider integration** — v1 links out via the floating Donate button.
 - **Coat of arms as a brand mark** — not ready yet.
+- **Donation provider integration** — the button links out; no payment code lives here (see
+  `donations.md`).
 
-## Future / backlog
+## Open questions
 
-- **Session buffers ("recharge" gaps).** Settled by the product rather than by code: every session is 30 minutes on one hourly grid (`08:00–20:00` Minsk), so each booking leaves a uniform 30-minute gap. The old per-type variation — and the idea of computing the grid per session type — only mattered while the three durations differed. Revisit only if durations diverge again.
+- **The umbrella, in public.** The apex is the person and `go.kozel.red` is the product
+  (**KozelGo** — websites and apps for energy healers), but nothing on either site links to the
+  other. Decide whether the personal site should point at the product (a "work" or "studio" line),
+  or keep the two deliberately unlinked. The hostname map itself is settled — KozelGo's
+  `docs/routing.md` owns it; this is only about whether the sites acknowledge each other.
+- **Session buffers ("recharge" gaps).** Settled by the product rather than by code: every session
+  is 30 minutes on one hourly grid (`08:00–20:00` Minsk), so each booking leaves a uniform
+  30-minute gap. Revisit only if durations diverge again.

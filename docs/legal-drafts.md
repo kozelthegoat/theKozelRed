@@ -1,6 +1,13 @@
 # Legal & contact drafts (for VPOS bank review)
 
-Status: **Draft for review** · Last updated: 2026-10-17 · Nothing here is published on the site yet.
+Status: **Draft for review** · Last updated: 2026-10-19 · Nothing here is published on the site yet.
+
+> **Reality check (2026-10-19).** This set was drafted on the premise that the 1:1 sessions are
+> **paid** services. As shipped they are **free** (`docs/donations.md`), and the site's locales are
+> **en / ru / be**, not the **en / ru / hy** assumed in §5 — so §1's price table and §5's switcher
+> plan are ahead of, or at odds with, the site as built. The paid framing still applies if a paid tier
+> is ever added, and Armenian is still the language the *bank* review needs; until then read this as a
+> template, not a description of the live site.
 
 Provenance: the *document set* (privacy, refund policy, terms, company details) and the *conventions* in it — which document a bank wants, that versions must agree across languages, that a reviewed version is never edited in place — are regulatory and industry practice. The wording here is written for this site; nothing is copied from another operator's terms.
 
@@ -21,9 +28,9 @@ shown before you pay. Sessions take place online, by video call; a link is sent 
 
 | session | duration | price |
 |---|---|---|
-| Intro Call | 30 min | «AMD / USD / EUR» |
-| Career Review | 30 min | «AMD / USD / EUR» |
-| Working Session | 30 min | «AMD / USD / EUR» |
+| RE: Anything | 30 min | «AMD / USD / EUR» |
+| RE: Career | 30 min | «AMD / USD / EUR» |
+| RE: Business | 30 min | «AMD / USD / EUR» |
 
 Prices are shown before payment and are not changed after a booking is confirmed. Any bank or card fees charged by
 your bank are outside my control.
@@ -68,7 +75,6 @@ disagree, the English text governs — except where mandatory law requires other
 does not by itself create or widen an obligation.
 
 **Where local law gives you more.** Nothing here removes a right you hold under the law that mandatorily applies to you, and where that law is more generous, it prevails.
-to you.
 
 **Governing law.** «The laws of «country», with disputes heard by the courts of «city».»
 

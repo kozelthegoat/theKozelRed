@@ -1,10 +1,13 @@
 # DNS & email — living doc
 
-Status: **Living document** · Last updated: 2026-10-16
+Status: **Living document** · Last updated: 2026-10-19
 
 Zone **`kozel.red`** — managed entirely on **Cloudflare DNS** (nameservers `alaric` / `margaret.ns.cloudflare.com`).
 
-Two concerns share this zone: **email** (receive via Migadu, send via Resend) and **the site** (a Worker). Edit records in the Cloudflare dashboard → DNS → Records; the `wrangler` token has **no DNS scope**, so records are edited by hand (or with a scoped API token).
+Three things share this zone: **email** (receive via Migadu, send via Resend), **this site** (the
+`kozel-red` Worker at the apex), and the **KozelGo umbrella hosts** (`go.kozel.red` and its client
+instances). Edit records in the Cloudflare dashboard → DNS → Records; the `wrangler` token has **no
+DNS scope**, so records are edited by hand (or with a scoped API token).
 
 ## Receive — Migadu
 
@@ -33,13 +36,21 @@ Two concerns share this zone: **email** (receive via Migadu, send via Resend) an
 
 So: **one address (`hello@kozel.red`), two paths** — *receive* via Migadu's MX, *send* via Resend on the `send.*` subdomain. They don't conflict because they use different names.
 
-## Site — Worker (Proxied)
+## Hosts — Proxied
 
 | Host | Purpose |
 |---|---|
 | `kozel.red`, `www.kozel.red` | this site (Worker `kozel-red`, custom domains) |
+| `go.kozel.red` | the **KozelGo** product gateway (Worker `kozel-red-go-gateway`) |
+| `NNN.go.kozel.red` (e.g. `001.go.kozel.red`) | a client instance's gateway |
 
-`www` redirects to the apex. These are Cloudflare **"Worker"-type** records (orange cloud / Proxied), so they don't appear in a BIND export — that's expected.
+`www` redirects to the apex. Every host here is a Cloudflare **"Worker"-type** record (orange cloud /
+Proxied), so they don't appear in a BIND export — that's expected.
+
+**The hostname map for `go.` and below lives in KozelGo's `docs/routing.md`** — that is the source of
+truth for the product and its clients; this doc owns the apex and the email records. A client's own
+domain (e.g. `www.aelia.love`) is **not** in this zone: a Pages custom domain must sit in the account
+that owns the zone, so a client's production lives on the client's account, not ours.
 
 ## Rules of thumb (the gotchas)
 

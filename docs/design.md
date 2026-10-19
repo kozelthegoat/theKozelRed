@@ -1,28 +1,37 @@
 # kozel.red — design
 
-Status: **Living document** · Last updated: 2026-10-16
+Status: **Living document** · Last updated: 2026-10-19
 
 Personal site for Aliaksei Kozel — a consulting + 1:1 page with a résumé, in an immersive but
-**non-interactive** style. English only (v1).
+**non-interactive** style. English at the root, Russian at `/ru/`, Belarusian at `/be/`.
 
 ## Stack
 
 - **Astro 7** (SSR) on **Cloudflare Workers** via `@astrojs/cloudflare` (`wrangler.jsonc`).
 - **Tailwind v4** (tokens live in `src/styles/global.css`).
 - **D1** for booking requests (`migrations/`). **Vitest** for the logic tests.
+- **i18n by path prefix** — `src/i18n/config.mjs` (locales), `pages.mjs` (the page registry),
+  `ui.mjs` (the chrome), `mail.mjs` (the email copy). No cookie; every locale is a shareable URL.
 - API as **Astro endpoints** (`src/pages/api/…`); vanilla-JS client for the calendar.
 
 ## Pages
 
-- `/` — one scrolling page: **Hero** · **Expertise** · **Experience** · **Recommendations** ·
-  **Résumé** · **Services / 1:1** CTA.
+- `/` — one scrolling page: **Hero** · **Expertise** · **Experience** · **Recommendations** (the two
+  featured) · **Pro Bono / 1:1** CTA.
+- `/recommendations/` — every quote, each with an original / translation toggle.
+- `/notes/` — the writing archive (a list plus one page per note, translated per note).
 - `/schedule/` — the 1:1 request flow (session type → date → time → note).
 - `/privacy/` — what's stored and why.
 - `/me` — the owner's view of incoming requests, **gated by Cloudflare Access** (not linked publicly).
-- `404` — styled not-found page.
+- `404` — styled not-found page (English only).
+
+Every page but `404` exists in all three languages; `src/i18n/pages.mjs` is the registry and
+`tests/i18n-pages.test.js` keeps it in step with the routes on disk.
 
 **Hosts:** `kozel.red` + `www.kozel.red` both serve the site (Worker custom domains); the
-`<link rel="canonical">` points at the apex.
+`<link rel="canonical">` points at the apex. This is the **apex of the `kozel.red` umbrella** — the
+product (`go.kozel.red`, **KozelGo** — websites and apps for energy healers) and its client
+instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md` owns the hostname map.
 
 ### API (Astro endpoints)
 
@@ -32,13 +41,16 @@ Personal site for Aliaksei Kozel — a consulting + 1:1 page with a résumé, in
 
 ## 1:1 booking
 
-- **Session types** (`src/data/sessions.js`): `Intro Call` 30 min · `Career Review` 45 · `Working Session` 60.
+- **Session types** (`src/data/sessions.js`): `RE: Anything` · `RE: Career` · `RE: Business` — all
+  30 minutes. The name is a label, untranslated (like "Pro Bono"); the description / `bring` / `build`
+  copy is per language. What separates the three is intent, not duration.
 - **Availability:** a single weekly grid of start times defined in **Minsk**, every day
   08:00–20:00, with a **24-hour minimum notice** (`minNoticeHours`).
-- **Flow:** pick a type → see open slots (the grid minus existing requests) → submit a
-  **request** (name, email, note). **No payment**, no accounts. Requester + owner get an email.
+- **Flow:** pick a type → see open slots (the grid minus existing requests) → accept the privacy
+  policy → submit a **request** (name, email, note). **No payment**, no accounts. Requester + owner
+  get an email; a confirm attaches the `.ics`, a decline closes the thread — same subject either way.
 - **Data (D1):** one `requests` table. A partial unique index keeps one active request per slot,
-  and a declined row frees the slot again.
+  and a declined row frees the slot again. The visitor's timezone and locale are stored with the row.
 - **Timezones:** the API returns raw `{date, time}` wall-clock in Minsk; the browser shows each
   slot in the **visitor's** timezone (auto-detected, switchable).
 
@@ -75,13 +87,14 @@ if a new one is needed, add a token.
 
 | Token | Value | Used for |
 |---|---|---|
-| `--background` | `#f5f5ed` | page background |
+| `--background` | `#ffffff` | page background (Google's search-page white) |
 | `--foreground` | `#282828` | primary ink |
 | `--secondary` | `#414140` | secondary text |
 | `--muted` | `#72726f` | muted labels |
-| `--border` | `#d9d9d5` | hairlines |
+| `--border` | `#dadce0` | hairlines (Google's border grey) |
 | `--brand` | `#fa3600` | accent: links, highlights, focus, active state |
 | `--brand-deep` | derived | brand hover (e.g. scrollbar) — `color-mix` of `--brand` and black |
+| `--brand-tint` | derived | the accent at 10% — selected / hovered chips, tiles, buttons |
 | `--on-brand` | `#ffffff` | text on brand |
 | `--hair` | `max(1px, .0625rem)` | border width |
 | `--pad` | `clamp(1rem, 3vw, 2.5rem)` | page gutter |
