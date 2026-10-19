@@ -1,10 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
 import Cta from '../components/Cta.astro';
+import Recommendation from '../components/Recommendation.astro';
 import { site } from '../data/site.js';
-import { helpWith, experience, earlierRoles, recommendations, orgUrls, earlierOrgUrls, recommenderUrls } from '../data/resume.js';
+import {
+  helpWith,
+  experience,
+  earlierRoles,
+  recommendations,
+  homeRecommendations,
+  orgUrls,
+  earlierOrgUrls,
+  recommenderUrls
+} from '../data/resume.js';
 
-const pad = (n) => String(n).padStart(2, '0');
+// Two here, the rest at /recommendations/. Order follows the source array, so Mike comes first —
+// the employer-side sentence is the one worth reading before the others.
+const featured = recommendations.filter((r) => homeRecommendations.includes(r.author));
 ---
 <Base>
   <!-- hero -->
@@ -229,31 +241,21 @@ const pad = (n) => String(n).padStart(2, '0');
     </div>
     <div class="grid md:grid-cols-2">
       {
-        recommendations.map((r, i) => (
-          <blockquote class={`group relative p-[var(--pad)] transition-transform duration-300 ease-out hover:-translate-y-1 ${i === 1 ? 'hair-t-mobile' : i >= 2 ? 'hair-t' : ''} ${i % 2 === 1 ? 'hair-l-md' : ''}`}>
-            <span class="pointer-events-none absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 bg-brand transition-transform duration-300 ease-out group-hover:scale-y-100"></span>
-            <p class="mono text-muted"><span class="px-1 transition-colors duration-200 group-hover:bg-brand group-hover:text-on-brand">[{pad(i + 1)}]</span></p>
-            <p class="mt-5 text-[0.95rem] leading-relaxed text-secondary">“{r.quote}”</p>
-            <cite class="mono mt-5 block not-italic text-muted">
-              —{' '}
-              {
-                recommenderUrls[r.author] ? (
-                  <a
-                    class="transition-colors hover:text-brand"
-                    href={recommenderUrls[r.author]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {r.author}
-                  </a>
-                ) : (
-                  r.author
-                )
-              }
-            </cite>
-          </blockquote>
+        featured.map((r, i) => (
+          <Recommendation
+            quote={r.quote}
+            author={r.author}
+            url={recommenderUrls[r.author]}
+            index={i}
+            variant="grid"
+          />
         ))
       }
+    </div>
+    <div class="px-[var(--pad)] py-8">
+      <a class="mono text-muted hover:text-brand" href="/recommendations/">
+        All {recommendations.length} recommendations →
+      </a>
     </div>
   </section>
 

@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Recommendation from '../components/Recommendation.astro';
+import { recommendations, recommenderUrls } from '../data/resume.js';
+---
+
+<Base
+  title="Aliaksei Kozel — Recommendations"
+  description="What colleagues and clients have said about working with Aliaksei Kozel."
+>
+  <section class="hair-b">
+    <div class="px-[var(--pad)] pt-14 pb-12">
+      <p class="mono text-brand">Recommendations</p>
+      <h1 class="page-title mt-4">In their words</h1>
+      <p class="mt-6 max-w-[52ch] text-secondary">
+        {recommendations.length} people I have worked with, quoted in full rather than trimmed to a
+        line. Names link to the person on LinkedIn.
+      </p>
+    </div>
+  </section>
+
+  <section class="hair-b">
+    {
+      recommendations.map((r, i) => (
+        <Recommendation
+          quote={r.quote}
+          author={r.author}
+          url={recommenderUrls[r.author]}
+          index={i}
+          variant="list"
+        />
+      ))
+    }
+  </section>
+</Base>

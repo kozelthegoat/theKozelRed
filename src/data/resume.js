@@ -175,6 +175,11 @@ export const recommendations = [
   }
 ];
 
+// The pair that carries the most on a first read: one from the employer side, and one on
+// leadership and team-building. Everyone else lives at /recommendations/ — a dozen quotes in a
+// grid is six rows, and each one is diluted by the one beside it.
+export const homeRecommendations = ['Mike Lindelsee', 'Mitzi McGilvray'];
+
 // Company sites, from the résumé PDF's hyperlinks.
 export const orgUrls = {
   'Magic Media': 'https://magicmedia.studio',

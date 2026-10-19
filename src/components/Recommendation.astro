@@ -1,0 +1,50 @@
+---
+// One recommendation, in the two places it is used: the pair on the homepage, where they sit side
+// by side, and the list on /recommendations/, where the rest of them do. The wrapper rules differ
+// between those layouts, so the variant decides them rather than the caller.
+const { quote, author, url, index = 0, variant = 'list' } = Astro.props;
+
+const frame =
+  variant === 'grid'
+    ? [
+        index === 1 ? 'hair-t-mobile' : index >= 2 ? 'hair-t' : '',
+        index % 2 === 1 ? 'hair-l-md' : ''
+      ]
+    : [index > 0 ? 'hair-t' : ''];
+---
+
+<blockquote
+  class:list={[
+    'group relative p-[var(--pad)] transition-transform duration-300 ease-out hover:-translate-y-1',
+    ...frame
+  ]}
+>
+  <span
+    class="pointer-events-none absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 bg-brand transition-transform duration-300 ease-out group-hover:scale-y-100"
+  ></span>
+  <p class="mono text-muted">
+    <span
+      class="px-1 transition-colors duration-200 group-hover:bg-brand group-hover:text-on-brand"
+    >
+      [{String(index + 1).padStart(2, '0')}]
+    </span>
+  </p>
+  <p class="mt-5 max-w-[62ch] text-[0.95rem] leading-relaxed text-secondary">“{quote}”</p>
+  <cite class="mono mt-5 block not-italic text-muted">
+    —{' '}
+    {
+      url ? (
+        <a
+          class="transition-colors hover:text-brand"
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {author}
+        </a>
+      ) : (
+        author
+      )
+    }
+  </cite>
+</blockquote>

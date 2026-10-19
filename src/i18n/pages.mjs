@@ -13,6 +13,7 @@ import { defaultLocale, localeFromPath, prefixFor } from './config.mjs';
 export const pages = {
   home: { slug: { en: '', ru: '', be: '' }, locales: ['en'] },
   notes: { slug: { en: 'notes', ru: 'notes', be: 'notes' }, locales: ['en', 'ru', 'be'] },
+  recommendations: { slug: { en: 'recommendations', ru: 'recommendations', be: 'recommendations' }, locales: ['en'] },
   schedule: { slug: { en: 'schedule', ru: 'schedule', be: 'schedule' }, locales: ['en'] },
   privacy: { slug: { en: 'privacy', ru: 'privacy', be: 'privacy' }, locales: ['en'] },
   notFound: { slug: { en: '404', ru: '404', be: '404' }, locales: ['en'] }
