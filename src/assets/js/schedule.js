@@ -72,7 +72,10 @@ if (cfgEl && root) {
 
   const start = dateInTz(detected, new Date()).split('-').map(Number);
   const state = {
-    type: null,
+    // Defaulted here, not left for the initialiser at the foot of the file: load() returns early
+    // without a type, so anything that stops that line running empties the whole calendar — no
+    // period, no dates, no times — rather than failing visibly.
+    type: cfg.types[0]?.id || null,
     tz: detected,
     layout: 'month',
     year: start[0],
@@ -476,9 +479,9 @@ if (cfgEl && root) {
     $('[data-done-close]')?.addEventListener('click', () => stepDone.close('close'));
   }
 
-  const firstType = typesEl.querySelector('[data-type]');
-  if (firstType) {
-    selectType(firstType.dataset.type);
-    load();
-  }
+  // Ungated on purpose. This was `if (firstType) { ... }`, so a query that came back empty left the
+  // whole calendar blank — no period, no dates, no times — without a word about why. The state now
+  // carries a default too, so either one alone is enough.
+  selectType(typesEl.querySelector('[data-type]')?.dataset.type || state.type);
+  load();
 }
