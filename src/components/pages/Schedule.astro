@@ -30,10 +30,9 @@ import { site } from '../../data/site.js';
     <div class="grid gap-10 px-[var(--pad)] pt-8 pb-16 md:grid-cols-3 md:gap-y-5">
       {
         sessionTypes.map((t) => (
-          <div class="grid content-start gap-5 md:row-span-5 md:grid-rows-subgrid">
-            <p class="mono text-muted">{t.audience}</p>
+          <div class="grid content-start gap-5 md:row-span-4 md:grid-rows-subgrid">
             <div class="flex items-baseline justify-between gap-4">
-              <h3 class="text-xl font-medium">{t.name}</h3>
+              <h3 class="text-xl font-medium">{t.audience}</h3>
               <span class="mono text-muted">{t.minutes} min</span>
             </div>
             <p class="text-secondary">{t.description}</p>
@@ -81,9 +80,8 @@ import { site } from '../../data/site.js';
                 data-type={t.id}
                 aria-pressed="false"
               >
-                <span class="mono block text-muted">{t.audience}</span>
-                <span class="mt-2 flex items-baseline justify-between gap-4">
-                  <span class="text-lg font-medium" data-type-name>{t.name}</span>
+                <span class="flex items-baseline justify-between gap-4">
+                  <span class="text-lg font-medium" data-type-name>{t.audience}</span>
                   <span class="mono text-muted">{t.minutes} min</span>
                 </span>
                 <span class="mt-2 block text-sm text-secondary">{t.description}</span>
