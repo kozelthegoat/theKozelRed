@@ -4,7 +4,7 @@ import Recommendation from '../../components/Recommendation.astro';
 import { site } from '../../data/site.js';
 import { sessionTypesFor } from '../../data/sessions.js';
 import {
-  recommendations,
+  recommendationsFor,
   homeRecommendations,
   recommenderUrls,
   orgUrls,
@@ -24,10 +24,12 @@ const sessionTypes = sessionTypesFor(locale);
 const helpWith = helpWithFor(locale);
 const experience = experienceFor(locale);
 const earlierRoles = earlierRolesFor(locale);
+const originalLabel = t('reco.seeOriginal');
+const translationLabel = t('reco.seeTranslation');
 
 // Two here, the rest at /recommendations/. Order follows the source array, so Mike comes first —
 // the employer-side sentence is the one worth reading before the others.
-const featured = recommendations.filter((r) => homeRecommendations.includes(r.author));
+const featured = recommendationsFor(locale).filter((r) => homeRecommendations.includes(r.author));
 ---
 
   <!-- hero -->
@@ -254,6 +256,9 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
         featured.map((r, i) => (
           <Recommendation
             quote={r.quote}
+            original={r.original}
+            originalLabel={originalLabel}
+            translationLabel={translationLabel}
             author={r.author}
             url={recommenderUrls[r.author]}
             index={i}
@@ -299,3 +304,7 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
       }
     </div>
   </section>
+
+  <script>
+    import '../../assets/js/recommendations.js';
+  </script>

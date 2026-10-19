@@ -1,19 +1,23 @@
 ---
 import Recommendation from '../Recommendation.astro';
-import { recommendations, recommenderUrls, homeRecommendations } from '../../data/resume.js';
+import { recommendationsFor, recommenderUrls, homeRecommendations } from '../../data/resume.js';
 import { localeFromPath } from '../../i18n/config.mjs';
 import { fill, translator } from '../../i18n/ui.mjs';
 
 // Reads the language from the path itself, exactly as Base does, so one component serves all three
-// routes. The quotes are other people's words and are never translated — only the frame around them.
-const t = translator(localeFromPath(Astro.url.pathname));
+// routes. A translated quote keeps its English alongside, offered as "See original · English".
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const originalLabel = t('reco.seeOriginal');
+const translationLabel = t('reco.seeTranslation');
 
 // Mike leads: the one chosen for the homepage, and the strongest sentence for someone hiring.
 // Everyone else keeps the order they are already in.
 const [lead] = homeRecommendations;
+const recos = recommendationsFor(locale);
 const ordered = [
-  ...recommendations.filter((r) => r.author === lead),
-  ...recommendations.filter((r) => r.author !== lead)
+  ...recos.filter((r) => r.author === lead),
+  ...recos.filter((r) => r.author !== lead)
 ];
 ---
 
@@ -40,6 +44,9 @@ const ordered = [
       ordered.map((r, i) => (
         <Recommendation
           quote={r.quote}
+          original={r.original}
+          originalLabel={originalLabel}
+          translationLabel={translationLabel}
           author={r.author}
           url={recommenderUrls[r.author]}
           index={i}
@@ -70,6 +77,9 @@ const ordered = [
     ordered.map((r, i) => (
       <Recommendation
         quote={r.quote}
+        original={r.original}
+        originalLabel={originalLabel}
+        translationLabel={translationLabel}
         author={r.author}
         url={recommenderUrls[r.author]}
         index={i}

@@ -2,8 +2,14 @@
 // One recommendation, in the three places it is used: the pair on the homepage, the plain list on
 // /recommendations/ that everyone gets, and the pinned crossfade layered on top of that list. Only
 // the wrapper differs, so the variant decides it rather than each caller.
-const { quote, author, url, index = 0, variant = 'list' } = Astro.props;
+const { quote, author, url, index = 0, variant = 'list', original = null, originalLabel = '', translationLabel = '' } = Astro.props;
 const slide = variant === 'slide';
+
+// Only where a translation exists. On the English page the quote is the original, and on a page
+// whose language has no translation yet the same is true, so there is nothing to toggle to.
+const showOriginal = Boolean(original);
+// The slide carries its decorative quote as a glyph of its own, so the swap must not add another.
+const originalText = slide ? original : `“${original}”`;
 
 const frame = slide
   ? []
@@ -41,6 +47,7 @@ const wrapper = slide
     )
   }
   <p
+    data-quote
     class:list={[
       slide ? 'slide-quote' : 'mt-5 max-w-[62ch] text-[0.95rem] leading-relaxed text-secondary'
     ]}
@@ -64,4 +71,18 @@ const wrapper = slide
       )
     }
   </cite>
+  {
+    showOriginal && (
+      <button
+        type="button"
+        class="reco-original mono"
+        data-original={originalText}
+        data-original-label={originalLabel}
+        data-translation-label={translationLabel}
+        aria-expanded="false"
+      >
+        {originalLabel}
+      </button>
+    )
+  }
 </blockquote>

@@ -57,6 +57,9 @@ export const ui = {
     'reco.intro':
       'None of this is my own writing. It’s theirs, and it makes the case better than I could. My thanks to each of them.',
     'reco.bullet': 'Recommendation {n} of {total}, {author}',
+    // The toggle on a translated quote. The language after the dot names what you get by pressing.
+    'reco.seeOriginal': 'See original · English',
+    'reco.seeTranslation': 'See translation',
 
     // The schedule page, including the strings the browser writes after a click.
     'sched.eyebrow': 'Pro Bono',
@@ -181,6 +184,8 @@ export const ui = {
     'reco.intro':
       'Здесь нет ничего моего. Это их слова, и они убеждают лучше, чем сумел бы я. Спасибо каждому из них.',
     'reco.bullet': 'Рекомендация {n} из {total}, {author}',
+    'reco.seeOriginal': 'Показать оригинал · English',
+    'reco.seeTranslation': 'Показать перевод · Русский',
 
     'sched.eyebrow': 'Pro Bono',
     'sched.title': '1:1 / Schedule',
@@ -304,6 +309,8 @@ export const ui = {
     'reco.intro':
       'Тут няма нічога майго. Гэта іх словы, і яны пераконваюць лепш, чым сказаў бы я. Дзякуй кожнаму з іх.',
     'reco.bullet': 'Рэкамендацыя {n} з {total}, {author}',
+    'reco.seeOriginal': 'Паказаць арыгінал · English',
+    'reco.seeTranslation': 'Паказаць пераклад · Беларуская',
 
     'sched.eyebrow': 'Pro Bono',
     'sched.title': '1:1 / Schedule',
