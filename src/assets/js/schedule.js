@@ -11,9 +11,9 @@ if (cfgEl && root) {
   const $ = (sel) => root.querySelector(sel);
   const pad = (n) => String(n).padStart(2, '0');
 
-  // Document-wide, not scoped to `root`: the chooser lives in the "In detail" section now, not
-  // inside the calendar's grid, and a scoped lookup silently returned null there — which took the
-  // whole calendar with it, since the next line attaches a listener to it.
+  // Document-wide rather than scoped to `root`. The picker moves with the design — it sits in the
+  // details form now — and a scoped lookup once silently returned null when it lived elsewhere,
+  // taking the whole calendar with it, since the next line attaches a listener to it.
   const typesEl = document.querySelector('[data-schedule-types]');
   const daysEl = $('[data-days]');
   const monthLabel = $('[data-month-label]');

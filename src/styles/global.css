@@ -261,9 +261,6 @@ dialog.req-done[open] {
   background: var(--brand-tint);
   color: var(--brand);
 }
-.pick-btn[aria-pressed="true"] [data-type-name] {
-  color: var(--brand);
-}
 
 /* Icon button (calendar nav) */
 .icon-btn {

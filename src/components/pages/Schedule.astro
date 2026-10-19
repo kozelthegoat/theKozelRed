@@ -24,25 +24,18 @@ import { site } from '../../data/site.js';
 
   <section>
     <div class="px-[var(--pad)] pt-14">
-      <p class="mono text-brand">In detail</p>
+      <p class="mono text-brand">Sessions</p>
       <h2 class="mt-4 max-w-[24ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what you leave with</h2>
     </div>
     <!--
-      The chooser. Plain divs rather than radios: the booking flow is JavaScript throughout — the
-      calendar cannot render without it and the request is sent by fetch, not by the form — so a
-      radio group bought nothing and its label swallowed the click. The state lives in the script.
+      Descriptions, not a control. Three ways to use the time, each saying what it asks of you and
+      what you leave with. The choice itself is one line down in the details, where the booking is
+      made — so the thing you read and the thing you press are in the place each belongs.
     -->
-    <div
-      class="grid gap-5 px-[var(--pad)] pt-8 pb-16 md:grid-cols-3 md:gap-y-5"
-      data-schedule-types
-    >
+    <div class="grid gap-5 px-[var(--pad)] pt-8 pb-16 md:grid-cols-3 md:gap-y-5">
       {
-        sessionTypes.map((t, i) => (
-          <div
-            class="pick-btn grid cursor-pointer content-start gap-5 p-5 md:row-span-4 md:grid-rows-subgrid"
-            data-type={t.id}
-            aria-pressed={i === 0 ? 'true' : 'false'}
-          >
+        sessionTypes.map((t) => (
+          <div class="grid content-start gap-5 md:row-span-4 md:grid-rows-subgrid">
             <div class="flex items-baseline justify-between gap-4">
               <span class="text-xl font-medium uppercase">{t.audience}</span>
               <span class="mono text-muted">{t.minutes} min</span>
@@ -77,7 +70,7 @@ import { site } from '../../data/site.js';
   </section>
 
   <section class="hair-b">
-    <!-- The calendar, and beside it the details. The type is chosen up in "In detail". -->
+    <!-- The calendar, and beside it the details, where the session and the rest are chosen. -->
     <p class="mono px-[var(--pad)] pt-14 text-brand">Calendar</p>
     <div class="grid gap-10 px-[var(--pad)] py-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
       <div>
@@ -173,6 +166,27 @@ import { site } from '../../data/site.js';
 
       <div>
         <form id="request" data-step="form" class="grid gap-4" novalidate>
+          <!--
+            One line per session, tapped here where the booking is made. The descriptions above say
+            what each one involves; this says which one you're asking for, as the last thing before
+            your details.
+          -->
+          <div class="grid gap-2" data-schedule-types>
+            <p class="mono text-muted">Session</p>
+            {
+              sessionTypes.map((t, i) => (
+                <button
+                  type="button"
+                  class="pick-btn flex items-baseline justify-between gap-4 px-4 py-3 text-left"
+                  data-type={t.id}
+                  aria-pressed={i === 0 ? 'true' : 'false'}
+                >
+                  <span class="text-sm">{t.audience}</span>
+                  <span class="mono text-muted">{t.minutes} min</span>
+                </button>
+              ))
+            }
+          </div>
           <p class="mono text-muted">Details — <span class="text-brand">*</span> required</p>
           <input
             name="name"
