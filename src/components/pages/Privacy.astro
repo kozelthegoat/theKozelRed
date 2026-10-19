@@ -11,7 +11,7 @@ const t = translator(localeFromPath(Astro.url.pathname));
   The privacy page's body, with no layout of its own. Each route supplies Base, so the same markup
   serves every language and only the chrome around it changes.
 -->
-<section class="hair-b">
+<section>
   <div class="px-[var(--pad)] py-14">
     <p class="mono text-brand">{t('privacy.eyebrow')}</p>
     <h1 class="page-title mt-4">{t('privacy.title')}</h1>
@@ -19,7 +19,7 @@ const t = translator(localeFromPath(Astro.url.pathname));
   </div>
 </section>
 
-<section class="hair-b">
+<section>
   <div class="grid max-w-[70ch] gap-8 px-[var(--pad)] py-14">
     <div>
       <p class="mono text-muted">{t('privacy.collect')}</p>
