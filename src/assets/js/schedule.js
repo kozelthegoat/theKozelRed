@@ -420,6 +420,12 @@ if (cfgEl && root) {
       form.querySelector('[name="email"]').focus();
       return;
     }
+    if (!data.get('consent')) {
+      formError.textContent = s.consent;
+      formError.hidden = false;
+      form.querySelector('[name="consent"]').focus();
+      return;
+    }
     const payload = {
       type: state.type,
       date: state.slot.date,

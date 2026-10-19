@@ -250,14 +250,15 @@ const sessionTypes = sessionTypesFor(locale);
             placeholder={t('sched.message')}
             class="field min-h-[6rem] w-full flex-1 resize-none px-4 py-3"></textarea>
           <p class="text-sm text-brand" data-form-error hidden></p>
+          <!-- A tick box, and above the button rather than below it: this is the thing being agreed
+               to, not a note about what happens afterwards. -->
+          <label class="flex items-start gap-2 text-sm text-muted">
+            <input type="checkbox" name="consent" required class="radio-dot mt-0.5" />
+            <span>{t('sched.consentBefore')}<a class="hover:text-brand" href={urlFor('privacy', locale)}>{t('sched.consentLink')}</a>.</span>
+          </label>
           <div class="flex flex-wrap gap-3">
             <button type="submit" class="btn mono">{t('sched.send')}</button>
           </div>
-          <!-- Quiet, and a line rather than a checkbox: the request is free, so a tick box would
-               read as a contract being signed. It still says plainly where the details go. -->
-          <!-- One line on purpose: Astro strips the whitespace at a line break, which glued the
-               link to the dash. -->
-          <p class="text-sm text-muted">{t('sched.consentBefore')}<a class="hover:text-brand" href={urlFor('privacy', locale)}>{t('sched.consentLink')}</a>.</p>
         </form>
 
         <dialog data-step="done" class="req-done" aria-labelledby="done-heading">
@@ -319,7 +320,8 @@ const sessionTypes = sessionTypesFor(locale);
         generic: t('sched.err.generic'),
         time: t('sched.err.time'),
         name: t('sched.err.name'),
-        email: t('sched.err.email')
+        email: t('sched.err.email'),
+        consent: t('sched.err.consent')
       }
     })}
   ></script>
