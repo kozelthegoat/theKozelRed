@@ -404,8 +404,16 @@ dialog.req-done[open] {
    rather than sliding, because a tap is brief and a 0.45s transition would finish after the
    finger had gone. */
 @media (hover: none) {
+  /* No transitions at all on a touch press, in either direction. The asymmetry was the bug: the
+     fill jumped up instantly on :active but slid back down over 0.5s on release, so if you
+     navigated before it finished you only ever saw the second half — arriving back on the page
+     and watching a button animate for something you had forgotten doing. */
+  .btn,
+  .btn::after {
+    transition: none;
+  }
   .btn:active { color: var(--on-brand); border-color: var(--brand); }
-  .btn:active::after { transform: translateY(0); transition: none; }
+  .btn:active::after { transform: translateY(0); }
   .btn--solid:active { color: var(--brand); border-color: var(--brand); }
   .pick-btn:active { border-color: var(--brand); }
   .seg-btn:active { color: var(--brand); }
