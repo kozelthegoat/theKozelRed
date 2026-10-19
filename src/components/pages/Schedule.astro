@@ -81,7 +81,7 @@ import { site } from '../../data/site.js';
                 aria-pressed="false"
               >
                 <span class="flex items-baseline justify-between gap-4">
-                  <span class="text-lg font-medium" data-type-name>{t.audience}</span>
+                  <span class="text-lg font-medium uppercase" data-type-name>{t.audience}</span>
                   <span class="mono text-muted">{t.minutes} min</span>
                 </span>
                 <span class="mt-2 block text-sm text-secondary">{t.description}</span>
@@ -248,7 +248,7 @@ import { site } from '../../data/site.js';
     set:html={JSON.stringify({
       types: sessionTypes.map((t) => ({
         id: t.id,
-        name: t.name,
+        audience: t.audience,
         minutes: t.minutes,
         confirmation: t.confirmation
       })),
