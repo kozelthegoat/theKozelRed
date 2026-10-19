@@ -262,6 +262,15 @@ dialog.req-done[open] {
   color: var(--brand);
 }
 
+/* Session radios. The browser's own control, in the accent — no custom dot to keep in sync. */
+.radio-dot {
+  accent-color: var(--brand);
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  flex: none;
+}
+
 /* Icon button (calendar nav) */
 .icon-btn {
   color: var(--muted);

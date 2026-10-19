@@ -97,7 +97,9 @@ if (cfgEl && root) {
   }
   function selectType(id) {
     state.type = id;
-    typesEl.querySelectorAll('[data-type]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.type === id ? 'true' : 'false'));
+    typesEl.querySelectorAll('[data-type]').forEach((input) => {
+      input.checked = input.value === id;
+    });
   }
   function goToCurrentMonth(tz) {
     const [y, m] = dateInTz(tz, new Date()).split('-').map(Number);
@@ -105,14 +107,14 @@ if (cfgEl && root) {
     state.month = m;
   }
 
-  // No radios and no change event: the request is sent by fetch with the type taken from the state,
-  // so a form control was never carrying this. The panel sets the state, and that is the whole
-  // interaction — which is also why the calendar does not wait on it. Every session is 30 minutes,
-  // so the choice changes what is sent, never what the calendar can show.
-  typesEl.addEventListener('click', (event) => {
-    const btn = event.target.closest('[data-type]');
-    if (!btn) return;
-    selectType(btn.dataset.type);
+  // Radios now, so the browser carries the choice and the arrow keys carry it too. The request is
+  // still sent by fetch with the type read from the state, so nothing here waits on the form
+  // submitting. Every session is 30 minutes, so the choice changes what is sent, never what the
+  // calendar can show — which is the other reason the calendar does not wait on it.
+  typesEl.addEventListener('change', (event) => {
+    const input = event.target.closest('[data-type]');
+    if (!input) return;
+    selectType(input.value);
     if (!state.slots.length) load();
   });
 
@@ -485,6 +487,6 @@ if (cfgEl && root) {
   // Ungated on purpose. This was `if (firstType) { ... }`, so a query that came back empty left the
   // whole calendar blank — no period, no dates, no times — without a word about why. The state now
   // carries a default too, so either one alone is enough.
-  selectType(typesEl.querySelector('[data-type]')?.dataset.type || state.type);
+  selectType(typesEl.querySelector('[data-type]:checked')?.value || state.type);
   load();
 }
