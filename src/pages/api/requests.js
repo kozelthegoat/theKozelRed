@@ -3,6 +3,7 @@ import { computeSlots, minBookable } from '../../lib/slots.js';
 import { json, jsonError } from '../../lib/api.js';
 import { sendBookingEmails } from '../../lib/email.js';
 import { isValidZone } from '../../lib/tz.js';
+import { locales } from '../../i18n/config.mjs';
 import { env } from 'cloudflare:workers';
 
 export const prerender = false;
@@ -33,6 +34,11 @@ export const POST = async ({ request, locals }) => {
   // the emails can quote their clock. Absent → the emails stay Minsk-only.
   const postedTz = String(body.tz || '');
   const visitorTz = isValidZone(postedTz) ? postedTz : null;
+  // The language the visitor was reading, kept on the row: the confirmed and declined emails are
+  // sent later, from /me, so it has to survive rather than be known only at submit time. Only
+  // languages the site actually speaks are kept; anything else sends in English.
+  const postedLocale = String(body.locale || '');
+  const locale = locales.includes(postedLocale) ? postedLocale : 'en';
 
   if (name.length < 2 || name.length > 120) return jsonError('invalid_name', 'Please add your name.');
   if (!EMAIL_RE.test(email)) return jsonError('invalid_email', 'Please add a valid email.');
@@ -58,9 +64,9 @@ export const POST = async ({ request, locals }) => {
   try {
     const info = await db
       .prepare(
-        'INSERT INTO requests (type, slot_date, slot_time, name, email, note, visitor_tz) VALUES (?, ?, ?, ?, ?, ?, ?)'
+        'INSERT INTO requests (type, slot_date, slot_time, name, email, note, visitor_tz, locale) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
       )
-      .bind(type.id, date, time, name, email, note || null, visitorTz)
+      .bind(type.id, date, time, name, email, note || null, visitorTz, locale)
       .run();
     id = info?.meta?.last_row_id;
   } catch (e) {
@@ -80,7 +86,8 @@ export const POST = async ({ request, locals }) => {
     name,
     email,
     note,
-    visitorTz
+    visitorTz,
+    locale
   }).catch(() => {});
 
   return json({ ok: true });

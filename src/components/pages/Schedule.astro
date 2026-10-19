@@ -308,6 +308,8 @@ const sessionTypes = sessionTypesFor(locale);
       // it sends — so the words it needs travel with it, and the dates it formats use the page's
       // language rather than whatever the visitor's machine happens to be set to.
       intl: intlTagFor(locale),
+      // Sent with the request so the emails it triggers can answer in the language it was asked in.
+      locale,
       strings: {
         loading: t('sched.loading'),
         loadError: t('sched.loadError'),

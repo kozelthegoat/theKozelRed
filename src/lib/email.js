@@ -7,9 +7,11 @@
 // and a status change is read in the body rather than guessed from the subject line.
 
 import { brandFor } from '../data/palette.js';
-import { site } from '../data/site.js';
+import { site, nameFor } from '../data/site.js';
 import { wallClockInTz, zonedWallClockToUtc, isValidZone, zoneOffsetLabel } from './tz.js';
 import { buildIcs, icsFilename } from './ics.js';
+import { mailFor } from '../i18n/mail.mjs';
+import { fill } from '../i18n/ui.mjs';
 
 const INK = '#282828';
 const DARK = '#16150f';
@@ -89,16 +91,17 @@ export function hostSubject({ name, date, time, typeName }) {
   return `1:1 · ${name} · ${typeName} · ${date} · ${time} ${zoneOffsetLabel(MINSK, instant)}`;
 }
 
-export function requesterSubject({ date, time, visitorTz, typeName }) {
+export function requesterSubject({ date, time, visitorTz, typeName, host = HOST }) {
   const m = localMoment({ date, time, visitorTz });
-  return `1:1 · ${HOST} · ${typeName} · ${m.date} · ${m.time} ${m.zone}`;
+  return `1:1 · ${host} · ${typeName} · ${m.date} · ${m.time} ${m.zone}`;
 }
 
 // The three facts worth reading twice — session, date, time — carry the weight in the body.
 const momentHtml = ({ typeName, m }) =>
   `<p style="margin:0;"><strong>${esc(typeName)}</strong> · <strong>${esc(m.date)}</strong> · <strong>${esc(m.time)} ${esc(m.zone)}</strong></p>`;
 
-const signoff = `<p style="margin:8px 0 0;">I appreciate your trust.<br>${HOST}</p>`;
+// The close, in the visitor's language and under the spelling of the name their language uses.
+const signoff = (copy, host) => `<p style="margin:8px 0 0;">${esc(copy.signoff)}<br>${esc(host)}</p>`;
 
 const send = (key, payload) =>
   fetch('https://api.resend.com/emails', {
@@ -173,18 +176,24 @@ ${
     )
   });
 
+  // The requester's email, in the language they were reading, signed under the spelling of the name
+  // their language uses. The notification above stays English: that one is the host's working copy.
+  const copy = mailFor(req.locale);
+  const host = nameFor(req.locale);
+  const greet = fill(copy.greet, { name: firstName(req.name) });
+
   await send(key, {
-    from,
+    from: env.BOOKING_FROM || `${host} <aliaksei@kozel.red>`,
     to: req.email,
-    subject: requesterSubject({ date: req.date, time: req.time, visitorTz: req.visitorTz, typeName }),
-    text: `Hi ${firstName(req.name)},\n\nThank you for your request.\n\n${typeName} · ${theirClock} (${req.type.minutes} min)\n\nI'll see what's on my plate, and come back to you either way.\n\nI appreciate your trust,\n${HOST}`,
+    subject: requesterSubject({ date: req.date, time: req.time, visitorTz: req.visitorTz, typeName, host }),
+    text: `${greet}\n\n${copy.thanks}\n\n${typeName} · ${theirClock} ${fill(copy.minutes, { n: req.type.minutes })}\n\n${copy.willSee}\n\n${copy.signoff}\n${host}`,
     html: wrap(
       `
-<p style="margin:0 0 20px;">Hi ${esc(firstName(req.name))},</p>
-<p style="margin:0 0 20px;">Thank you for your request.</p>
+<p style="margin:0 0 20px;">${esc(greet)}</p>
+<p style="margin:0 0 20px;">${esc(copy.thanks)}</p>
 ${momentHtml({ typeName, m })}
-<p style="margin:20px 0 0;">I'll see what's on my plate, and come back to you either way.</p>
-${signoff}`,
+<p style="margin:20px 0 0;">${esc(copy.willSee)}</p>
+${signoff(copy, host)}`,
       brand
     )
   });
@@ -196,20 +205,23 @@ ${signoff}`,
 // thread; the change of state is stated in the body. No apology, no promised reply, no
 // claimed reason: it names the declined time, thanks them, and leaves another time as
 // theirs to take — true whether the reason was the calendar or a no.
-export function declineCopy({ name, date, time, visitorTz, typeName = '', brand = brandFor() }) {
+export function declineCopy({ name, date, time, visitorTz, typeName = '', locale = 'en', brand = brandFor() }) {
   const m = localMoment({ date, time, visitorTz });
+  const copy = mailFor(locale);
+  const host = nameFor(locale);
+  const greet = fill(copy.greet, { name: firstName(name) });
   return {
-    subject: requesterSubject({ date, time, visitorTz, typeName }),
-    text: `Hi ${firstName(name)},\n\nThank you for reaching out — I'm grateful for the opportunity.\n\nAn update on your request: I'm not able to take the time you picked.\n\n${typeName} · ${momentLine(m)}\n\nIf you'd still like to talk, you're welcome to choose another time whenever it suits you.\n\n${BOOK}\n\nI appreciate your trust,\n${HOST}`,
+    subject: requesterSubject({ date, time, visitorTz, typeName, host }),
+    text: `${greet}\n\n${copy.grateful}\n\n${copy.declined}\n\n${typeName} · ${momentLine(m)}\n\n${copy.stillWelcome}\n\n${BOOK}\n\n${copy.signoff}\n${host}`,
     html: wrap(
       `
-<p style="margin:0 0 20px;">Hi ${esc(firstName(name))},</p>
-<p style="margin:0 0 20px;">Thank you for reaching out — I'm grateful for the opportunity.</p>
-<p style="margin:0 0 12px;">An update on your request: I'm not able to take the time you picked.</p>
+<p style="margin:0 0 20px;">${esc(greet)}</p>
+<p style="margin:0 0 20px;">${esc(copy.grateful)}</p>
+<p style="margin:0 0 12px;">${esc(copy.declined)}</p>
 ${momentHtml({ typeName, m })}
-<p style="margin:20px 0 0;">If you'd still like to talk, you're welcome to choose another time whenever it suits you.</p>
-${cta(BOOK, 'Send request', brand)}
-${signoff}`,
+<p style="margin:20px 0 0;">${esc(copy.stillWelcome)}</p>
+${cta(BOOK, copy.sendLabel, brand)}
+${signoff(copy, host)}`,
       brand
     )
   };
@@ -217,32 +229,35 @@ ${signoff}`,
 
 // Confirmation copy: same subject again, the confirmation stated in the first person, calendar
 // file alongside.
-export function confirmedCopy({ name, date, time, visitorTz, typeName = '', minutes = 60, meetingUrl = '', brand = brandFor() }) {
+export function confirmedCopy({ name, date, time, visitorTz, typeName = '', minutes = 60, meetingUrl = '', locale = 'en', brand = brandFor() }) {
   const m = localMoment({ date, time, visitorTz });
+  const copy = mailFor(locale);
+  const host = nameFor(locale);
+  const greet = fill(copy.greet, { name: firstName(name) });
   return {
-    subject: requesterSubject({ date, time, visitorTz, typeName }),
-    text: `Hi ${firstName(name)},\n\nThank you for your request.\n\nI confirm your 1:1.\n\n${typeName} · ${momentLine(m)} (${minutes} min)\n\nI've attached a calendar file so it's in your diary.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}\n\nI appreciate your trust,\n${HOST}`,
+    subject: requesterSubject({ date, time, visitorTz, typeName, host }),
+    text: `${greet}\n\n${copy.thanks}\n\n${copy.confirm}\n\n${typeName} · ${momentLine(m)} ${fill(copy.minutes, { n: minutes })}\n\n${copy.attached}${meetingUrl ? `\n\n${fill(copy.join, { url: meetingUrl })}` : ''}\n\n${copy.signoff}\n${host}`,
     html: wrap(
       `
-<p style="margin:0 0 20px;">Hi ${esc(firstName(name))},</p>
-<p style="margin:0 0 20px;">Thank you for your request.</p>
-<p style="margin:0 0 20px;">I confirm your 1:1.</p>
+<p style="margin:0 0 20px;">${esc(greet)}</p>
+<p style="margin:0 0 20px;">${esc(copy.thanks)}</p>
+<p style="margin:0 0 20px;">${esc(copy.confirm)}</p>
 ${momentHtml({ typeName, m })}
-<p style="margin:20px 0 0;">I've attached a calendar file so it's in your diary.</p>
-${meetingUrl ? cta(meetingUrl, 'Join the call', brand) : ''}
-${signoff}`,
+<p style="margin:20px 0 0;">${esc(copy.attached)}</p>
+${meetingUrl ? cta(meetingUrl, copy.joinLabel, brand) : ''}
+${signoff(copy, host)}`,
       brand
     )
   };
 }
 
 // Decline notice, sent to the requester.
-export async function sendDeclineEmail(env, { name, email, date, time, visitorTz, typeName }) {
+export async function sendDeclineEmail(env, { name, email, date, time, visitorTz, typeName, locale }) {
   const key = env.RESEND_API_KEY;
   const from = env.BOOKING_FROM || `${HOST} <aliaksei@kozel.red>`;
   if (!key || !email) return { skipped: true };
 
-  const { subject, text, html } = declineCopy({ name, date, time, visitorTz, typeName });
+  const { subject, text, html } = declineCopy({ name, date, time, visitorTz, typeName, locale });
 
   await send(key, { from, to: email, subject, text, html });
 
@@ -250,7 +265,7 @@ export async function sendDeclineEmail(env, { name, email, date, time, visitorTz
 }
 
 // Confirmation notice with the calendar invite. Sent on the transition into confirmed.
-export async function sendConfirmEmail(env, { id, name, email, date, time, visitorTz, type }) {
+export async function sendConfirmEmail(env, { id, name, email, date, time, visitorTz, type, locale }) {
   const key = env.RESEND_API_KEY;
   const from = env.BOOKING_FROM || `${HOST} <aliaksei@kozel.red>`;
   if (!key || !email) return { skipped: true };
@@ -258,7 +273,7 @@ export async function sendConfirmEmail(env, { id, name, email, date, time, visit
   const typeName = type?.name || '';
   const minutes = type?.minutes || 60;
   const meetingUrl = site.meetingUrl || '';
-  const { subject, text, html } = confirmedCopy({ name, date, time, visitorTz, typeName, minutes, meetingUrl });
+  const { subject, text, html } = confirmedCopy({ name, date, time, visitorTz, typeName, minutes, meetingUrl, locale });
   const ics = buildIcs({ date, time, minutes, typeName, meetingUrl, uid: `request-${id}@kozel.red` });
 
   await send(key, {

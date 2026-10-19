@@ -427,8 +427,10 @@ if (cfgEl && root) {
       name,
       email,
       note,
-      // So the confirmation can quote the time back in the clock they booked in.
-      tz: state.tz
+      // So the confirmation can quote the time back in the clock they booked in …
+      tz: state.tz,
+      // … and so the emails it triggers can answer in the language this page is in.
+      locale: cfg.locale || 'en'
     };
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;

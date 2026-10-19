@@ -97,7 +97,9 @@ describe('declineCopy', () => {
 
   it('leaves another time as theirs to take, with a standard button label', () => {
     const { text, html } = declineCopy(args);
-    expect(text).toContain("you're welcome to choose another time");
+    // No apostrophe in the needle: the copy moved into the mail module and now uses the site's
+    // typographic ones, so matching on ' would fail on spelling rather than on substance.
+    expect(text).toContain('welcome to choose another time');
     // The button names what it does — send a request — rather than the thing it replaces.
     expect(html).toContain('Send request');
     expect(html).not.toContain('Choose another time');
@@ -334,5 +336,27 @@ describe('sendConfirmEmail', () => {
       sendConfirmEmail({}, { id: 1, name: 'A', email: 'a@b.c', date: '2026-10-17', time: '16:00', type: { name: 'Intro Call', minutes: 30 } })
     );
     expect(sent).toHaveLength(0);
+  });
+});
+
+describe('the requester emails in the language the request was made in', () => {
+  // The host notification is deliberately absent here: it stays English, being the host's copy.
+  it('answers in that language, under that language’s spelling of the name', () => {
+    const ru = declineCopy({ ...args, locale: 'ru' });
+    expect(ru.subject).toContain('Алексей Козел');
+    expect(ru.text).toContain('не смогу взять выбранное вами время');
+    expect(ru.html).toContain('Отправить заявку');
+    expect(ru.text.trim().endsWith('Алексей Козел')).toBe(true);
+
+    const be = confirmedCopy({ ...args, locale: 'be', meetingUrl: 'https://example.com/room' });
+    expect(be.subject).toContain('Аляксей Козел');
+    expect(be.text).toContain('Пацвярджаю вашу сустрэчу 1:1.');
+    expect(be.text).toContain('Далучыцца: https://example.com/room');
+    expect(be.text).toContain('(60 хв)');
+  });
+
+  it('stays English for a language it does not speak, and when none was given', () => {
+    expect(declineCopy({ ...args, locale: 'de' }).subject).toContain('Aliaksei Kozel');
+    expect(declineCopy(args).subject).toContain('Aliaksei Kozel');
   });
 });

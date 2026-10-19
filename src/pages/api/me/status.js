@@ -36,7 +36,7 @@ export const POST = async ({ request }) => {
   // Read the row first: each notice depends on the status it is leaving, not the one it gets.
   const { results } = await db
     .prepare(
-      'SELECT type, slot_date, slot_time, name, email, status, visitor_tz FROM requests WHERE id = ?'
+      'SELECT type, slot_date, slot_time, name, email, status, visitor_tz, locale FROM requests WHERE id = ?'
     )
     .bind(id)
     .all();
@@ -46,7 +46,14 @@ export const POST = async ({ request }) => {
   await db.prepare('UPDATE requests SET status = ? WHERE id = ?').bind(status, id).run();
 
   const type = findSessionType(row.type) || { name: row.type, minutes: 60 };
-  const when = { date: row.slot_date, time: row.slot_time, visitorTz: row.visitor_tz, typeName: type.name };
+  // The language the request was made in, so both notices answer in it — old rows default to English.
+  const when = {
+    date: row.slot_date,
+    time: row.slot_time,
+    visitorTz: row.visitor_tz,
+    typeName: type.name,
+    locale: row.locale || 'en'
+  };
 
   if (shouldSendDecline(row.status, status)) {
     await sendDeclineEmail(env, { name: row.name, email: row.email, ...when }).catch(() => {});
@@ -60,6 +67,7 @@ export const POST = async ({ request }) => {
       date: row.slot_date,
       time: row.slot_time,
       visitorTz: row.visitor_tz,
+      locale: row.locale || 'en',
       type
     }).catch(() => {});
   }
