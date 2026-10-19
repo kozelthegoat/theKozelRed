@@ -306,6 +306,12 @@ dialog.req-done[open] {
 }
 .control[type='checkbox']:checked {
   background-color: var(--brand);
+  /* A tick over the accent rather than a solid block. White, not the accent: a colour inside a
+     data-URI cannot read a custom property, and the accent changes with the day. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.6 8.6l2.9 2.9 5.9-6.9'/%3E%3C/svg%3E");
+  background-size: 78%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .control:focus-visible {
   outline: var(--hair) solid var(--brand);
