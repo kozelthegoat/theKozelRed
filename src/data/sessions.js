@@ -1,7 +1,7 @@
 // 1:1 session types.
-// Every session is 30 minutes. Short enough to fit inside a free Zoom room with ten minutes
-// of slack, and short enough that a request has to arrive specific to be worth booking. What
-// separates the three types is what each one sets out to do, not how long it takes.
+// Every session is 30 minutes. Short enough to leave room to spare inside any free call, and short
+// enough that a request has to arrive specific to be worth booking. What separates the three types
+// is what each one sets out to do, not how long it takes.
 export const sessionTypes = [
   {
     id: 'intro',
