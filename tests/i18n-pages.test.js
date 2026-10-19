@@ -44,7 +44,7 @@ describe('pageKeyForPath', () => {
 describe('alternatesForPath', () => {
   it('reports the languages a page exists in, and nothing for an unknown path', () => {
     expect(alternatesForPath('/notes/')).toEqual(['en', 'ru', 'be']);
-    expect(alternatesForPath('/schedule/')).toEqual(['en']);
+    expect(alternatesForPath('/schedule/')).toEqual(['en', 'ru', 'be']);
     expect(alternatesForPath('/ru/notes/')).toEqual(['en', 'ru', 'be']);
     expect(alternatesForPath('/notes/why-benches-rot/')).toBeNull();
   });

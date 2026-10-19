@@ -1,0 +1,284 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import Recommendation from '../../components/Recommendation.astro';
+import { site } from '../../data/site.js';
+import {
+  helpWith,
+  experience,
+  earlierRoles,
+  recommendations,
+  homeRecommendations,
+  orgUrls,
+  earlierOrgUrls,
+  recommenderUrls
+} from '../../data/resume.js';
+
+// Two here, the rest at /recommendations/. Order follows the source array, so Mike comes first —
+// the employer-side sentence is the one worth reading before the others.
+const featured = recommendations.filter((r) => homeRecommendations.includes(r.author));
+---
+
+  <!-- hero -->
+  <section class="hair-b">
+    <div class="grid md:grid-cols-[1fr_auto]">
+      <div class="px-[var(--pad)] pt-20 pb-14">
+        <p class="mono text-brand">Independent operator</p>
+        <h1 class="mt-6 max-w-[18ch] text-[clamp(2.6rem,7.5vw,6.5rem)] font-medium">
+          Strategy / Operations / Production — from scope to ship
+        </h1>
+        <div class="mt-12 flex flex-wrap gap-3">
+          <Cta href="/schedule/" label="Schedule 1:1" />
+          <Cta href={site.resume} label="Download Résumé" arrow={false} download />
+        </div>
+        <p class="mono mt-10 max-w-[54rem] text-balance">
+          <span class="text-brand">All products will remain a mirror, a reflection of the values of their creators, and will attract an audience that resonates with these values, whether explicit or implicit.</span>
+        </p>
+      </div>
+      <div class="hair-t px-[var(--pad)] pb-14 pt-10 hair-l-md md:w-[22rem] md:border-t-0 md:pt-20">
+        <dl class="mono grid gap-6 text-muted">
+          <div><dt>Location</dt><dd class="mt-2 whitespace-pre-line text-foreground">{site.location}</dd></div>
+          <div>
+            <dt>Availability</dt>
+            <dd class="mt-2 text-foreground">
+              <ul class="grid gap-1">
+                {site.availability.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt>Languages</dt>
+            <dd class="mt-2 text-foreground">
+              <ul class="grid gap-1">
+                {site.languages.map((lang) => (
+                  <li>{lang}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt>Off the clock</dt>
+            <dd class="mt-2 text-foreground">
+              <ul class="grid gap-1">
+                {site.offClock.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    <div>
+      <picture>
+        <source
+          type="image/webp"
+          srcset="/kozel-photo-3-1280.webp 1280w, /kozel-photo-3.webp 1920w"
+          sizes="100vw"
+        />
+        <img
+          src="/kozel-photo-3-1280.jpg"
+          srcset="/kozel-photo-3-1280.jpg 1280w, /kozel-photo-3.jpg 1920w"
+          sizes="100vw"
+          width="1920"
+          height="1080"
+          alt="Aliaksei Kozel"
+          class="block h-auto w-full"
+        />
+      </picture>
+    </div>
+  </section>
+
+  <!-- what I can help -->
+  <section id="expertise" class="hair-b">
+    <div class="px-[var(--pad)] pt-14">
+      <p class="mono text-brand">Expertise</p>
+      <h2 class="mt-4 max-w-[26ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+        What I can help with
+      </h2>
+    </div>
+    <ul class="grid gap-x-12 gap-y-6 px-[var(--pad)] pt-8 pb-16 md:grid-cols-2">
+      {
+        helpWith.map((item, i) => (
+          <li
+            class="reveal group grid grid-cols-[2.5rem_1fr] items-baseline gap-3"
+            style={`transition-delay: ${i * 45}ms`}
+          >
+            <span class="mono text-muted transition-colors group-hover:text-brand">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span
+              class="inline-block text-[clamp(1.2rem,1.9vw,1.6rem)] font-medium uppercase leading-[1.15] tracking-tight text-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-brand"
+            >
+              {item}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- experience -->
+  <section id="experience" class="hair-b">
+    <div class="px-[var(--pad)] pt-14">
+      <p class="mono text-brand">Experience</p>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">Selected work</h2>
+    </div>
+    {
+      experience.map((job, i) => (
+        <article class={`grid gap-6 ${i > 0 ? 'hair-t' : ''} px-[var(--pad)] py-10 md:grid-cols-[1fr_2fr]`}>
+          <div>
+            <h3 class="text-2xl font-medium tracking-tight">{job.role}</h3>
+            <p class="mono mt-3 text-muted">
+              {
+                orgUrls[job.org] ? (
+                  <a
+                    class="transition-colors hover:text-brand"
+                    href={orgUrls[job.org]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {job.org}
+                  </a>
+                ) : (
+                  job.org
+                )
+              }
+            </p>
+            <div class="mono mt-1 grid gap-0.5 text-muted">
+              <span>{job.where}</span>
+              <span>{job.when}</span>
+            </div>
+          </div>
+          <div>
+            {job.intro && <p class="mb-4 text-[0.98rem] text-foreground">{job.intro}</p>}
+            <ul class="grid gap-2 text-[0.98rem] text-secondary">
+              {job.points.map((point) => (
+                <li class="flex gap-3">
+                  <span class="text-brand">–</span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+            {
+              job.released && (
+                <div class="mt-5">
+                  <p class="mono text-muted">Released</p>
+                  <ul class="mt-2 grid gap-2 text-[0.92rem] text-secondary">
+                    {job.released.map((item) => {
+                      const title = typeof item === 'string' ? item : item.title;
+                      const notes = typeof item === 'string' ? [] : item.notes || [];
+                      return (
+                        <li class="flex flex-col gap-1">
+                          <span class="flex gap-3">
+                            <svg
+                              class="mt-[0.2rem] h-3.5 w-3.5 shrink-0 text-brand"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2.5"
+                              aria-hidden="true"
+                            >
+                              <path d="M4 10.5l4 4 8-9.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span>{title}</span>
+                          </span>
+                          {notes.length > 0 && (
+                            <ul class="ml-6 grid gap-1 text-muted">
+                              {notes.map((note) => (
+                                <li class="flex gap-2">
+                                  <span class="text-brand">–</span>
+                                  <span>{note}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )
+            }
+          </div>
+        </article>
+      ))
+    }
+    <div class="hair-t px-[var(--pad)] py-8">
+      <p class="mono text-muted">Earlier</p>
+      <ul class="mono mt-4 grid gap-2 text-muted">
+        {earlierRoles.map((r) => (
+          <li>
+            {r.role},{' '}
+            {
+              earlierOrgUrls[r.org] ? (
+                <a
+                  class="transition-colors hover:text-brand"
+                  href={earlierOrgUrls[r.org]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {r.org}
+                </a>
+              ) : (
+                r.org
+              )
+            }{' '}
+            <span class="text-secondary">({r.when})</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- recommendations -->
+  <section id="recommendations" class="hair-b">
+    <div class="px-[var(--pad)] pt-14">
+      <p class="mono text-brand">Recommendations</p>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">What colleagues say</h2>
+    </div>
+    <div class="grid md:grid-cols-2">
+      {
+        featured.map((r, i) => (
+          <Recommendation
+            quote={r.quote}
+            author={r.author}
+            url={recommenderUrls[r.author]}
+            index={i}
+            variant="grid"
+          />
+        ))
+      }
+    </div>
+    <div class="px-[var(--pad)] py-10">
+      <Cta href="/recommendations/" label="recommendations" />
+    </div>
+  </section>
+
+  <!-- resume CTA -->
+  <section id="resume" class="hair-b">
+    <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="mono text-brand">Résumé</p>
+        <h2 class="mt-4 max-w-[22ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+          The story, experience and all — in full
+        </h2>
+      </div>
+      <Cta href={site.resume} label="Download Résumé" arrow={false} download />
+    </div>
+  </section>
+
+  <!-- contacts / 1:1 -->
+  <section id="contacts" class="hair-b">
+    <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="mono text-brand">Services</p>
+        <h2 class="mt-4 max-w-[18ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+          Let’s talk — book a 30-minute call
+        </h2>
+      </div>
+      <Cta href="/schedule/" label="Schedule 1:1" />
+    </div>
+  </section>
