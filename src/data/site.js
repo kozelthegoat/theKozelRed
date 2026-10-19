@@ -15,7 +15,6 @@ export const site = {
   email: 'aliaksei@kozel.red',
   resume: '/kozel-resume-2026-10-18.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],
-  education: ['BA, English Literature', 'Minsk State Linguistic University'],
   offClock: ['Meditation', 'Mind–body discipline', 'Volunteering', 'Vibe Coding'],
   // Floating "Donate" button target (external). Empty = button hidden.
   donateUrl: '',
