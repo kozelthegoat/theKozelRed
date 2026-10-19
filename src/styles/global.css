@@ -16,7 +16,9 @@
 :root {
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --background: #f5f5ed;
+  /* Google's light surface (#f8f9fa) rather than the warm bone (#f5f5ed) this was built on. The
+     hairlines and tints below were chosen against the warm one, so they may want to follow. */
+  --background: #f8f9fa;
   --foreground: #282828;
   --secondary: #414140;
   --muted: #72726f;
