@@ -11,10 +11,7 @@ export const site = {
   // Read as facts beside the location, not as a pitch. No link of their own: the hero's résumé
   // button is the action, and a second call to action in the same block would compete. An array
   // rather than a line-broken string, so each one renders as its own bullet.
-  availability: [
-    'Open to part-time roles and contracts',
-    'Open to full-time roles with relocation'
-  ],
+  availability: ['Part-time roles and contracts', 'Full-time roles with relocation'],
   email: 'aliaksei@kozel.red',
   resume: '/kozel-resume-2026-10-18.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],
