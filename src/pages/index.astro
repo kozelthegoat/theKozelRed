@@ -44,7 +44,10 @@ const pad = (n) => String(n).padStart(2, '0');
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.languages.map((lang) => (
-                  <li>{lang}</li>
+                  <li class="flex gap-2">
+                    <span class="text-brand">–</span>
+                    <span>{lang}</span>
+                  </li>
                 ))}
               </ul>
             </dd>
@@ -54,7 +57,10 @@ const pad = (n) => String(n).padStart(2, '0');
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.offClock.map((item) => (
-                  <li>{item}</li>
+                  <li class="flex gap-2">
+                    <span class="text-brand">–</span>
+                    <span>{item}</span>
+                  </li>
                 ))}
               </ul>
             </dd>
