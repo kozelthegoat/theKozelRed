@@ -4,7 +4,7 @@ import { sessionTypes, availability } from '../../data/sessions.js';
 import { site } from '../../data/site.js';
 ---
 
-  <section class="hair-b">
+  <section>
     <div class="px-[var(--pad)] py-14">
       <p class="mono text-brand">Pro Bono</p>
       <h1 class="page-title mt-4 max-w-[20ch]">1:1 / Schedule</h1>
@@ -25,17 +25,28 @@ import { site } from '../../data/site.js';
   <section>
     <div class="px-[var(--pad)] pt-14">
       <p class="mono text-brand">Sessions</p>
-      <h2 class="mt-4 max-w-[24ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what you leave with</h2>
+      <h2 class="mt-4 max-w-[24ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what we build</h2>
     </div>
     <!--
       Descriptions, not a control. Three ways to use the time, each saying what it asks of you and
-      what you leave with. The choice itself is one line down in the details, where the booking is
-      made — so the thing you read and the thing you press are in the place each belongs.
+      what we build. The choice itself is one line down in the details, where the booking is made —
+      so the thing you read and the thing you press are in the place each belongs.
+
+      The treatment the recommendations get: a rule between the cards that goes brand under the
+      pointer, and a lift on hover. The padding sits on the card rather than the row, so the rule
+      runs the full height of the grid instead of stopping short above and below it.
     -->
-    <div class="grid gap-5 px-[var(--pad)] pt-8 pb-16 md:grid-cols-3 md:gap-y-5">
+    <div class="grid md:grid-cols-3 md:gap-y-5">
       {
-        sessionTypes.map((t) => (
-          <div class="grid content-start gap-5 md:row-span-4 md:grid-rows-subgrid">
+        sessionTypes.map((t, i) => (
+          <div
+            class:list={[
+              'group relative grid content-start gap-5 p-[var(--pad)] transition-transform duration-300 ease-out hover:-translate-y-1 md:row-span-4 md:grid-rows-subgrid',
+              i > 0 && 'hair-t-mobile',
+              i > 0 && 'hair-l-md'
+            ]}
+          >
+            <span class="pointer-events-none absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 bg-brand transition-transform duration-300 ease-out group-hover:scale-y-100"></span>
             <div class="flex items-baseline justify-between gap-4">
               <span class="text-xl font-medium uppercase">{t.audience}</span>
               <span class="mono text-muted">{t.minutes} min</span>
@@ -53,7 +64,7 @@ import { site } from '../../data/site.js';
               </ul>
             </div>
             <div>
-              <p class="mono text-muted">You leave with</p>
+              <p class="mono text-muted">We build</p>
               <ul class="mt-2 grid gap-1 text-secondary">
                 {t.build.map((item) => (
                   <li class="flex gap-3">
@@ -69,7 +80,7 @@ import { site } from '../../data/site.js';
     </div>
   </section>
 
-  <section class="hair-b">
+  <section>
     <!-- The calendar, and beside it the details, where the session and the rest are chosen. -->
     <p class="mono px-[var(--pad)] pt-14 text-brand">Calendar</p>
     <div class="grid gap-10 px-[var(--pad)] pt-8 pb-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
