@@ -3,6 +3,7 @@ import { site } from '../data/site.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
 import { dirFor, localeFromPath, pathInLocale, prefixFor } from '../i18n/config.mjs';
+import { alternatesForPath } from '../i18n/pages.mjs';
 import { translator } from '../i18n/ui.mjs';
 import Cta from '../components/Cta.astro';
 import LocaleSwitcher from '../components/LocaleSwitcher.astro';
@@ -12,11 +13,12 @@ import '../styles/global.css';
 const {
   title = `${site.name} — ${site.role}`,
   description = `${site.name} — ${site.role}.`,
-  // The languages this page actually exists in. Absent means English only, which is most of the
-  // site while the page copy is still untranslated — and a switcher offering dead links is worse
-  // than no switcher at all.
-  alternates = null
+  // A page can name its own languages — a note varies per slug — and otherwise the registry knows.
+  // Null means nothing to switch to, so the menu never offers a link that isn't there.
+  alternates: explicitAlternates = null
 } = Astro.props;
+
+const alternates = explicitAlternates ?? alternatesForPath(Astro.url.pathname);
 
 // The language comes from the URL, never a cookie: a prefixed path is self-describing, so every
 // locale is shareable and indexable and nothing has to be remembered between visits.
@@ -192,7 +194,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
         </div>
 
         {
-          alternates && (
+          alternates?.length > 1 && (
             <div class="px-[var(--pad)] pb-5">
               <LocaleSwitcher alternates={alternates} />
             </div>

@@ -1,83 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import Recommendation from '../components/Recommendation.astro';
-import { recommendations, recommenderUrls, homeRecommendations } from '../data/resume.js';
-
-// Mike leads: the one chosen for the homepage, and the strongest sentence for someone hiring.
-// Everyone else keeps the order they are already in.
-const [lead] = homeRecommendations;
-const ordered = [
-  ...recommendations.filter((r) => r.author === lead),
-  ...recommendations.filter((r) => r.author !== lead)
-];
+import Body from '../components/pages/Recommendations.astro';
 ---
 
 <Base
   title="Aliaksei Kozel — Recommendations"
   description="What colleagues and clients have said about working with Aliaksei Kozel."
 >
-  <section>
-    <div class="px-[var(--pad)] pt-14 pb-12">
-      <p class="mono text-brand">Recommendations</p>
-      <h1 class="page-title mt-4">In their words</h1>
-      <p class="mt-6 max-w-[52ch] text-secondary">
-        None of this is my own writing. It's theirs, and it makes the case better than I could. My
-        thanks to each of them.
-      </p>
-    </div>
-  </section>
-
-  <!--
-    One quote at a time, chosen with the bullets below rather than by scrolling through them. It is
-    a layer, not the page: the script reveals it, so a browser without JS — or a reader with motion
-    reduced — gets the plain list underneath and nothing is lost.
-  -->
-  <section class="reco-slides" data-slides>
-    <div class="reco-viewport">
-      {
-        ordered.map((r, i) => (
-          <Recommendation
-            quote={r.quote}
-            author={r.author}
-            url={recommenderUrls[r.author]}
-            index={i}
-            variant="slide"
-          />
-        ))
-      }
-    </div>
-    <div class="reco-bullets" data-bullets>
-      {
-        ordered.map((r, i) => (
-          <button
-            type="button"
-            class="reco-bullet"
-            data-bullet={i}
-            aria-pressed={i === 0 ? 'true' : 'false'}
-            aria-label={`Recommendation ${i + 1} of ${ordered.length}, ${r.author}`}
-          >
-            {String(i + 1).padStart(2, '0')}
-          </button>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="reco-list hair-b">
-    {
-      ordered.map((r, i) => (
-        <Recommendation
-          quote={r.quote}
-          author={r.author}
-          url={recommenderUrls[r.author]}
-          index={i}
-          variant="list"
-        />
-      ))
-    }
-  </section>
-
-  <script>
-    import '../assets/js/recommendations.js';
-  </script>
+  <Body />
 </Base>
