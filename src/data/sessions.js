@@ -59,9 +59,9 @@ export const sessionTypes = [
     ],
     build: [
       'The problem underneath the problem',
-      'The trade-offs spelled out, not hidden',
+      'What each option really costs',
       'Your first move, and what it unlocks',
-      'Short written notes afterwards'
+      'Notes afterwards, so it survives the week'
     ]
   }
 ];
