@@ -350,8 +350,14 @@ dialog.req-done[open] {
 
 /* Nothing draws a rule into the footer. One rule here rather than deleting a hair-b from every
    page, and pages written later get it without anyone remembering. Unlayered on purpose: inside
-   @layer base it would lose to .hair-b, which is unlayered too. */
-main > :last-child { border-bottom: 0; }
+   @layer base it would lose to .hair-b, which is unlayered too.
+   :last-of-type, not :last-child — Astro leaves the page's hoisted <script> as the last child of
+   <main>, so :last-child was pointing at a script tag and quietly doing nothing on every page that
+   had one. Articles count too: a note is an <article>. */
+main > section:last-of-type,
+main > article:last-of-type {
+  border-bottom: 0;
+}
 .hair-l { border-left: var(--hair) solid var(--border); }
 .hair-r { border-right: var(--hair) solid var(--border); }
 /* Left rule only from md up (for grid renderers that can't do custom md: variants) */
