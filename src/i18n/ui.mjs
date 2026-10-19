@@ -150,14 +150,14 @@ export const ui = {
     'notes.empty': 'Пока ничего не опубликовано.',
     'notes.back': '← Все заметки',
 
-    'page.home': 'Aliaksei Kozel — Стратегия / Операции / Производство',
-    'page.home.description': 'Aliaksei Kozel — Стратегия / Операции / Производство.',
-    'page.schedule': 'Aliaksei Kozel — 1:1 / Schedule',
+    'page.home': 'Алексей Козел — Стратегия / Операции / Производство',
+    'page.home.description': 'Алексей Козел — Стратегия / Операции / Производство.',
+    'page.schedule': 'Алексей Козел — 1:1 / Schedule',
     'page.schedule.description':
-      'Бесплатная встреча 1:1 на 30 минут с Aliaksei Kozel — стратегия, операции и производство, от замысла до выпуска.',
-    'page.recommendations': 'Aliaksei Kozel — Рекомендации',
-    'page.recommendations.description': 'Что коллеги и клиенты говорят о работе с Aliaksei Kozel.',
-    'page.privacy': 'Aliaksei Kozel — Конфиденциальность',
+      'Бесплатная встреча 1:1 на 30 минут — стратегия, операции и производство, от замысла до выпуска.',
+    'page.recommendations': 'Алексей Козел — Рекомендации',
+    'page.recommendations.description': 'Что коллеги и клиенты говорят о совместной работе.',
+    'page.privacy': 'Алексей Козел — Конфиденциальность',
     'page.privacy.description': 'Что этот сайт хранит, а что — нет.',
 
     'reco.eyebrow': 'Рекомендации',
@@ -258,14 +258,14 @@ export const ui = {
     'notes.empty': 'Пакуль нічога не апублікавана.',
     'notes.back': '← Усе нататкі',
 
-    'page.home': 'Aliaksei Kozel — Стратэгія / Аперацыі / Вытворчасць',
-    'page.home.description': 'Aliaksei Kozel — Стратэгія / Аперацыі / Вытворчасць.',
-    'page.schedule': 'Aliaksei Kozel — 1:1 / Schedule',
+    'page.home': 'Аляксей Козел — Стратэгія / Аперацыі / Вытворчасць',
+    'page.home.description': 'Аляксей Козел — Стратэгія / Аперацыі / Вытворчасць.',
+    'page.schedule': 'Аляксей Козел — 1:1 / Schedule',
     'page.schedule.description':
-      'Бясплатная 30-хвілінная сустрэча 1:1 з Aliaksei Kozel — стратэгія, аперацыі і вытворчасць, ад задумы да выпуску.',
-    'page.recommendations': 'Aliaksei Kozel — Рэкамендацыі',
-    'page.recommendations.description': 'Што калегі і кліенты кажуць пра працу з Aliaksei Kozel.',
-    'page.privacy': 'Aliaksei Kozel — Прыватнасць',
+      'Бясплатная 30-хвілінная сустрэча 1:1 — стратэгія, аперацыі і вытворчасць, ад задумы да выпуску.',
+    'page.recommendations': 'Аляксей Козел — Рэкамендацыі',
+    'page.recommendations.description': 'Што калегі і кліенты кажуць пра сумесную працу.',
+    'page.privacy': 'Аляксей Козел — Прыватнасць',
     'page.privacy.description': 'Што гэты сайт трымае, а што — не.',
 
     'reco.eyebrow': 'Рэкамендацыі',

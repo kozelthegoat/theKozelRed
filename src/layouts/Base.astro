@@ -1,5 +1,5 @@
 ---
-import { site } from '../data/site.js';
+import { site, nameFor } from '../data/site.js';
 import { sessionTypes } from '../data/sessions.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
@@ -31,9 +31,9 @@ const t = translator(locale);
 // so /ru/privacy/ had a translated body under an English <title>. A note names itself, so it still
 // passes one; everything else resolves from the path.
 const pageKey = pageKeyForPath(Astro.url.pathname);
-const title = explicitTitle ?? (pageKey && lookup(locale, `page.${pageKey}`)) ?? `${site.name} — ${site.role}`;
+const title = explicitTitle ?? (pageKey && lookup(locale, `page.${pageKey}`)) ?? `${nameFor(locale)} — ${site.role}`;
 const description =
-  explicitDescription ?? (pageKey && lookup(locale, `page.${pageKey}.description`)) ?? `${site.name} — ${site.role}.`;
+  explicitDescription ?? (pageKey && lookup(locale, `page.${pageKey}.description`)) ?? `${nameFor(locale)} — ${site.role}.`;
 const year = new Date().getFullYear();
 // The footer's Navigation block points at home sections, so it only belongs on the English home.
 const isHome = Astro.url.pathname === '/';
@@ -105,7 +105,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
             <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
               <rect x="3.5" y="3.5" width="13" height="13" fill="var(--brand)" transform="rotate(45 10 10)"></rect>
             </svg>
-            <span class="text-[1.05rem] font-medium tracking-tight">{site.name}</span>
+            <span class="text-[1.05rem] font-medium tracking-tight">{nameFor(locale)}</span>
           </a>
 
           <!--
@@ -234,7 +234,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
 
         <div class="mono flex flex-col gap-1 px-[var(--pad)] py-5 text-muted">
           <div class="grid w-fit grid-cols-[auto_auto] gap-x-3 gap-y-1">
-            <span>© {site.name}</span>
+            <span>© {nameFor(locale)}</span>
             <span>| {site.renameYear} …</span>
             <span>© {site.previousName}</span>
             <span>| {site.bornYear} – {site.renameYear}</span>

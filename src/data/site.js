@@ -2,6 +2,10 @@
 
 export const site = {
   name: 'Aliaksei Kozel',
+  // The name written the way each language writes it: a Russian page should not call him "Aliaksei
+  // Kozel". The Latin spelling stays for English, and for the request API and the host's own
+  // notification, which are not the visitor's to read.
+  names: { en: 'Aliaksei Kozel', ru: 'Алексей Козел', be: 'Аляксей Козел' },
   altName: 'formerly Aliaksei Pashkel',
   previousName: 'Aliaksei Pashkel',
   bornYear: 1987,
@@ -32,3 +36,6 @@ export const site = {
     // { label: 'LinkedIn', url: 'https://…' },
   ]
 };
+
+// The name in one language, falling back to the default spelling.
+export const nameFor = (locale) => site.names?.[locale] ?? site.name;
