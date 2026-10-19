@@ -108,18 +108,34 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
             <span class="text-[1.05rem] font-medium tracking-tight">{site.name}</span>
           </a>
 
-          <nav class="mono hidden items-center gap-7 text-muted md:flex" aria-label="Primary">
-            <a class="transition-colors hover:text-foreground" href="/#expertise">{t('nav.expertise')}</a>
-            <a class="transition-colors hover:text-foreground" href="/#experience">{t('nav.experience')}</a>
-            {
-              hasNotes && (
-                <a class="transition-colors hover:text-foreground" href={`${prefixFor(locale)}/notes/`}>
-                  {t('nav.notes')}
-                </a>
-              )
-            }
-            <a class="transition-colors hover:text-foreground" href="/#contacts">{t('nav.contacts')}</a>
-          </nav>
+          <!--
+            Expertise, Experience and Contacts point at sections of the home page, which exist
+            there and nowhere else — the footer's Navigation block is home-only for the same reason.
+            They were on every page, so on /schedule/ they offered anchors that were not on the page
+            under the pointer. Notes is a page of its own, so it stays wherever it is published.
+          -->
+          {
+            (isHome || hasNotes) && (
+              <nav class="mono hidden items-center gap-7 text-muted md:flex" aria-label="Primary">
+                {isHome && (
+                  <a class="transition-colors hover:text-foreground" href="/#expertise">{t('nav.expertise')}</a>
+                )}
+                {isHome && (
+                  <a class="transition-colors hover:text-foreground" href="/#experience">{t('nav.experience')}</a>
+                )}
+                {
+                  hasNotes && (
+                    <a class="transition-colors hover:text-foreground" href={`${prefixFor(locale)}/notes/`}>
+                      {t('nav.notes')}
+                    </a>
+                  )
+                }
+                {isHome && (
+                  <a class="transition-colors hover:text-foreground" href="/#contacts">{t('nav.contacts')}</a>
+                )}
+              </nav>
+            )
+          }
 
           <Cta href="/schedule/" label={t('cta.schedule')} variant="solid" />
         </div>
