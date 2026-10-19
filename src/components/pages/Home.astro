@@ -129,7 +129,7 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
     </div>
     {
       experience.map((job, i) => (
-        <article class={`grid gap-6 ${i > 0 ? 'hair-t' : ''} px-[var(--pad)] py-10 md:grid-cols-[1fr_2fr]`}>
+        <article class="grid gap-6 px-[var(--pad)] py-10 md:grid-cols-[1fr_2fr]">
           <div>
             <h3 class="text-2xl font-medium tracking-tight">{job.role}</h3>
             <p class="mono mt-3 text-muted">
@@ -207,9 +207,8 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
         </article>
       ))
     }
-    <div class="hair-t px-[var(--pad)] py-8">
-      <p class="mono text-muted">Earlier</p>
-      <ul class="mono mt-4 grid gap-2 text-muted">
+    <div class="px-[var(--pad)] py-8">
+      <ul class="mono grid gap-2 text-muted">
         {earlierRoles.map((r) => (
           <li>
             {r.role},{' '}
