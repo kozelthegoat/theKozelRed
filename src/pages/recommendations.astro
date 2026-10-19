@@ -28,11 +28,11 @@ const ordered = [
   </section>
 
   <!--
-    The pinned crossfade. It is a layer, not the page: the script reveals it only once it has
-    measured the section, so a browser without JS — or a reader with motion reduced — gets the
-    plain list below and nothing is lost.
+    One quote at a time, chosen with the bullets below rather than by scrolling through them. It is
+    a layer, not the page: the script reveals it, so a browser without JS — or a reader with motion
+    reduced — gets the plain list underneath and nothing is lost.
   -->
-  <section class="reco-slides" data-slides style={`height: calc(${ordered.length} * 62vh)`}>
+  <section class="reco-slides" data-slides>
     <div class="reco-viewport">
       {
         ordered.map((r, i) => (
@@ -45,8 +45,21 @@ const ordered = [
           />
         ))
       }
-      <div class="reco-rail" aria-hidden="true"><span data-rail></span></div>
-      <p class="mono reco-counter" data-counter aria-hidden="true"></p>
+    </div>
+    <div class="reco-bullets" data-bullets>
+      {
+        ordered.map((r, i) => (
+          <button
+            type="button"
+            class="reco-bullet"
+            data-bullet={i}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+            aria-label={`Recommendation ${i + 1} of ${ordered.length}, ${r.author}`}
+          >
+            {String(i + 1).padStart(2, '0')}
+          </button>
+        ))
+      }
     </div>
   </section>
 

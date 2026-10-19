@@ -449,12 +449,11 @@ dialog.req-done[open] {
 .reco-slides[data-ready] { display: block; }
 .reco-slides[data-ready] + .reco-list { display: none; }
 
+/* No pinning and no extra scrolling: the quote area holds its place and the bullets below move
+   between quotes. The min-height is what stops the page jumping as quotes change length. */
 .reco-viewport {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
+  position: relative;
+  min-height: clamp(20rem, 46vh, 30rem);
   display: grid;
   place-items: center;
 }
@@ -466,7 +465,7 @@ dialog.req-done[open] {
   align-content: center;
   justify-items: center;
   gap: 1.5rem;
-  padding: 6rem var(--pad);
+  padding: 4rem var(--pad);
   text-align: center;
   opacity: 0;
   transition: opacity 0.5s var(--ease);
@@ -491,32 +490,38 @@ dialog.req-done[open] {
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  /* <cite> is italic by default, which is not this site's voice. The list variant already carries
+     not-italic for the same reason; this one was missing it. */
+  font-style: normal;
   color: var(--muted);
 }
 
-/* Where you are, and how much is left. */
-.reco-rail {
-  position: absolute;
-  right: var(--pad);
-  top: 50%;
-  translate: 0 -50%;
-  width: 2px;
-  height: 28vh;
-  background: var(--border);
+/* The bullets: one per quote, the current one in the accent. Same language as the segmented
+   control on the schedule page, so choosing a quote reads like choosing a view. */
+.reco-bullets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 var(--pad) 3rem;
 }
-.reco-rail span {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--brand);
-  transform-origin: top;
-  transform: scaleY(0);
-}
-.reco-counter {
-  position: absolute;
-  left: var(--pad);
-  bottom: 2rem;
+.reco-bullet {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  min-width: 2.25rem;
+  padding: 0.4rem 0.55rem;
+  border: var(--hair) solid var(--border);
   color: var(--muted);
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+@media (hover: hover) {
+  .reco-bullet:hover { border-color: var(--brand); }
+}
+.reco-bullet[aria-pressed='true'] {
+  border-color: var(--brand);
+  background: var(--brand-tint);
+  color: var(--brand);
 }
 
 /* Scrollbar — brand orange */
