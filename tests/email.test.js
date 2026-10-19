@@ -98,8 +98,9 @@ describe('declineCopy', () => {
   it('leaves another time as theirs to take, with a standard button label', () => {
     const { text, html } = declineCopy(args);
     expect(text).toContain("you're welcome to choose another time");
-    expect(html).toContain('Choose another time');
-    expect(html).not.toContain('Pick another time');
+    // The button names what it does — send a request — rather than the thing it replaces.
+    expect(html).toContain('Send request');
+    expect(html).not.toContain('Choose another time');
   });
 
   it('gives the moment its own line, in their clock only', () => {

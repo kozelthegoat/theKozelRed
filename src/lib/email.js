@@ -208,7 +208,7 @@ export function declineCopy({ name, date, time, visitorTz, typeName = '', brand 
 <p style="margin:0 0 12px;">An update on your request: I'm not able to take the time you picked.</p>
 ${momentHtml({ typeName, m })}
 <p style="margin:20px 0 0;">If you'd still like to talk, you're welcome to choose another time whenever it suits you.</p>
-${cta(BOOK, 'Choose another time', brand)}
+${cta(BOOK, 'Send request', brand)}
 ${signoff}`,
       brand
     )
