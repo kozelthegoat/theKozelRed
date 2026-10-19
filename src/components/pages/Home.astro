@@ -287,8 +287,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
     </div>
     <!-- What the three sessions are, not a way to choose one: choosing happens on the schedule,
          where the calendar and the form are. This is the invitation, and the button is the door —
-         which on a phone comes after them rather than between the invitation and what it offers.
-         From md it returns to the end of the invitation's own line. -->
+         which comes after them on every size, rather than between the invitation and what it offers. -->
     <div class="grid gap-5 md:col-span-2 md:grid-cols-3">
       {
         sessionTypes.map((session) => (
@@ -302,7 +301,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
         ))
       }
     </div>
-    <div class="md:col-start-2 md:row-start-1 md:justify-self-end">
+    <div class="md:col-span-2">
       <Cta href="/schedule/" label={t('cta.schedule')} />
     </div>
   </section>
