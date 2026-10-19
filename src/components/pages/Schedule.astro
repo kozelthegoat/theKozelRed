@@ -72,7 +72,7 @@ import { site } from '../../data/site.js';
   <section class="hair-b">
     <!-- The calendar, and beside it the details, where the session and the rest are chosen. -->
     <p class="mono px-[var(--pad)] pt-14 text-brand">Calendar</p>
-    <div class="grid gap-10 px-[var(--pad)] py-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
+    <div class="grid gap-10 px-[var(--pad)] pt-8 pb-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
       <div>
         <div data-step="slots">
           <div class="flex items-center justify-between gap-4">
@@ -164,8 +164,14 @@ import { site } from '../../data/site.js';
 
       </div>
 
-      <div>
-        <form id="request" data-step="form" class="grid gap-4" novalidate>
+      <!--
+        The column is stretched to the calendar's height and the form fills it, so the message field
+        takes up whatever the calendar leaves. That is what keeps the two columns ending on one line:
+        the calendar is four to six rows tall depending on the month, so a fixed height here would
+        drift out of step by a row and no rule would catch it.
+      -->
+      <div class="flex flex-col">
+        <form id="request" data-step="form" class="flex flex-1 flex-col gap-4" novalidate>
           <!--
             One line each, chosen here where the booking is made. The descriptions above say what
             each one involves; this says which one you're asking for, as the last thing before your
@@ -220,7 +226,7 @@ import { site } from '../../data/site.js';
             name="note"
             rows="3"
             placeholder="What’s on your mind?"
-            class="field w-full px-4 py-3"></textarea>
+            class="field min-h-[6rem] w-full flex-1 resize-none px-4 py-3"></textarea>
           <p class="text-sm text-brand" data-form-error hidden></p>
           <div class="flex flex-wrap gap-3">
             <button type="submit" class="btn mono">Send request</button>
