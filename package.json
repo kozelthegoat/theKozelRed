@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "generate-types": "wrangler types",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "node scripts/deploy.mjs",
     "test": "vitest run",
     "icons": "node scripts/icons.mjs"
   },
