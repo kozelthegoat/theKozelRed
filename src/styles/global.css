@@ -247,8 +247,10 @@ dialog.req-done[open] {
   background: transparent;
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
-.pick-btn:hover {
-  border-color: var(--brand);
+@media (hover: hover) {
+  .pick-btn:hover {
+    border-color: var(--brand);
+  }
 }
 .pick-btn[aria-pressed="true"] {
   border-color: var(--brand);
@@ -264,9 +266,11 @@ dialog.req-done[open] {
   color: var(--muted);
   transition: color 0.15s ease, background-color 0.15s ease;
 }
-.icon-btn:not(:disabled):hover {
-  color: var(--brand);
-  background: var(--brand-tint);
+@media (hover: hover) {
+  .icon-btn:not(:disabled):hover {
+    color: var(--brand);
+    background: var(--brand-tint);
+  }
 }
 .icon-btn:disabled {
   opacity: 0.3;
@@ -311,8 +315,10 @@ dialog.req-done[open] {
   color: var(--muted);
   transition: color 0.15s ease, background-color 0.15s ease;
 }
-.seg-btn:hover {
-  color: var(--brand);
+@media (hover: hover) {
+  .seg-btn:hover {
+    color: var(--brand);
+  }
 }
 .seg-btn[aria-pressed="true"] {
   background: var(--brand-tint);
@@ -376,16 +382,22 @@ dialog.req-done[open] {
   transform: translateY(101%);
   transition: transform 0.5s var(--ease);
 }
-.btn:hover { color: var(--on-brand); border-color: var(--brand); }
-.btn:hover::after { transform: translateY(0); }
+/* Hover is pointer-only, which Tailwind already assumes for its own hover utilities and these
+   hand-written rules did not. On a touch screen a tap applies :hover and it sticks until you tap
+   elsewhere, so the 0.45s colour transition gets caught part-way — which is exactly why the label
+   read as grey on a phone and white on a desktop, where the hover is held to completion. */
+@media (hover: hover) {
+  .btn:hover { color: var(--on-brand); border-color: var(--brand); }
+  .btn:hover::after { transform: translateY(0); }
+  .btn--solid:hover { color: var(--brand); border-color: var(--brand); }
+  .btn:hover .arrow { transform: translateX(0.25rem); }
+}
 .btn--solid { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
 /* On hover the button goes light: the fill slides the page colour up over the accent, and the
    label and border keep the raw accent. Deepening them was tried and read worse — leave it. */
 .btn--solid::after { background: var(--background); }
-.btn--solid:hover { color: var(--brand); border-color: var(--brand); }
 
 .arrow { transition: transform 0.45s var(--ease); }
-.btn:hover .arrow { transform: translateX(0.25rem); }
 
 /* Square icon-only button (table row actions) — drops .btn's 12rem min-width so the
    row's other columns keep the space. Label comes from aria-label/title. */
