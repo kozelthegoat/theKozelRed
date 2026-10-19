@@ -441,6 +441,84 @@ dialog.req-done[open] {
 .reveal { opacity: 0; transform: translateY(12px); }
 .reveal.in { opacity: 1; transform: none; transition: opacity 0.7s ease, transform 0.7s var(--ease); }
 
+/* Recommendations — the pinned crossfade on /recommendations/.
+   The plain list is the page; this is a layer over it, switched on only once the script has
+   measured the section. A browser without JS, or a reader with motion reduced, gets the list and
+   loses nothing — which is why nothing here is load-bearing. */
+.reco-slides { display: none; position: relative; }
+.reco-slides[data-ready] { display: block; }
+.reco-slides[data-ready] + .reco-list { display: none; }
+
+.reco-viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1.5rem;
+  padding: 6rem var(--pad);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+  pointer-events: none;
+}
+.slide.is-active { opacity: 1; pointer-events: auto; }
+
+.slide-glyph {
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  line-height: 0.5;
+  color: var(--brand);
+}
+.slide-quote {
+  max-width: 54ch;
+  font-size: clamp(1.05rem, 2.1vw, 1.5rem);
+  line-height: 1.5;
+  text-wrap: balance;
+  color: var(--secondary);
+}
+.slide-cite {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Where you are, and how much is left. */
+.reco-rail {
+  position: absolute;
+  right: var(--pad);
+  top: 50%;
+  translate: 0 -50%;
+  width: 2px;
+  height: 28vh;
+  background: var(--border);
+}
+.reco-rail span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--brand);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+.reco-counter {
+  position: absolute;
+  left: var(--pad);
+  bottom: 2rem;
+  color: var(--muted);
+}
+
 /* Scrollbar — brand orange */
 html {
   scrollbar-color: var(--brand) var(--background);

@@ -1,7 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import Recommendation from '../components/Recommendation.astro';
-import { recommendations, recommenderUrls } from '../data/resume.js';
+import { recommendations, recommenderUrls, homeRecommendations } from '../data/resume.js';
+
+// Mike leads: the one chosen for the homepage, and the strongest sentence for someone hiring.
+// Everyone else keeps the order they are already in.
+const [lead] = homeRecommendations;
+const ordered = [
+  ...recommendations.filter((r) => r.author === lead),
+  ...recommendations.filter((r) => r.author !== lead)
+];
 ---
 
 <Base
@@ -13,15 +21,38 @@ import { recommendations, recommenderUrls } from '../data/resume.js';
       <p class="mono text-brand">Recommendations</p>
       <h1 class="page-title mt-4">In their words</h1>
       <p class="mt-6 max-w-[52ch] text-secondary">
-        None of this is my own writing. These come from the people I've worked with, kept whole as
-        they wrote them — and they make the case better than I could. My thanks to each of them.
+        None of this is my own writing. It's theirs, and it makes the case better than I could. My
+        thanks to each of them.
       </p>
     </div>
   </section>
 
-  <section class="hair-b">
+  <!--
+    The pinned crossfade. It is a layer, not the page: the script reveals it only once it has
+    measured the section, so a browser without JS — or a reader with motion reduced — gets the
+    plain list below and nothing is lost.
+  -->
+  <section class="reco-slides" data-slides style={`height: calc(${ordered.length} * 62vh)`}>
+    <div class="reco-viewport">
+      {
+        ordered.map((r, i) => (
+          <Recommendation
+            quote={r.quote}
+            author={r.author}
+            url={recommenderUrls[r.author]}
+            index={i}
+            variant="slide"
+          />
+        ))
+      }
+      <div class="reco-rail" aria-hidden="true"><span data-rail></span></div>
+      <p class="mono reco-counter" data-counter aria-hidden="true"></p>
+    </div>
+  </section>
+
+  <section class="reco-list hair-b">
     {
-      recommendations.map((r, i) => (
+      ordered.map((r, i) => (
         <Recommendation
           quote={r.quote}
           author={r.author}
@@ -32,4 +63,8 @@ import { recommendations, recommenderUrls } from '../data/resume.js';
       ))
     }
   </section>
+
+  <script>
+    import '../assets/js/recommendations.js';
+  </script>
 </Base>
