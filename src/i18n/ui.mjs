@@ -102,6 +102,11 @@ export const ui = {
     'sched.err.name': 'Please add your name.',
     'sched.err.email': 'Please add a valid email.',
     'sched.err.generic': 'Please try again — something is off.',
+    // The refusals that come from the server, keyed by the code it sends so they too answer in the
+    // visitor's language rather than in the API's.
+    'sched.err.slotTaken': 'Please pick another time — that one was just taken.',
+    'sched.err.slotUnavailable': 'Please pick another time — that one is no longer available.',
+    'sched.err.unavailable': 'Please come back later — booking is not available right now.',
     'sched.done.heading': 'Requested',
     'sched.done.thanks': 'Thank you for asking. It means more than the request suggests.',
     'sched.done.next':
@@ -227,6 +232,9 @@ export const ui = {
     'sched.err.name': 'Пожалуйста, укажите имя.',
     'sched.err.email': 'Пожалуйста, укажите корректную почту.',
     'sched.err.generic': 'Попробуйте ещё раз — что-то не так.',
+    'sched.err.slotTaken': 'Пожалуйста, выберите другое время — это только что заняли.',
+    'sched.err.slotUnavailable': 'Пожалуйста, выберите другое время — оно больше недоступно.',
+    'sched.err.unavailable': 'Пожалуйста, заходите позже — запись сейчас недоступна.',
     'sched.done.heading': 'Заявка отправлена',
     'sched.done.thanks': 'Спасибо, что спрашиваете. Это значит больше, чем кажется по заявке.',
     'sched.done.next':
@@ -352,6 +360,9 @@ export const ui = {
     'sched.err.name': 'Калі ласка, укажыце імя.',
     'sched.err.email': 'Калі ласка, укажыце карэктную пошту.',
     'sched.err.generic': 'Паспрабуйце яшчэ раз — нешта не так.',
+    'sched.err.slotTaken': 'Калі ласка, выберыце іншы час — гэты толькі што занялі.',
+    'sched.err.slotUnavailable': 'Калі ласка, выберыце іншы час — ён больш недасяжны.',
+    'sched.err.unavailable': 'Калі ласка, заходзьце пазней — запіс зараз недаступны.',
     'sched.done.heading': 'Заяўка адпраўлена',
     'sched.done.thanks': 'Дзякуй, што пытаеце. Гэта значыць больш, чым выглядае па заяўцы.',
     'sched.done.next':

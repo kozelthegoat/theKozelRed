@@ -15,7 +15,9 @@ const frame = slide
   ? []
   : variant === 'grid'
     ? [
-        index === 1 ? 'hair-t-mobile' : index >= 2 ? 'hair-t' : '',
+        // No rule between the pair on a phone: they are the same two quotes, and the line only
+        // separated them into a list. Side by side, from md, they still get their column rule.
+        index >= 2 ? 'hair-t' : '',
         index % 2 === 1 ? 'hair-l-md' : ''
       ]
     : [index > 0 ? 'hair-t' : ''];

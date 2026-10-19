@@ -448,7 +448,9 @@ if (cfgEl && root) {
         body: JSON.stringify(payload)
       });
       const body = await res.json();
-      if (!res.ok) throw new Error(body.error?.message || s.generic);
+      // The server's own words are English, so where its code is one we know, the visitor's
+      // language wins; an unknown code still falls back to what it said.
+      if (!res.ok) throw new Error(s[body.error?.code] || body.error?.message || s.generic);
       const chose = typeById(state.type);
       $('[data-done-summary]').textContent = `${chose.audience} · ${whenLabel(true)}`;
       $('[data-done-note]').textContent = chose.confirmation || '';

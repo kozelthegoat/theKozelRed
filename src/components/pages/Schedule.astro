@@ -321,7 +321,12 @@ const sessionTypes = sessionTypesFor(locale);
         time: t('sched.err.time'),
         name: t('sched.err.name'),
         email: t('sched.err.email'),
-        consent: t('sched.err.consent')
+        consent: t('sched.err.consent'),
+        // Keyed by the code the API sends back, so a refusal from the server arrives in the
+        // visitor's language like every other message on the page.
+        slot_taken: t('sched.err.slotTaken'),
+        slot_unavailable: t('sched.err.slotUnavailable'),
+        unavailable: t('sched.err.unavailable')
       }
     })}
   ></script>
