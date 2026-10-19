@@ -274,7 +274,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
 
   <!-- resume CTA -->
   <!-- pro bono / 1:1 -->
-  <section id="contacts" class="grid gap-8 px-[var(--pad)] pt-16 md:grid-cols-[1fr_auto] md:items-end">
+  <section id="contacts" class="grid gap-8 px-[var(--pad)] pt-16 pb-16 md:grid-cols-[1fr_auto] md:items-end">
     <div>
       <p class="mono text-brand">{t('footer.proBono')}</p>
       <h2 class="mt-4 max-w-[18ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
@@ -289,7 +289,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
          where the calendar and the form are. This is the invitation, and the button is the door —
          which on a phone comes after them rather than between the invitation and what it offers.
          From md it returns to the end of the invitation's own line. -->
-    <div class="grid gap-5 pb-16 md:col-span-2 md:grid-cols-3">
+    <div class="grid gap-5 md:col-span-2 md:grid-cols-3">
       {
         sessionTypes.map((session) => (
           <div class="hair grid content-start gap-3 p-5">

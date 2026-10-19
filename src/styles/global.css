@@ -543,9 +543,10 @@ main > article:last-of-type {
   align-content: center;
   justify-items: center;
   gap: 1.5rem;
-  /* Four rem of vertical padding is right on a desktop and cavernous on a phone, where the quote
-     is the whole screen anyway. */
-  padding: 2rem var(--pad);
+  /* Four rem of vertical padding is right on a desktop. On a phone the quote is the whole screen
+     anyway, so the top of it is just distance to scroll past — an inch of breath above the glyph,
+     no more. */
+  padding: 1rem var(--pad);
   text-align: center;
   opacity: 0;
   transition: opacity 0.5s var(--ease);
