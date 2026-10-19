@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
 import Recommendation from '../../components/Recommendation.astro';
 import { site } from '../../data/site.js';
+import { sessionTypes } from '../../data/sessions.js';
 import {
   helpWith,
   experience,
@@ -280,5 +281,20 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
         </h2>
       </div>
       <Cta href="/schedule/" label="Schedule 1:1" />
+    </div>
+    <!-- What the three sessions are, not a way to choose one: choosing happens on the schedule,
+         where the calendar and the form are. This is the invitation, and the button is the door. -->
+    <div class="grid gap-5 px-[var(--pad)] pb-16 md:grid-cols-3">
+      {
+        sessionTypes.map((t) => (
+          <div class="hair grid content-start gap-3 p-5">
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="text-lg font-medium">{t.audience}</h3>
+              <span class="mono text-muted">{t.minutes} min</span>
+            </div>
+            <p class="text-sm text-secondary">{t.description}</p>
+          </div>
+        ))
+      }
     </div>
   </section>
