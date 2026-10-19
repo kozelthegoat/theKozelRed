@@ -259,19 +259,7 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
   </section>
 
   <!-- resume CTA -->
-  <section id="resume" class="hair-b">
-    <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
-      <div>
-        <p class="mono text-brand">Résumé</p>
-        <h2 class="mt-4 max-w-[22ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
-          The story, experience and all — in full
-        </h2>
-      </div>
-      <Cta href={site.resume} label="Download Résumé" arrow={false} download />
-    </div>
-  </section>
-
-  <!-- contacts / 1:1 -->
+  <!-- pro bono / 1:1 -->
   <section id="contacts" class="hair-b">
     <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
       <div>
@@ -279,6 +267,11 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
         <h2 class="mt-4 max-w-[18ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
           Let’s talk — book a 30-minute call
         </h2>
+        <!-- What pro bono means here, in two lines: not a discount on a service, but time given. -->
+        <p class="mt-4 max-w-[46ch] text-secondary">
+          Free, and no strings — this is time set aside to help, not a service being sold. All I ask
+          is something real to work on.
+        </p>
       </div>
       <Cta href="/schedule/" label="Schedule 1:1" />
     </div>
@@ -296,5 +289,18 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
           </div>
         ))
       }
+    </div>
+  </section>
+
+  <!-- résumé -->
+  <section id="resume" class="hair-b">
+    <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="mono text-brand">Résumé</p>
+        <h2 class="mt-4 max-w-[22ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+          The story, experience and all — in full
+        </h2>
+      </div>
+      <Cta href={site.resume} label="Download Résumé" arrow={false} download />
     </div>
   </section>
