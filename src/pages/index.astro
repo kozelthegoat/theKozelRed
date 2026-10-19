@@ -252,10 +252,8 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
         ))
       }
     </div>
-    <div class="px-[var(--pad)] py-8">
-      <a class="mono text-muted hover:text-brand" href="/recommendations/">
-        All {recommendations.length} recommendations →
-      </a>
+    <div class="px-[var(--pad)] py-10">
+      <Cta href="/recommendations/" label={`All ${recommendations.length} recommendations`} />
     </div>
   </section>
 
