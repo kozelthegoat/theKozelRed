@@ -26,40 +26,29 @@ import { site } from '../../data/site.js';
     <div class="px-[var(--pad)] pt-14">
       <p class="mono text-brand">In detail</p>
       <h2 class="mt-4 max-w-[16ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">What you bring, what you leave with</h2>
-      <p class="mono mt-4 text-muted">Pick one — the calendar below takes it from there</p>
+      <p class="mono mt-4 text-muted">Pick one — the calendar is the same for all three</p>
     </div>
     <!--
-      The chooser. Each panel is a <label> wrapping its own radio rather than a <button>, because a
-      button may only contain phrasing content and these hold lists. The radios carry form="request"
-      so they submit with the details form below, which is in another section entirely.
+      The chooser. Plain divs rather than radios: the booking flow is JavaScript throughout — the
+      calendar cannot render without it and the request is sent by fetch, not by the form — so a
+      radio group bought nothing and its label swallowed the click. The state lives in the script.
     -->
     <div
       class="grid gap-5 px-[var(--pad)] pt-8 pb-16 md:grid-cols-3 md:gap-y-5"
       data-schedule-types
-      role="radiogroup"
     >
       {
         sessionTypes.map((t, i) => (
           <div
-            class="pick-btn grid content-start gap-5 p-5 md:row-span-4 md:grid-rows-subgrid"
+            class="pick-btn grid cursor-pointer content-start gap-5 p-5 md:row-span-4 md:grid-rows-subgrid"
             data-type={t.id}
-            aria-pressed="false"
+            aria-pressed={i === 0 ? 'true' : 'false'}
           >
-            <label class="grid cursor-pointer content-start gap-3">
-              <input
-                class="sr-only"
-                type="radio"
-                name="type"
-                value={t.id}
-                form="request"
-                checked={i === 0}
-              />
-              <span class="flex items-baseline justify-between gap-4">
-                <span class="text-xl font-medium uppercase">{t.audience}</span>
-                <span class="mono text-muted">{t.minutes} min</span>
-              </span>
-              <span class="text-secondary">{t.description}</span>
-            </label>
+            <div class="flex items-baseline justify-between gap-4">
+              <span class="text-xl font-medium uppercase">{t.audience}</span>
+              <span class="mono text-muted">{t.minutes} min</span>
+            </div>
+            <p class="text-secondary">{t.description}</p>
             <div>
               <p class="mono text-muted">You bring</p>
               <ul class="mt-2 grid gap-1 text-secondary">

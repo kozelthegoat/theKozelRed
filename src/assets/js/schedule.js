@@ -92,11 +92,6 @@ if (cfgEl && root) {
   function selectType(id) {
     state.type = id;
     typesEl.querySelectorAll('[data-type]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.type === id ? 'true' : 'false'));
-    // Keep the radio in step with the panel. A click on the lists inside a panel is a click on the
-    // panel but not on its label, so the radio has to be set here; the change handler below covers
-    // the other direction, when someone arrows between radios from the keyboard.
-    const radio = typesEl.querySelector(`input[type="radio"][value="${id}"]`);
-    if (radio && !radio.checked) radio.checked = true;
   }
   function goToCurrentMonth(tz) {
     const [y, m] = dateInTz(tz, new Date()).split('-').map(Number);
@@ -104,19 +99,14 @@ if (cfgEl && root) {
     state.month = m;
   }
 
+  // No radios and no change event: the request is sent by fetch with the type taken from the state,
+  // so a form control was never carrying this. The panel sets the state, and that is the whole
+  // interaction — which is also why the calendar does not wait on it. Every session is 30 minutes,
+  // so the choice changes what is sent, never what the calendar can show.
   typesEl.addEventListener('click', (event) => {
     const btn = event.target.closest('[data-type]');
     if (!btn) return;
     selectType(btn.dataset.type);
-    if (!state.slots.length) load();
-  });
-
-  // Arrowing through the radios fires change and never click, so without this the chosen type and
-  // the checked radio would quietly disagree.
-  typesEl.addEventListener('change', (event) => {
-    const radio = event.target;
-    if (!radio || radio.type !== 'radio' || !radio.value) return;
-    selectType(radio.value);
     if (!state.slots.length) load();
   });
 
