@@ -1,19 +1,29 @@
 ---
-import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
 import Recommendation from '../../components/Recommendation.astro';
 import { site } from '../../data/site.js';
-import { sessionTypes } from '../../data/sessions.js';
+import { sessionTypesFor } from '../../data/sessions.js';
 import {
-  helpWith,
-  experience,
-  earlierRoles,
   recommendations,
   homeRecommendations,
+  recommenderUrls,
   orgUrls,
   earlierOrgUrls,
-  recommenderUrls
+  helpWithFor,
+  experienceFor,
+  earlierRolesFor
 } from '../../data/resume.js';
+import { localeFromPath } from '../../i18n/config.mjs';
+import { translator } from '../../i18n/ui.mjs';
+
+// Reads the language from the path itself, exactly as Base does, so one component serves all three
+// routes. The CV prose comes per language; company names, people and game titles do not.
+const locale = localeFromPath(Astro.url.pathname);
+const t = translator(locale);
+const sessionTypes = sessionTypesFor(locale);
+const helpWith = helpWithFor(locale);
+const experience = experienceFor(locale);
+const earlierRoles = earlierRolesFor(locale);
 
 // Two here, the rest at /recommendations/. Order follows the source array, so Mike comes first —
 // the employer-side sentence is the one worth reading before the others.
@@ -24,23 +34,23 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
   <section>
     <div class="grid md:grid-cols-[1fr_auto]">
       <div class="px-[var(--pad)] pt-20 pb-14">
-        <p class="mono text-brand">Independent operator</p>
+        <p class="mono text-brand">{t('home.eyebrow')}</p>
         <h1 class="mt-6 max-w-[18ch] text-[clamp(2.6rem,7.5vw,6.5rem)] font-medium">
-          Strategy / Operations / Production — from scope to ship
+          {t('home.title')}
         </h1>
         <div class="mt-12 flex flex-wrap gap-3">
-          <Cta href="/schedule/" label="Schedule 1:1" />
-          <Cta href={site.resume} label="Download Résumé" arrow={false} download />
+          <Cta href="/schedule/" label={t('cta.schedule')} />
+          <Cta href={site.resume} label={t('cta.resume')} arrow={false} download />
         </div>
         <p class="mono mt-10 max-w-[54rem] text-balance">
-          <span class="text-brand">All products will remain a mirror, a reflection of the values of their creators, and will attract an audience that resonates with these values, whether explicit or implicit.</span>
+          <span class="text-brand">{t('home.motto')}</span>
         </p>
       </div>
       <div class="px-[var(--pad)] pb-14 pt-10 md:w-[22rem] md:pt-20">
         <dl class="mono grid gap-6 text-muted">
-          <div><dt>Location</dt><dd class="mt-2 whitespace-pre-line text-foreground">{site.location}</dd></div>
+          <div><dt>{t('footer.location')}</dt><dd class="mt-2 whitespace-pre-line text-foreground">{site.location}</dd></div>
           <div>
-            <dt>Availability</dt>
+            <dt>{t('footer.availability')}</dt>
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.availability.map((item) => (
@@ -50,7 +60,7 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
             </dd>
           </div>
           <div>
-            <dt>Languages</dt>
+            <dt>{t('fact.languages')}</dt>
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.languages.map((lang) => (
@@ -60,7 +70,7 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
             </dd>
           </div>
           <div>
-            <dt>Off the clock</dt>
+            <dt>{t('fact.offClock')}</dt>
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
                 {site.offClock.map((item) => (
@@ -95,9 +105,9 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
   <!-- what I can help -->
   <section id="expertise">
     <div class="px-[var(--pad)] pt-14">
-      <p class="mono text-brand">Expertise</p>
+      <p class="mono text-brand">{t('nav.expertise')}</p>
       <h2 class="mt-4 max-w-[26ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
-        What the work involves
+        {t('home.expertise.title')}
       </h2>
     </div>
     <ul class="grid gap-x-12 gap-y-6 px-[var(--pad)] pt-8 pb-16 md:grid-cols-2">
@@ -124,8 +134,8 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
   <!-- experience -->
   <section id="experience">
     <div class="px-[var(--pad)] pt-14">
-      <p class="mono text-brand">Experience</p>
-      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">Where the work happens</h2>
+      <p class="mono text-brand">{t('nav.experience')}</p>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">{t('home.experience.title')}</h2>
     </div>
     {
       experience.map((job, i) => (
@@ -236,8 +246,8 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
   <!-- recommendations -->
   <section id="recommendations">
     <div class="px-[var(--pad)] pt-14">
-      <p class="mono text-brand">Recommendations</p>
-      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">What colleagues say</h2>
+      <p class="mono text-brand">{t('reco.eyebrow')}</p>
+      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">{t('home.recommendations.title')}</h2>
     </div>
     <div class="grid md:grid-cols-2">
       {
@@ -253,7 +263,7 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
       }
     </div>
     <div class="px-[var(--pad)] py-10">
-      <Cta href="/recommendations/" label="recommendations" />
+      <Cta href="/recommendations/" label={t('footer.recommendations')} />
     </div>
   </section>
 
@@ -262,29 +272,28 @@ const featured = recommendations.filter((r) => homeRecommendations.includes(r.au
   <section id="contacts">
     <div class="flex flex-col items-start gap-8 px-[var(--pad)] py-16 md:flex-row md:items-end md:justify-between">
       <div>
-        <p class="mono text-brand">Pro Bono</p>
+        <p class="mono text-brand">{t('footer.proBono')}</p>
         <h2 class="mt-4 max-w-[18ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
-          Let’s talk — book a 30-minute call
+          {t('home.proBono.title')}
         </h2>
         <!-- What pro bono means here, in two lines: not a discount on a service, but time given. -->
         <p class="mt-4 max-w-[46ch] text-secondary">
-          Free, and no strings — this is time set aside to help, not a service being sold. All I ask
-          is something real to work on.
+          {t('home.proBono.sub')}
         </p>
       </div>
-      <Cta href="/schedule/" label="Schedule 1:1" />
+      <Cta href="/schedule/" label={t('cta.schedule')} />
     </div>
     <!-- What the three sessions are, not a way to choose one: choosing happens on the schedule,
          where the calendar and the form are. This is the invitation, and the button is the door. -->
     <div class="grid gap-5 px-[var(--pad)] pb-16 md:grid-cols-3">
       {
-        sessionTypes.map((t) => (
+        sessionTypes.map((session) => (
           <div class="hair grid content-start gap-3 p-5">
             <div class="flex items-baseline justify-between gap-4">
-              <h3 class="text-lg font-medium">{t.audience}</h3>
-              <span class="mono text-muted">{t.minutes} min</span>
+              <h3 class="text-lg font-medium">{session.audience}</h3>
+              <span class="mono text-muted">{session.minutes} min</span>
             </div>
-            <p class="text-sm text-secondary">{t.description}</p>
+            <p class="text-sm text-secondary">{session.description}</p>
           </div>
         ))
       }

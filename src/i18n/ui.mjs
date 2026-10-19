@@ -104,6 +104,20 @@ export const ui = {
       'I’ll give it proper attention, and you’ll hear back by email either way — that part I promise.',
     'sched.done.join': ' The link to join comes with it.',
 
+    // Home. The section eyebrows reuse the nav's words; the fact labels reuse the footer's.
+    'home.eyebrow': 'Independent operator',
+    'home.title': 'Strategy / Operations / Production — from scope to ship',
+    'home.motto':
+      'All products will remain a mirror, a reflection of the values of their creators, and will attract an audience that resonates with these values, whether explicit or implicit.',
+    'home.expertise.title': 'What the work involves',
+    'home.experience.title': 'Where the work happens',
+    'home.recommendations.title': 'What colleagues say',
+    'home.proBono.title': 'Let’s talk — book a 30-minute call',
+    'home.proBono.sub':
+      'Free, and no strings — this is time set aside to help, not a service being sold. All I ask is something real to work on.',
+    'fact.languages': 'Languages',
+    'fact.offClock': 'Off the clock',
+
     'privacy.eyebrow': 'Privacy',
     'privacy.title': 'Privacy',
     'privacy.intro': 'I keep only what I need to reply to you, and nothing here tracks you.',
@@ -210,6 +224,19 @@ export const ui = {
     'sched.done.next':
       'Я уделю этому должное внимание, и вы в любом случае получите ответ по почте — это я обещаю.',
     'sched.done.join': ' Ссылка для подключения придёт вместе с ним.',
+
+    'home.eyebrow': 'Независимый оператор',
+    'home.title': 'Стратегия / Операции / Производство — от замысла до выпуска',
+    'home.motto':
+      'Любой продукт остаётся зеркалом — отражением ценностей своих создателей, и притягивает аудиторию, которой эти ценности откликаются, явно или неявно.',
+    'home.expertise.title': 'Из чего состоит работа',
+    'home.experience.title': 'Где происходит работа',
+    'home.recommendations.title': 'Что говорят коллеги',
+    'home.proBono.title': 'Давайте поговорим — запишитесь на 30 минут',
+    'home.proBono.sub':
+      'Бесплатно и без условий — это время, отведённое, чтобы помочь, а не услуга на продажу. Прошу об одном: чтобы было над чем работать по-настоящему.',
+    'fact.languages': 'Языки',
+    'fact.offClock': 'Вне работы',
 
     'privacy.eyebrow': 'Конфиденциальность',
     'privacy.title': 'Конфиденциальность',
@@ -318,6 +345,19 @@ export const ui = {
     'sched.done.next':
       'Я ўдзялю гэтаму належную ўвагу, і вы ў любым выпадку атрымаеце адказ па пошце — гэта я абяцаю.',
     'sched.done.join': ' Спасылка для далучэння прыйдзе разам з ім.',
+
+    'home.eyebrow': 'Незалежны аператар',
+    'home.title': 'Стратэгія / Аперацыі / Вытворчасць — ад задумы да выпуску',
+    'home.motto':
+      'Любы прадукт застаецца люстэркам — адлюстраваннем каштоўнасцей сваіх стваральнікаў, і прыцягвае аўдыторыю, якой гэтыя каштоўнасці адгукаюцца, яўна ці няяўна.',
+    'home.expertise.title': 'З чаго складаецца праца',
+    'home.experience.title': 'Дзе адбываецца праца',
+    'home.recommendations.title': 'Што кажуць калегі',
+    'home.proBono.title': 'Давайце пагаворым — запішыцеся на 30 хвілін',
+    'home.proBono.sub':
+      'Бясплатна і без умоваў — гэта час, адведзены, каб дапамагчы, а не паслуга на продаж. Прашу толькі аднаго: каб было над чым працаваць па-сапраўднаму.',
+    'fact.languages': 'Мовы',
+    'fact.offClock': 'Па-за працай',
 
     'privacy.eyebrow': 'Прыватнасць',
     'privacy.title': 'Прыватнасць',

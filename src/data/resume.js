@@ -1,129 +1,352 @@
 // Résumé content — sourced from kozel-resume-2026-10-15.pdf. Edit freely.
+//
+// The prose is written three times; the proper nouns — organisations, people, places, game and
+// event titles — are written once, because they keep their own name. `*For(locale)` gives one
+// language's view; the plain exports are English, for anything that is not a page. A language that
+// is missing a line falls back to English rather than going blank.
 
-export const helpWith = [
-  'Running operations across distributed, multi-entity teams',
-  'Putting AI and automation to work in real delivery — not slide decks',
-  'Turning strategy into scope, priorities, and shipped products',
-  'Structuring and staffing teams for the work at hand',
-  'Forecasting risks and steering teams through a crisis',
-  'Keeping the numbers honest — P&L, budgets, and “misc” spend',
-  'Building processes and tools people actually love',
-  'Aligning product, design, engineering, and art around one plan'
-];
+const helpWithText = {
+  en: [
+    'Running operations across distributed, multi-entity teams',
+    'Putting AI and automation to work in real delivery — not slide decks',
+    'Turning strategy into scope, priorities, and shipped products',
+    'Structuring and staffing teams for the work at hand',
+    'Forecasting risks and steering teams through a crisis',
+    'Keeping the numbers honest — P&L, budgets, and “misc” spend',
+    'Building processes and tools people actually love',
+    'Aligning product, design, engineering, and art around one plan'
+  ],
+  ru: [
+    'Операционная работа в распределённых командах и нескольких юрлицах',
+    'ИИ и автоматизация в реальной работе — а не в презентациях',
+    'Превращение стратегии в объём, приоритеты и выпущенные продукты',
+    'Структура и подбор команд под конкретную задачу',
+    'Прогноз рисков и вывод команд из кризиса',
+    'Честные цифры — P&L, бюджеты и «прочие» расходы',
+    'Процессы и инструменты, которыми люди действительно пользуются',
+    'Согласование продукта, дизайна, разработки и арта вокруг одного плана'
+  ],
+  be: [
+    'Аперацыйная праца ў размеркаваных камандах і некалькіх юрыдычных асобах',
+    'ШІ і аўтаматызацыя ў рэальнай працы — а не ў прэзентацыях',
+    'Ператварэнне стратэгіі ў аб’ём, прыярытэты і выпушчаныя прадукты',
+    'Структура і падбор каманд пад пэўную задачу',
+    'Прагноз рызык і вывад каманд з крызісу',
+    'Сумленныя лічбы — P&L, бюджэты і «іншыя» выдаткі',
+    'Працэсы і інструменты, якімі людзі сапраўды карыстаюцца',
+    'Узгадненне прадукту, дызайну, распрацоўкі і арта вакол аднаго плана'
+  ]
+};
 
-export const experience = [
+const experienceText = [
   {
-    role: 'Director of Operations',
+    role: { en: 'Director of Operations', ru: 'Директор по операциям', be: 'Дырэктар па аперацыях' },
     org: 'Magic Media',
-    where: 'Ireland',
-    when: 'Feb 2024 – Sep 2025',
-    points: [
-      'Led operations across a few legal entities for ~20 AA+ titles.',
-      'Steered P&L to bring transparency to “misc” expenses with no clear ROI, saving R&D budget.',
-      'Sunset “pet” projects with no path to production.',
-      'Optimized bench mgmt reducing idle time w/ dynamic talent pooling from cross-project staffing.',
-      'Standardized Jira workflows for a number of projects reducing cross-team dependencies.'
-    ]
+    where: { en: 'Ireland', ru: 'Ирландия', be: 'Ірландыя' },
+    when: { en: 'Feb 2024 – Sep 2025', ru: 'фев 2024 – сен 2025', be: 'лют 2024 – вер 2025' },
+    points: {
+      en: [
+        'Led operations across a few legal entities for ~20 AA+ titles.',
+        'Steered P&L to bring transparency to “misc” expenses with no clear ROI, saving R&D budget.',
+        'Sunset “pet” projects with no path to production.',
+        'Optimized bench mgmt reducing idle time w/ dynamic talent pooling from cross-project staffing.',
+        'Standardized Jira workflows for a number of projects reducing cross-team dependencies.'
+      ],
+      ru: [
+        'Вёл операционную работу в нескольких юрлицах для ~20 проектов уровня AA+.',
+        'Вывел P&L в прозрачность по «прочим» расходам без явной отдачи, сэкономив бюджет R&D.',
+        'Закрыл «любимые» проекты без пути в производство.',
+        'Оптимизировал управление скамом, снизив простой за счёт динамического пула талантов из кросс-проектного штата.',
+        'Стандартизировал рабочие процессы Jira для ряда проектов, снизив кросс-командные зависимости.'
+      ],
+      be: [
+        'Вёў аперацыйную працу ў некалькіх юрыдычных асобах для ~20 праектаў узроўню AA+.',
+        'Вывеў P&L у празрыстасць па «іншых» выдатаках без яўнай аддачы, зэканоміўшы бюджэт R&D.',
+        'Закрыў «любімыя» праекты без шляху ў вытворчасць.',
+        'Аптымізаваў кіраванне скамам, знізіўшы прастой за кошт дынамічнага пула талентаў з крос-праектнага штату.',
+        'Стандартызаваў працэсы Jira для шэрагу праектаў, знізіўшы крос-камандныя залежнасці.'
+      ]
+    }
   },
   {
-    role: 'Director of Production',
+    role: { en: 'Director of Production', ru: 'Директор по производству', be: 'Дырэктар па вытворчасці' },
     org: 'Fracture Labs',
-    where: 'Singapore',
-    when: 'Jun 2022 – Feb 2024',
-    intro: 'Worked on Decimated, AA+, an MMO FPS for PC.',
-    points: [
-      'Reworked & phased out product scope (multiple iterations).',
-      'Streamlined team structure to re-define responsibilities and pipelines.',
-      'Built & managed: Engineering, Design, DevOps, Tech Art, Animation, VFX, Recruitment.',
-      'Introduced new studio task management & automation tools.',
-      'Introduced & maintained Agile as continuous improvement practices.',
-      'Reworked knowledge-base structure, fueling its quality & depth.'
-    ]
+    where: { en: 'Singapore', ru: 'Сингапур', be: 'Сінгапур' },
+    when: { en: 'Jun 2022 – Feb 2024', ru: 'июн 2022 – фев 2024', be: 'чэр 2022 – лют 2024' },
+    intro: {
+      en: 'Worked on Decimated, AA+, an MMO FPS for PC.',
+      ru: 'Работал над Decimated — AA+, MMO FPS для PC.',
+      be: 'Працаваў над Decimated — AA+, MMO FPS для PC.'
+    },
+    points: {
+      en: [
+        'Reworked & phased out product scope (multiple iterations).',
+        'Streamlined team structure to re-define responsibilities and pipelines.',
+        'Built & managed: Engineering, Design, DevOps, Tech Art, Animation, VFX, Recruitment.',
+        'Introduced new studio task management & automation tools.',
+        'Introduced & maintained Agile as continuous improvement practices.',
+        'Reworked knowledge-base structure, fueling its quality & depth.'
+      ],
+      ru: [
+        'Переработал и поэтапно свёл продуктовый объём (несколько итераций).',
+        'Выстроил структуру команды заново, переопределив зоны ответственности и пайплайны.',
+        'Собрал и управлял: разработка, дизайн, DevOps, техарт, анимация, VFX, рекрутинг.',
+        'Внедрил новые инструменты управления задачами и автоматизации в студии.',
+        'Внедрил и поддерживал Agile как практику непрерывного улучшения.',
+        'Переработал структуру базы знаний, что подняло её качество и глубину.'
+      ],
+      be: [
+        'Перапрацаваў і паэтапна звёў прадуктовы аб’ём (некалькі ітэрацый).',
+        'Пабудаваў структуру каманды нанова, пераакрэсліўшы зоны адказнасці і пайплайны.',
+        'Сабраў і кіраваў: распрацоўка, дызайн, DevOps, тэхарт, анімацыя, VFX, рэкрутынг.',
+        'Укараніў новыя інструменты кіравання задачамі і аўтаматызацыі ў студыі.',
+        'Укараніў і падтрымліваў Agile як практыку бесперапыннага паляпшэння.',
+        'Перапрацаваў структуру базы ведаў, што падняло яе якасць і глыбіню.'
+      ]
+    }
   },
   {
-    role: 'Game Producer',
+    role: { en: 'Game Producer', ru: 'Гейм-продюсер', be: 'Гейм-прадзюсар' },
     org: 'CM Games',
-    where: 'Estonia',
-    when: 'Mar 2022 – Jul 2022',
-    points: [
-      'Revamped LiveOps leading global updates optimizing live events, car economies & balancing, IAP pricing, etc.',
-      'Reduced rollout delays from 3 weeks to healthy “2 days” with kill-switch feature enabled (multi-platform updates).'
-    ],
-    released: ['a number of updates to Nitro Nation, a popular game in the Racing genre']
+    where: { en: 'Estonia', ru: 'Эстония', be: 'Эстонія' },
+    when: { en: 'Mar 2022 – Jul 2022', ru: 'мар 2022 – июл 2022', be: 'сак 2022 – ліп 2022' },
+    points: {
+      en: [
+        'Revamped LiveOps leading global updates optimizing live events, car economies & balancing, IAP pricing, etc.',
+        'Reduced rollout delays from 3 weeks to healthy “2 days” with kill-switch feature enabled (multi-platform updates).'
+      ],
+      ru: [
+        'Переработал LiveOps, ведя глобальные обновления: живые события, экономика машин и балансировка, цены IAP и т. д.',
+        'Сократил задержки релизов с 3 недель до здоровых «2 дней», включив kill-switch (обновления для нескольких платформ).'
+      ],
+      be: [
+        'Перапрацаваў LiveOps, вёў глабальныя абнаўленні: жывыя падзеі, эканоміка машын і балансаванне, кошты IAP і г. д.',
+        'Скараціў затрымкі рэлізаў з 3 тыдняў да здаровых «2 дзён», уключыўшы kill-switch (абнаўленні для некалькіх платформ).'
+      ]
+    },
+    released: {
+      en: ['a number of updates to Nitro Nation, a popular game in the Racing genre'],
+      ru: ['ряд обновлений для Nitro Nation — популярной игры в жанре гонок'],
+      be: ['шэраг абнаўленняў для Nitro Nation — папулярнай гульні ў жанры гонак']
+    }
   },
   {
-    role: 'Co-founder',
+    role: { en: 'Co-founder', ru: 'Соучредитель', be: 'Сузаснавальнік' },
     org: 'Payara Games',
-    where: 'Belarus',
-    when: 'Mar 2020 – Mar 2022',
-    points: [
-      'Pioneered award-winning survival horror game development in Eastern Europe.',
-      'Developed 5+ mobile & web games powered by the latest NFC and smart chip technologies.'
-    ],
-    released: [
-      {
-        title: 'a PC game in the Horror genre inspired by P.T. on Steam',
-        notes: [
-          '“Best PC Game” & “Best Art” @ Games Gathering',
-          '“True Indie” @ BelGameDev (nominated by WarHorse Studios)',
-          '“People’s Choice” & “Best Game” @ WebCon'
-        ]
-      },
-      {
-        title: 'a PC game in the Adventure / Horror genres on Steam',
-        notes: ['“The Finalist” @ Unreal Engine Dev Contest']
-      },
-      '5 mobile & web games in the Charitable Gaming / Lottery / Casino genres powered by NFC'
-    ]
+    where: { en: 'Belarus', ru: 'Беларусь', be: 'Беларусь' },
+    when: { en: 'Mar 2020 – Mar 2022', ru: 'мар 2020 – мар 2022', be: 'сак 2020 – сак 2022' },
+    points: {
+      en: [
+        'Pioneered award-winning survival horror game development in Eastern Europe.',
+        'Developed 5+ mobile & web games powered by the latest NFC and smart chip technologies.'
+      ],
+      ru: [
+        'Запустил отмеченную наградами разработку survival horror в Восточной Европе.',
+        'Разработал 5+ мобильных и веб-игр на новейших NFC и smart-chip технологиях.'
+      ],
+      be: [
+        'Запусціў адзначаную ўзнагародамі распрацоўку survival horror ва Усходняй Еўропе.',
+        'Распрацаваў 5+ мабільных і вэб-гульняў на найноўшых NFC і smart-chip тэхналогіях.'
+      ]
+    },
+    released: {
+      en: [
+        {
+          title: 'a PC game in the Horror genre inspired by P.T. on Steam',
+          notes: [
+            '“Best PC Game” & “Best Art” @ Games Gathering',
+            '“True Indie” @ BelGameDev (nominated by WarHorse Studios)',
+            '“People’s Choice” & “Best Game” @ WebCon'
+          ]
+        },
+        {
+          title: 'a PC game in the Adventure / Horror genres on Steam',
+          notes: ['“The Finalist” @ Unreal Engine Dev Contest']
+        },
+        '5 mobile & web games in the Charitable Gaming / Lottery / Casino genres powered by NFC'
+      ],
+      ru: [
+        {
+          title: 'PC-игра в жанре хоррор, вдохновлённая P.T., в Steam',
+          notes: [
+            '«Лучшая PC-игра» и «Лучший арт» @ Games Gathering',
+            '«True Indie» @ BelGameDev (номинация от WarHorse Studios)',
+            '«Приз зрительских симпатий» и «Лучшая игра» @ WebCon'
+          ]
+        },
+        {
+          title: 'PC-игра в жанрах приключение / хоррор в Steam',
+          notes: ['«Финалист» @ Unreal Engine Dev Contest']
+        },
+        '5 мобильных и веб-игр в жанрах благотворительных игр / лотерей / казино на NFC'
+      ],
+      be: [
+        {
+          title: 'PC-гульня ў жанры хорар, натхнёная P.T., у Steam',
+          notes: [
+            '«Лепшая PC-гульня» і «Лепшы арт» @ Games Gathering',
+            '«True Indie» @ BelGameDev (намінацыя ад WarHorse Studios)',
+            '«Прыз гледачоў» і «Лепшая гульня» @ WebCon'
+          ]
+        },
+        {
+          title: 'PC-гульня ў жанрах прыгоды / хорар у Steam',
+          notes: ['«Фіналіст» @ Unreal Engine Dev Contest']
+        },
+        '5 мабільных і вэб-гульняў у жанрах дабрачынных гульняў / латарэй / казіно на NFC'
+      ]
+    }
   },
   {
-    role: 'Co-founder',
+    role: { en: 'Co-founder', ru: 'Соучредитель', be: 'Сузаснавальнік' },
     org: 'Abelana VR Productions, Inc.',
-    where: 'United States',
-    when: 'Mar 2018 – Mar 2022',
-    points: [
-      'Pioneered & developed educational VR experiences and tools.',
-      'Developed a platform & 5+ games/apps blending science, education, and latest visionary technologies.'
-    ],
-    released: [
-      'a VR game featuring Atoms and Orbitals + mobile companion app',
-      'a VR game featuring Speed Of Light + mobile game',
-      'a VR game featuring String Theory',
-      'a distribution platform for educational VR apps (including 3rd-party ones)',
-      'a VR experience featuring Romina Russell, the US writer and author of famous Zodiac series',
-      'a VR app for online metaverse collaboration'
-    ]
+    where: { en: 'United States', ru: 'США', be: 'ЗША' },
+    when: { en: 'Mar 2018 – Mar 2022', ru: 'мар 2018 – мар 2022', be: 'сак 2018 – сак 2022' },
+    points: {
+      en: [
+        'Pioneered & developed educational VR experiences and tools.',
+        'Developed a platform & 5+ games/apps blending science, education, and latest visionary technologies.'
+      ],
+      ru: [
+        'Запустил и развивал образовательные VR-опыты и инструменты.',
+        'Разработал платформу и 5+ игр/приложений, соединяющих науку, образование и новейшие технологии.'
+      ],
+      be: [
+        'Запусціў і развіваў адукацыйныя VR-вопыты і інструменты.',
+        'Распрацаваў платформу і 5+ гульняў/прыкладанняў, што спалучаюць навуку, адукацыю і найноўшыя тэхналогіі.'
+      ]
+    },
+    released: {
+      en: [
+        'a VR game featuring Atoms and Orbitals + mobile companion app',
+        'a VR game featuring Speed Of Light + mobile game',
+        'a VR game featuring String Theory',
+        'a distribution platform for educational VR apps (including 3rd-party ones)',
+        'a VR experience featuring Romina Russell, the US writer and author of famous Zodiac series',
+        'a VR app for online metaverse collaboration'
+      ],
+      ru: [
+        'VR-игра про атомы и орбитали + мобильное приложение-компаньон',
+        'VR-игра про скорость света + мобильная игра',
+        'VR-игра про теорию струн',
+        'платформа распространения образовательных VR-приложений (включая сторонние)',
+        'VR-опыт с Роминой Расселл — американской писательницей, автором известной серии Zodiac',
+        'VR-приложение для онлайн-коллаборации в метавёрсе'
+      ],
+      be: [
+        'VR-гульня пра атамы і арбіталі + мабільнае прыкладанне-кампаньён',
+        'VR-гульня пра хуткасць святла + мабільная гульня',
+        'VR-гульня пра тэорыю струн',
+        'платформа распаўсюду адукацыйных VR-прыкладанняў (уключаючы староннія)',
+        'VR-вопыт з Рамінай Расэл — амерыканскай пісьменніцай, аўтарам вядомай серыі Zodiac',
+        'VR-прыкладанне для анлайн-калабарацыі ў метасусвеце'
+      ]
+    }
   },
   {
-    role: 'Co-founder',
+    role: { en: 'Co-founder', ru: 'Соучредитель', be: 'Сузаснавальнік' },
     org: 'Iridescent Studio, Ltd.',
-    where: 'Belarus',
-    when: 'Mar 2016 – Mar 2022',
-    points: [
-      'Pioneered subscription monetization in mobile gaming, mastered with A/B testing & predictive analytics.',
-      'Developed 10+ games/apps blending entertainment, brain science, and mindfulness.'
-    ],
-    released: [
-      '3 mobile games in the Board game genre',
-      'a mobile app with 50+ different brain-training mini-games approved by neuroscientists',
-      'an AA mobile multiplayer online game in the RTS genre',
-      'a web platform for skill-based cash mobile games',
-      '10+ hyper-casual games with various gameplay mechanics',
-      '2 mental health mobile gamified apps with hundreds of unique meditation content items',
-      '2 emoji apps featuring celebrities (Zayn Malik, Kevin Durant)'
-    ]
+    where: { en: 'Belarus', ru: 'Беларусь', be: 'Беларусь' },
+    when: { en: 'Mar 2016 – Mar 2022', ru: 'мар 2016 – мар 2022', be: 'сак 2016 – сак 2022' },
+    points: {
+      en: [
+        'Pioneered subscription monetization in mobile gaming, mastered with A/B testing & predictive analytics.',
+        'Developed 10+ games/apps blending entertainment, brain science, and mindfulness.'
+      ],
+      ru: [
+        'Запустил подписочную монетизацию в мобильных играх, отточив её на A/B-тестах и предиктивной аналитике.',
+        'Разработал 10+ игр/приложений на стыке развлечения, нейронауки и осознанности.'
+      ],
+      be: [
+        'Запусціў падпісную манетызацыю ў мабільных гульнях, адточваючы яе на A/B-тэстах і прэдыктыўнай аналітыцы.',
+        'Распрацаваў 10+ гульняў/прыкладанняў на стыку забавы, нейранавукі і ўсвядомленасці.'
+      ]
+    },
+    released: {
+      en: [
+        '3 mobile games in the Board game genre',
+        'a mobile app with 50+ different brain-training mini-games approved by neuroscientists',
+        'an AA mobile multiplayer online game in the RTS genre',
+        'a web platform for skill-based cash mobile games',
+        '10+ hyper-casual games with various gameplay mechanics',
+        '2 mental health mobile gamified apps with hundreds of unique meditation content items',
+        '2 emoji apps featuring celebrities (Zayn Malik, Kevin Durant)'
+      ],
+      ru: [
+        '3 мобильные игры в жанре настольных',
+        'мобильное приложение с 50+ мини-играми для тренировки мозга, одобренное нейробиологами',
+        'AA-игра в жанре RTS с онлайн-мультиплеером для мобильных',
+        'веб-платформа для мобильных игр на деньги за навык',
+        '10+ гиперказуальных игр с разными механиками',
+        '2 геймифицированных приложения о ментальном здоровье с сотнями уникальных медитаций',
+        '2 эмодзи-приложения с участием знаменитостей (Zayn Malik, Kevin Durant)'
+      ],
+      be: [
+        '3 мабільныя гульні ў жанры настольных',
+        'мабільнае прыкладанне з 50+ міні-гульнямі для трэніроўкі мозгу, ухваленае нейрабіёлагамі',
+        'AA-гульня ў жанры RTS з анлайн-мультыплэерам для мабільных',
+        'вэб-платформа для мабільных гульняў на грошы за навык',
+        '10+ гіперказуальных гульняў з рознымі механікамі',
+        '2 гейміфікаваныя прыкладанні пра ментальнае здароўе з сотнямі ўнікальных медытацый',
+        '2 эмодзі-прыкладанні з удзелам зорак (Zayn Malik, Kevin Durant)'
+      ]
+    }
   }
 ];
 
-export const earlierRoles = [
-  { role: 'Project Manager', org: 'Omertex', when: 'Aug 2014 – Feb 2016' },
-  { role: 'Project Manager', org: 'Cactus', when: 'Sep 2011 – Aug 2012' },
-  { role: 'Business Development Manager', org: 'Artezio', when: 'Aug 2012 – Jul 2013' },
-  { role: 'Business Development Manager', org: 'Svyaznoy', when: 'Oct 2009 – Mar 2011' }
+const earlierRolesText = [
+  {
+    role: { en: 'Project Manager', ru: 'Проектный менеджер', be: 'Праектны менеджар' },
+    org: 'Omertex',
+    when: { en: 'Aug 2014 – Feb 2016', ru: 'авг 2014 – фев 2016', be: 'жні 2014 – лют 2016' }
+  },
+  {
+    role: { en: 'Project Manager', ru: 'Проектный менеджер', be: 'Праектны менеджар' },
+    org: 'Cactus',
+    when: { en: 'Sep 2011 – Aug 2012', ru: 'сен 2011 – авг 2012', be: 'вер 2011 – жні 2012' }
+  },
+  {
+    role: { en: 'Business Development Manager', ru: 'Менеджер по развитию бизнеса', be: 'Менеджар па развіцці бізнесу' },
+    org: 'Artezio',
+    when: { en: 'Aug 2012 – Jul 2013', ru: 'авг 2012 – июл 2013', be: 'жні 2012 – ліп 2013' }
+  },
+  {
+    role: { en: 'Business Development Manager', ru: 'Менеджер по развитию бизнеса', be: 'Менеджар па развіцці бізнесу' },
+    org: 'Svyaznoy',
+    when: { en: 'Oct 2009 – Mar 2011', ru: 'окт 2009 – мар 2011', be: 'кас 2009 – сак 2011' }
+  }
 ];
 
-// Ordered so each 2-up row pairs quotes of near-equal length — the section
-// tapers smoothly instead of jumping between tall and short rows.
+// One language out of a field that is written per language, or a name that is not.
+const pick = (value, locale) => (value && typeof value === 'object' && !Array.isArray(value) ? value[locale] ?? value.en : value);
+
+export const helpWithFor = (locale) => helpWithText[locale] ?? helpWithText.en;
+export const experienceFor = (locale) =>
+  experienceText.map((job) => ({
+    role: pick(job.role, locale),
+    org: job.org,
+    where: pick(job.where, locale),
+    when: pick(job.when, locale),
+    ...(job.intro ? { intro: pick(job.intro, locale) } : {}),
+    points: pick(job.points, locale),
+    ...(job.released ? { released: pick(job.released, locale) } : {})
+  }));
+export const earlierRolesFor = (locale) =>
+  earlierRolesText.map((job) => ({ role: pick(job.role, locale), org: job.org, when: pick(job.when, locale) }));
+
+// English, for anything that is not a page.
+export const helpWith = helpWithFor('en');
+export const experience = experienceFor('en');
+export const earlierRoles = earlierRolesFor('en');
+
+// The pair that carries the most on a first read: one from the employer side, and one on
+// leadership and team-building. Everyone else lives at /recommendations/ — a dozen quotes in a
+// grid is six rows, and each one is diluted by the one beside it.
+export const homeRecommendations = ['Mike Lindelsee', 'Mitzi McGilvray'];
+
+// Order of the quotes below is deliberate: each 2-up row pairs near-equal lengths, so the section
+// tapers smoothly instead of jumping between tall and short rows. They are other people's words
+// and are never translated — the frame around them is, the words are not.
 export const recommendations = [
   {
     quote: `As a true professional, Aliaksei made our cooperation in software development not only effective, clear and fast but also smooth and pleasant. He is extremely attentive to detail, passionate about the quality of each project, focused on the clients' needs and able to estimate most of the risks at the very first stage of planning. He's open to new information, constantly improves his skills and is eager to master new spheres and to become an even better professional. It has always been a pleasure to work with him on different projects, and I hope our cooperation will continue in future. I would definitely recommend Aliaksei for any position he is interested in, since he will be a valuable asset for every company in game or business software development.`,
@@ -174,11 +397,6 @@ export const recommendations = [
     author: 'Tatiana Sehen'
   }
 ];
-
-// The pair that carries the most on a first read: one from the employer side, and one on
-// leadership and team-building. Everyone else lives at /recommendations/ — a dozen quotes in a
-// grid is six rows, and each one is diluted by the one beside it.
-export const homeRecommendations = ['Mike Lindelsee', 'Mitzi McGilvray'];
 
 // Company sites, from the résumé PDF's hyperlinks.
 export const orgUrls = {
