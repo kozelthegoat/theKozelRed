@@ -75,7 +75,10 @@ import { site } from '../../data/site.js';
     <div class="grid gap-10 px-[var(--pad)] pt-8 pb-14 md:grid-cols-[1.6fr_1fr]" data-schedule>
       <div>
         <div data-step="slots">
-          <div class="flex items-center justify-between gap-4">
+          <!-- Top-aligned, not centred: this row is 26px tall because of the nav buttons, and a
+               centred label sat 8px below the Session label that opens the other column. Aligning
+               them is what makes the two headings read as one line across the page. -->
+          <div class="flex items-start justify-between gap-4">
             <p class="mono text-muted" data-month-label></p>
             <div class="flex items-center gap-3">
               <div class="flex items-center gap-0.5" data-month-nav>
@@ -231,6 +234,12 @@ import { site } from '../../data/site.js';
           <div class="flex flex-wrap gap-3">
             <button type="submit" class="btn mono">Send request</button>
           </div>
+          <!-- Quiet, and a line rather than a checkbox: the request is free, so a tick box would
+               read as a contract being signed. It still says plainly where the details go. -->
+          <p class="text-sm text-muted">
+            By sending, you agree to how your details are handled —
+            <a class="hover:text-brand" href="/privacy/">Privacy</a>.
+          </p>
         </form>
 
         <dialog data-step="done" class="req-done" aria-labelledby="done-heading">
