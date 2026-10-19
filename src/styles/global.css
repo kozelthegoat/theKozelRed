@@ -480,11 +480,18 @@ main > article:last-of-type {
   align-content: center;
   justify-items: center;
   gap: 1.5rem;
-  padding: 4rem var(--pad);
+  /* Four rem of vertical padding is right on a desktop and cavernous on a phone, where the quote
+     is the whole screen anyway. */
+  padding: 2rem var(--pad);
   text-align: center;
   opacity: 0;
   transition: opacity 0.5s var(--ease);
   pointer-events: none;
+}
+@media (min-width: 768px) {
+  .slide {
+    padding: 4rem var(--pad);
+  }
 }
 .slide.is-active { opacity: 1; pointer-events: auto; }
 
@@ -518,7 +525,7 @@ main > article:last-of-type {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0 var(--pad) 3rem;
+  padding: 0 var(--pad) 2rem;
 }
 .reco-bullet {
   font-family: var(--font-mono);
