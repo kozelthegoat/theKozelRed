@@ -161,6 +161,17 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
             <ul class="mt-4 grid gap-2 text-sm">
               <li class="whitespace-pre-line text-muted">{site.location}</li>
             </ul>
+            <p class="mono mt-6 text-muted">{t('footer.availability')}</p>
+            <ul class="mt-4 grid gap-2 text-sm">
+              {
+                site.availability.map((item) => (
+                  <li class="flex gap-2 text-muted">
+                    <span class="text-brand">–</span>
+                    <span>{item}</span>
+                  </li>
+                ))
+              }
+            </ul>
           </div>
           <div>
             <p class="mono text-muted">{t('footer.resources')}</p>
