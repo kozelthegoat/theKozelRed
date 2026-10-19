@@ -8,9 +8,10 @@ export const site = {
   renameYear: 2026,
   role: 'Strategy / Operations / Production',
   location: 'Minsk, Belarus — right now\nwhere next can be your call',
-  // One line, read as a fact beside the location. No link of its own: the hero's résumé
-  // button is the action, and a second call to action in the same block would compete.
-  availability: 'Open to part-time roles and contracts',
+  // Read as a fact beside the location, not as a pitch. No link of its own: the hero's résumé
+  // button is the action, and a second call to action in the same block would compete. The break
+  // is deliberate and rendered with whitespace-pre-line, as the location above it is.
+  availability: 'Open to part-time roles and contracts\nOpen to full-time roles with relocation',
   email: 'aliaksei.pashkel@gmail.com',
   resume: '/kozel-resume-2026-10-18.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],

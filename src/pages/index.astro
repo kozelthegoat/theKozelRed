@@ -26,9 +26,7 @@ const pad = (n) => String(n).padStart(2, '0');
       <div class="hair-t px-[var(--pad)] pb-14 pt-10 hair-l-md md:w-[22rem] md:border-t-0 md:pt-20">
         <dl class="mono grid gap-6 text-muted">
           <div><dt>Location</dt><dd class="mt-2 whitespace-pre-line text-foreground">{site.location}</dd></div>
-          <div><dt>Availability</dt><dd class="mt-2 text-foreground">{site.availability}</dd></div>
-          <div><dt>Services</dt><dd class="mt-2"><a class="text-foreground underline-offset-4 hover:text-brand hover:underline" href="/schedule/">Schedule 1:1</a></dd></div>
-          <div><dt>Resources</dt><dd class="mt-2 text-foreground">PDF, one page</dd></div>
+          <div><dt>Availability</dt><dd class="mt-2 whitespace-pre-line text-foreground">{site.availability}</dd></div>
           <div>
             <dt>Languages</dt>
             <dd class="mt-2 text-foreground">
@@ -266,7 +264,7 @@ const pad = (n) => String(n).padStart(2, '0');
       <div>
         <p class="mono text-brand">Résumé</p>
         <h2 class="mt-4 max-w-[22ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
-          The story, experience and all, on one page
+          The story, experience and all — in full
         </h2>
       </div>
       <Cta href={site.resume} label="Download Résumé" arrow={false} download />
