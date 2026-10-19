@@ -120,7 +120,30 @@ const statusTone = (s) =>
 
     <div class="px-[var(--pad)] pb-16">
       {total === 0 && (
-        <p class="text-muted">{!list.past && pastCount > 0 ? 'Nothing upcoming.' : 'Nothing yet.'}</p>
+        <div class="grid max-w-[52ch] gap-3 py-12">
+          <p class="mono text-brand">
+            {!list.past && pastCount > 0 ? 'Nothing upcoming' : 'No requests yet'}
+          </p>
+          {
+            !list.past && pastCount > 0 ? (
+              <p class="text-secondary">
+                Everything that has come in is in the past — {pastCount}{' '}
+                {pastCount === 1 ? 'request' : 'requests'} hidden by the filter, and the link above
+                shows them.
+              </p>
+            ) : (
+              <>
+                <p class="text-secondary">
+                  When someone books a 1:1 it lands here with everything they wrote — and you answer
+                  it from this page rather than from an inbox.
+                </p>
+                <p class="mono text-muted">
+                  <a class="hover:text-brand" href="/schedule/">See the booking page →</a>
+                </p>
+              </>
+            )
+          }
+        </div>
       )}
 
       {
