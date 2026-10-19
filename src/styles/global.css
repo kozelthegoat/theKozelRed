@@ -100,8 +100,12 @@ article[data-past],
   opacity: 0.55;
 }
 
-/* Every row now draws its own rule, so the pager's top border would double the last row's and
-   read as a taller last row. On mobile the cards have no closing rule, so there it stays. */
+/* The last row draws no rule of its own, and the pager draws none either — so nothing sits
+   between the table and "Page 1 of 1". Scoped to the table: on mobile the cards still need the
+   pager's rule to close the block. */
+.req-table tbody tr:last-child {
+  border-bottom: 0;
+}
 @media (min-width: 1024px) {
   .req-pager {
     border-top: 0;
@@ -343,6 +347,11 @@ dialog.req-done[open] {
 }
 .hair-t { border-top: var(--hair) solid var(--border); }
 .hair-b { border-bottom: var(--hair) solid var(--border); }
+
+/* Nothing draws a rule into the footer. One rule here rather than deleting a hair-b from every
+   page, and pages written later get it without anyone remembering. Unlayered on purpose: inside
+   @layer base it would lose to .hair-b, which is unlayered too. */
+main > :last-child { border-bottom: 0; }
 .hair-l { border-left: var(--hair) solid var(--border); }
 .hair-r { border-right: var(--hair) solid var(--border); }
 /* Left rule only from md up (for grid renderers that can't do custom md: variants) */
