@@ -30,7 +30,7 @@ export const POST = async ({ request }) => {
   const id = Number(form.get('id'));
   const status = String(form.get('status') || '');
   if (!Number.isInteger(id) || !STATUSES.has(status)) {
-    return jsonError('bad_request', 'Invalid input.');
+    return jsonError('bad_request', 'No valid input.');
   }
 
   // Read the row first: each notice depends on the status it is leaving, not the one it gets.

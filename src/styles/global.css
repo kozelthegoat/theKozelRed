@@ -278,13 +278,42 @@ dialog.req-done[open] {
   color: var(--brand);
 }
 
-/* Session radios. The browser's own control, in the accent — no custom dot to keep in sync. */
-.radio-dot {
-  accent-color: var(--brand);
+/* The controls the booking form asks with — the three session radios and the consent box. Drawn
+   here rather than left to the browser: a native control's ring is thicker than every other rule on
+   the page (the tiles, the fields), so left alone it reads as a different material. Checked is the
+   accent, which follows the day. */
+.control {
+  appearance: none;
+  -webkit-appearance: none;
   width: 1rem;
   height: 1rem;
   margin: 0;
   flex: none;
+  border: var(--hair) solid var(--border);
+  background: transparent;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.control[type='radio'] {
+  border-radius: 50%;
+}
+.control:checked {
+  border-color: var(--brand);
+}
+.control[type='radio']:checked {
+  /* The dot in the accent. A gradient rather than a pseudo-element, which a replaced element does
+     not reliably render. */
+  background-image: radial-gradient(circle, var(--brand) 0 34%, transparent 38%);
+}
+.control[type='checkbox']:checked {
+  background-color: var(--brand);
+}
+.control:focus-visible {
+  outline: var(--hair) solid var(--brand);
+  outline-offset: 2px;
+}
+/* Optically level with the first line of the label beside it, which the box otherwise sits above. */
+.control[type='checkbox'] {
+  margin-top: 0.2rem;
 }
 
 /* Icon button (calendar nav) */

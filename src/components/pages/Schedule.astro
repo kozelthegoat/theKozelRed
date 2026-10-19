@@ -210,7 +210,7 @@ const sessionTypes = sessionTypesFor(locale);
                       name="session-type"
                       value={session.id}
                       data-type={session.id}
-                      class="radio-dot"
+                      class="control"
                       checked={i === 0}
                     />
                     <span>{session.audience}</span>
@@ -253,7 +253,7 @@ const sessionTypes = sessionTypesFor(locale);
           <!-- A tick box, and above the button rather than below it: this is the thing being agreed
                to, not a note about what happens afterwards. -->
           <label class="flex items-start gap-2 text-sm text-muted">
-            <input type="checkbox" name="consent" required class="radio-dot mt-0.5" />
+            <input type="checkbox" name="consent" required class="control" />
             <span>{t('sched.consentBefore')}<a class="hover:text-brand" href={urlFor('privacy', locale)}>{t('sched.consentLink')}</a>.</span>
           </label>
           <div class="flex flex-wrap gap-3">

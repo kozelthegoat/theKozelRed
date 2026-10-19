@@ -13,7 +13,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // POST /api/requests — create a 1:1 request (no payment).
 export const POST = async ({ request, locals }) => {
   const db = env?.DB;
-  if (!db) return jsonError('unavailable', 'Booking is not available right now.', 503);
+  if (!db) return jsonError('unavailable', 'Please come back later — booking is not available right now.', 503);
 
   let body;
   try {
@@ -57,7 +57,7 @@ export const POST = async ({ request, locals }) => {
     taken: new Set()
   });
   if (!offered.some((s) => s.id === `${date}T${time}`)) {
-    return jsonError('slot_unavailable', 'That time is no longer available.', 409);
+    return jsonError('slot_unavailable', 'Please pick another time — that one is no longer available.', 409);
   }
 
   let id;
@@ -71,7 +71,7 @@ export const POST = async ({ request, locals }) => {
     id = info?.meta?.last_row_id;
   } catch (e) {
     if (/unique/i.test(String(e && e.message))) {
-      return jsonError('slot_taken', 'That time was just taken.', 409);
+      return jsonError('slot_taken', 'Please pick another time — that one was just taken.', 409);
     }
     throw e;
   }

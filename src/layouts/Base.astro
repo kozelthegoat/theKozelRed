@@ -123,6 +123,9 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
                 {isHome && (
                   <a class="transition-colors hover:text-foreground" href="/#experience">{t('nav.experience')}</a>
                 )}
+                {isHome && (
+                  <a class="transition-colors hover:text-foreground" href="/#recommendations">{t('footer.recommendations')}</a>
+                )}
                 {
                   hasNotes && (
                     <a class="transition-colors hover:text-foreground" href={`${prefixFor(locale)}/notes/`}>
