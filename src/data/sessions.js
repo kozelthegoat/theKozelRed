@@ -59,10 +59,10 @@ const types = [
       'A plan that doesn’t survive contact with reality'
     ],
     build: [
-      'The problem underneath the problem',
-      'What each option really costs',
-      'Your first move, and what it unlocks',
-      'Notes afterwards, so it survives the week'
+      'A deep dive into root cause underneath the problem',
+      'A discussion on trade-offs of decisions made',
+      'An upgrade on vision towards first move, and what it unlocks',
+      'The confidence to adapt and face reality with eyes open'
     ]
   }
 ];
