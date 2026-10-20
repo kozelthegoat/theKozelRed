@@ -317,9 +317,12 @@ dialog.req-done[open] {
   outline: var(--hair) solid var(--brand);
   outline-offset: 2px;
 }
-/* Optically level with the first line of the label beside it, which the box otherwise sits above. */
+/* Level with the line of the sentence beside it: the box is centred on the label's own line box.
+   `1lh` is that line box (the input inherits the label's font and line-height), so the box stays
+   put whatever the type size, and it cannot drift to the bottom of the line the way a fixed nudge
+   does — which is what made it read as sitting on a line of its own. */
 .control[type='checkbox'] {
-  margin-top: 0.2rem;
+  margin-top: calc((1lh - 1rem) / 2);
 }
 
 /* Icon button (calendar nav) */
