@@ -9,7 +9,6 @@ const types = [
   {
     id: 'intro',
     name: 'RE: Anything',
-    short: 'Anything',
     minutes: 30,
     description: {
       en: 'A short, no-agenda hello — to hear where you are, and what might come next.',
@@ -62,7 +61,6 @@ const types = [
   {
     id: 'career',
     name: 'RE: Career',
-    short: 'Career',
     minutes: 30,
     description: {
       en: 'Your résumé, your portfolio, and the story they’re not telling yet.',
@@ -115,7 +113,6 @@ const types = [
   {
     id: 'work',
     name: 'RE: Business',
-    short: 'Business',
     minutes: 30,
     description: {
       en: 'Your products, your programs, your tools, and the value you’re willing to deliver.',
