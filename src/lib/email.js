@@ -152,7 +152,7 @@ export async function sendBookingEmails(env, req) {
   const tableHtml = rows
     .map(
       ([k, v]) =>
-        `<tr><td class="muted" style="padding:5px 20px 5px 0;color:${MUTED};font-family:${MONO};font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;vertical-align:top;">${esc(k)}</td><td style="padding:5px 0;vertical-align:top;">${esc(v)}</td></tr>`
+        `<tr><td class="muted" style="padding:5px 20px 5px 0;color:${MUTED};font-family:${MONO};font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;vertical-align:top;">${esc(k)}</td><td style="padding:5px 0;vertical-align:top;white-space:nowrap;">${esc(v)}</td></tr>`
     )
     .join('');
 

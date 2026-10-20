@@ -479,7 +479,11 @@ if (cfgEl && root) {
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = false;
     submit.textContent = s.send;
-    stepForm.classList.add('hidden');
+    // Re-arm for a second request: forget the slot that was just sent (otherwise a new submit
+    // would quietly reuse it) and bring the details form back — it is visible from the start,
+    // so hiding it here left the page without a way to enter a new request.
+    state.slot = null;
+    stepForm.classList.remove('hidden');
     stepSlots.hidden = false;
     for (const chip of document.querySelectorAll('[data-time]')) {
       chip.setAttribute('aria-pressed', 'false');
