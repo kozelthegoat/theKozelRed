@@ -554,7 +554,9 @@ main > article:last-of-type {
 }
 @media (min-width: 768px) {
   .slide {
-    padding: 4rem var(--pad);
+    /* The extra top padding would only push the glyph away from the intro above
+       it; how much room the quote itself needs is the content's business. */
+    padding: 2.5rem var(--pad) 4rem;
   }
 }
 .slide.is-active { opacity: 1; pointer-events: auto; }
