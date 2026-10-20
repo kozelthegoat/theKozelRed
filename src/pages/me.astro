@@ -20,7 +20,7 @@ const COLUMNS = [
   { key: 'slot_date', label: 'When', sortable: true, width: '8.25rem' },
   { key: 'name', label: 'Name', sortable: true, width: '8rem' },
   { key: 'email', label: 'Email', sortable: true, width: '7.5rem' },
-  { key: 'type', label: 'Type', sortable: true, width: '4rem' },
+  { key: 'type', label: 'Type', sortable: true, width: '7.5rem' },
   { key: 'note', label: 'Message', sortable: false, wide: true },
   { key: 'created_at', label: 'Requested', sortable: true, width: '6rem' }
 ];
@@ -85,11 +85,6 @@ if (db) {
 const tzLabel = `${availability.timezone} (${zoneOffsetLabel(availability.timezone)})`;
 
 const typeName = (id) => TYPE_NAMES[id] || id;
-// Table-only label. It used to be the duration — 30/45/60 told the three types apart in almost
-// no width — but with every session at 30 minutes that column said the same thing on every row.
-// The short name takes the same space and still needs no lookup key; the full name is in the title.
-const TYPE_LABELS = Object.fromEntries(sessionTypes.map((t) => [t.id, t.short]));
-const typeShort = (id) => TYPE_LABELS[id] || id;
 const isPast = (d) => d < today;
 
 // Clicking the active column flips direction; a new column starts ascending. Either way
@@ -302,7 +297,7 @@ const statusTone = (s) =>
                         </a>
                       </td>
                       <td class="py-4 pr-4 whitespace-nowrap text-sm text-secondary">
-                        <span title={typeName(r.type)}>{typeShort(r.type)}</span>
+                        <span title={typeName(r.type)}>{typeName(r.type)}</span>
                       </td>
                       <td class="w-full py-4 pr-4 text-sm text-secondary">
                         {r.note ? (

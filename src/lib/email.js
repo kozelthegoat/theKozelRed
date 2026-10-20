@@ -143,9 +143,8 @@ export async function sendBookingEmails(env, req) {
     ['Name', req.name],
     ['Email', req.email],
     ['Session', `${typeName} · ${req.type.minutes} min`],
-    ...(sameClock ? [['Time', myClock]] : [['Their clock', theirClock], ['My clock', myClock]]),
-    ['Requested', requestedLine],
-    ['Request', `#${req.id ?? '—'}`]
+    ...(sameClock ? [['When', myClock]] : [['Their clock', theirClock], ['My clock', myClock]]),
+    ['Requested', requestedLine]
   ];
   const pad = Math.max(...rows.map(([k]) => k.length));
   const tableText = rows.map(([k, v]) => `${k.padEnd(pad)}  ${v}`).join('\n');
@@ -168,7 +167,7 @@ export async function sendBookingEmails(env, req) {
 <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:15px;line-height:1.5;">${tableHtml}</table>
 ${
   req.note
-    ? `<p class="muted" style="margin:24px 0 6px;color:${MUTED};font-family:${MONO};font-size:12px;letter-spacing:.06em;text-transform:uppercase;">Message</p>
+    ? `<p style="margin:24px 0 6px;color:${INK};font-family:${MONO};font-size:12px;letter-spacing:.06em;text-transform:uppercase;">Message</p>
 <p style="margin:0;padding:16px;background:#fff;color:${INK};border-left:3px solid ${brand};">${esc(req.note)}</p>`
     : ''
 }`,

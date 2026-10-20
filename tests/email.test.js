@@ -242,10 +242,11 @@ describe('sendBookingEmails', () => {
     );
 
     const mail = sent[0];
-    for (const label of ['Name', 'Email', 'Session', 'Their clock', 'Requested', 'Request', 'Message']) {
+    for (const label of ['Name', 'Email', 'Session', 'Their clock', 'Requested', 'Message']) {
       expect(mail.text).toContain(label);
     }
-    expect(mail.text).toContain('#42');
+    // The request number is deliberately not shown any more (we are not counting them).
+    expect(mail.text).not.toContain('#42');
     expect(mail.text).toContain('2026-10-17 · 15:00 UTC+2'); // their clock
     expect(mail.text).toContain('2026-10-17 · 16:00 UTC+3'); // mine
     expect(mail.text).toContain('2026-10-01 · 12:30 UTC+3'); // requested, in my clock
