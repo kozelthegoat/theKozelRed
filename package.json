@@ -10,6 +10,8 @@
     "preview": "npm run build && wrangler dev",
     "generate-types": "wrangler types",
     "deploy": "node scripts/deploy.mjs",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:backup": "node scripts/backup.mjs",
     "test": "vitest run",
     "icons": "node scripts/icons.mjs"
   },

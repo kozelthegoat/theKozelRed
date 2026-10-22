@@ -50,6 +50,27 @@ English is at the root, Russian at `/ru/`, Belarusian at `/be/`. Path prefixes a
 
 Availability is a single weekly grid of start times defined in **Minsk** (`src/data/sessions.js`). The UI converts each slot to the **visitor's timezone** (auto-detected, switchable). Slot instants are computed client-side.
 
+## Schema changes
+
+Migrations are a **precondition** of a deploy, not part of one:
+
+```bash
+npm run db:backup   # before anything destructive (DROP, ALTER … DROP)
+npm run db:migrate  # apply what the remote is missing, then re-check
+npm run deploy      # build → refuse if the remote is behind → deploy
+```
+
+`scripts/deploy.mjs` compares `migrations/*.sql` with D1's own `d1_migrations` table and stops
+before deploying if anything is pending, naming the files and `npm run db:migrate`. CI runs the
+same engine, so a push cannot ship code over a stale schema either. Applying is deliberate; it is
+never a side effect of a deploy, so a failed deploy cannot leave production half-migrated.
+
+**Write migrations to be additive.** Expand now, contract later: add the column or table, ship
+code that tolerates both shapes, and drop the old thing in a later release once nothing reads it.
+That is what lets the schema land before the code without breaking the running Worker, and it
+keeps a rollback a code-only operation. Wrangler backs up automatically before applying, and D1
+keeps 30 days of time travel; `db:backup` is the readable file for the destructive ones.
+
 ## Local development
 
 ```bash
@@ -58,7 +79,9 @@ npm run dev        # astro dev (no database)
 npm run dev:local  # build + local D1 migrations + sample rows + wrangler dev on :8787
 npm run test       # vitest run
 npm run build      # astro build
-npm run deploy     # build + wrangler deploy
+npm run deploy     # build + schema check + wrangler deploy
+npm run db:migrate # apply pending migrations to the remote D1
+npm run db:backup  # export the remote D1 to backups/ (gitignored)
 npm run preview    # build + wrangler dev
 ```
 
@@ -96,7 +119,7 @@ src/lib/        slots, timezone, email, .ics, requests, headers, notes, linkify,
 src/assets/js/  client scripts (schedule, reveal, notes, recommendations, press)
 migrations/     D1 schema
 public/         fonts, images, résumé PDF, bimi logo, _headers, accent.js
-scripts/        local dev bootstrap + icon generation
+scripts/        deploy, migrate, backup, local dev bootstrap, icon generation
 docs/           design, ideas, DNS, donations and legal notes
 ```
 

@@ -15,10 +15,21 @@ repo is the one that works on `dev`). Changes land on `main` and deploy from the
 ## Steps
 
 1. Run `npm run test` (vitest).
-2. Deploy — either:
+2. Schema. If the checkout has migrations the remote does not, run `npm run db:migrate`
+   first. `scripts/deploy.mjs` refuses to deploy while any migration is pending — that refusal is
+   the safety net, not a step to work around.
+3. Deploy — either:
    - push `main` and let the workflow run `node scripts/deploy.mjs`, or
    - `npm run deploy` locally.
-3. The engine prints the `git describe` version; confirm the change is live at kozel.red.
+4. The engine prints the `git describe` version; confirm the change is live at kozel.red.
+
+Write migrations additively (expand now, contract later): the schema lands before the code, so the
+running Worker has to tolerate both shapes during the rollout and a rollback must not need a
+schema rollback. `npm run db:backup` before a destructive one.
+
+CI runs the same engine, but it needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo
+secrets; without them the deploy step fails after the tests pass and the site is only updated by a
+local `npm run deploy`.
 
 There is no separate dev server here (that's the guide-site repo): `npm run dev` is only an
 Astro dev server, not a deployment.

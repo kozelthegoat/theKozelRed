@@ -9,7 +9,9 @@ Personal site for Aliaksei Kozel — a consulting + 1:1 page with a résumé, in
 
 - **Astro 7** (SSR) on **Cloudflare Workers** via `@astrojs/cloudflare` (`wrangler.jsonc`).
 - **Tailwind v4** (tokens live in `src/styles/global.css`).
-- **D1** for booking requests (`migrations/`). **Vitest** for the logic tests.
+- **D1** for booking requests (`migrations/`). Migrations are applied deliberately with
+  `npm run db:migrate`; the deploy refuses to ship while the remote is behind (see README).
+  **Vitest** for the logic tests.
 - **i18n by path prefix** — `src/i18n/config.mjs` (locales), `pages.mjs` (the page registry),
   `ui.mjs` (the chrome), `mail.mjs` (the email copy). No cookie; every locale is a shareable URL.
 - API as **Astro endpoints** (`src/pages/api/…`); vanilla-JS client for the calendar.
