@@ -6,6 +6,7 @@ import {
   langOfId,
   slugOfId,
   notesIn,
+  localesForSlug,
   formatNoteDate
 } from '../src/lib/notes.js';
 
@@ -73,6 +74,38 @@ describe('notesIn', () => {
     expect(notesIn(entries, 'en').map((n) => n.id)).toEqual(['a']);
     expect(notesIn(entries, 'ru').map((n) => n.id)).toEqual(['a.ru']);
     expect(notesIn(entries, 'be').map((n) => n.id)).toEqual(['b.be']);
+  });
+});
+
+describe('localesForSlug', () => {
+  // This is what every note page advertises as its hreflang alternates and what the sitemap
+  // lists, so a wrong answer here points crawlers at a 404.
+  const entries = [
+    { id: 'benches', data: { date: new Date('2026-01-01'), draft: false } },
+    { id: 'benches.ru', data: { date: new Date('2026-01-01'), draft: false } },
+    { id: 'benches.be', data: { date: new Date('2026-01-01'), draft: true } },
+    { id: 'solo.be', data: { date: new Date('2026-02-01'), draft: false } }
+  ];
+
+  it('lists only the languages the piece was actually written in', () => {
+    expect(localesForSlug(entries, 'benches')).toEqual(['en', 'ru']);
+  });
+
+  it('does not advertise a translation that is still a draft', () => {
+    expect(localesForSlug(entries, 'benches')).not.toContain('be');
+  });
+
+  it('is empty for a slug nobody wrote', () => {
+    expect(localesForSlug(entries, 'never-written')).toEqual([]);
+  });
+
+  it('does not mistake a different slug for a translation', () => {
+    expect(localesForSlug(entries, 'solo')).toEqual(['be']);
+  });
+
+  it('keeps the site’s language order, not the order files were found in', () => {
+    const shuffled = [entries[3], entries[1], entries[0]];
+    expect(localesForSlug(shuffled, 'benches')).toEqual(['en', 'ru']);
   });
 });
 

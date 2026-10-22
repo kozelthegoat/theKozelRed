@@ -1,0 +1,8 @@
+# kozel.red — public pages are meant to be crawled; the owner's pages are not.
+User-agent: *
+Allow: /
+
+Disallow: /me
+Disallow: /api/
+
+Sitemap: https://kozel.red/sitemap.xml

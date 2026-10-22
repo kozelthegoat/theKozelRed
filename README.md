@@ -115,10 +115,10 @@ src/components/ Cta, LocaleSwitcher, StatusForm, Recommendation, page bodies
 src/content/    notes (markdown)
 src/i18n/       locales, the page registry, the chrome dictionary, email copy
 src/data/       content (site, résumé, sessions, palette)
-src/lib/        slots, timezone, email, .ics, requests, headers, notes, linkify, api
+src/lib/        slots, timezone, email, .ics, requests, headers, notes, sitemap, linkify, api
 src/assets/js/  client scripts (schedule, reveal, notes, recommendations, press)
 migrations/     D1 schema
-public/         fonts, images, résumé PDF, bimi logo, _headers, accent.js
+public/         fonts, images, résumé PDF, bimi logo, _headers, robots.txt, accent.js
 scripts/        deploy, migrate, backup, local dev bootstrap, icon generation
 docs/           design, ideas, DNS, donations and legal notes
 ```
@@ -133,6 +133,10 @@ docs/           design, ideas, DNS, donations and legal notes
   immediately. If a fresh deploy doesn't show up, re-check; purging the cache won't help.
 - Security headers come from `public/_headers` for prerendered pages and `src/middleware.js` for anything on demand;
   `src/lib/headers.js` is the single source and `tests/headers.test.js` keeps the two in step.
+- `sitemap.xml` is generated at build from the page registry and the published notes, so it cannot advertise a URL
+  the site does not have. `404`, `/me`, `/api/*`, and any language's notes index until that language has a note are
+  left out; notes carry `<lastmod>` from their frontmatter date, standing pages carry none. `robots.txt` points at it
+  and keeps crawlers out of `/me` and `/api/`.
 - The accent colour is the **weekday**, from `src/data/palette.js`; `public/accent.js` applies it before first paint.
 - See `docs/design.md` for the design language and `docs/ideas.md` for the backlog.
 

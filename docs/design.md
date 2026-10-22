@@ -30,6 +30,11 @@ Personal site for Aliaksei Kozel — a consulting + 1:1 page with a résumé, in
 Every page but `404` exists in all three languages; `src/i18n/pages.mjs` is the registry and
 `tests/i18n-pages.test.js` keeps it in step with the routes on disk.
 
+`/sitemap.xml` is generated at build from that same registry and the published notes, so it can
+never point at a page that isn't there. `404`, `/me`, `/api/*` and an empty notes index are left
+out; notes carry `<lastmod>` from their frontmatter date, standing pages carry none.
+`/robots.txt` points at it and disallows `/me` and `/api/`.
+
 **Hosts:** `kozel.red` + `www.kozel.red` both serve the site (Worker custom domains); the
 `<link rel="canonical">` points at the apex. This is the **apex of the `kozel.red` umbrella** — the
 product (`go.kozel.red`, **KozelGo** — websites and apps for energy healers) and its client
