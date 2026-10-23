@@ -78,6 +78,13 @@ instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md`
 - **Timezones:** the API returns raw `{date, time}` wall-clock in Minsk; the browser shows each
   slot in the **visitor's** timezone (auto-detected, switchable).
 
+## Masthead
+
+The line above the header is a quote from *Kung Fu Panda* (2008), translated per locale; the
+footer credits it. It is static: a motto is not an announcement, so there is nothing to pause. The
+dismiss control and its local preference are built (`public/ribbon.js`) but switched off in
+`site.ribbonDismissible` until the ribbon carries news.
+
 ## Type
 
 - The base is the browser default (**16px**), not a percentage of it: the site is text-first, and
@@ -144,7 +151,14 @@ Tailwind maps these via `@theme` → `bg-background`, `text-foreground`, `text-b
 so the tab matches the day). `--brand-deep` derives from `--brand` via `color-mix`. The static
 PNG icons (apple-touch / 192 / 512) stay one color — regenerate with `npm run icons`.
 
-### Type & headings
+### Masthead
+
+The line above the header is a quote from *Kung Fu Panda* (2008), translated per locale; the
+footer credits it. It is static: a motto is not an announcement, so there is nothing to pause. The
+dismiss control and its local preference are built (`public/ribbon.js`) but switched off in
+`site.ribbonDismissible` until the ribbon carries news.
+
+## Type & headings
 
 **Geist** (sans) + **Geist Mono** (labels), both self-hosted. Headings are
 uppercase with tight `line-height` (0.98) and `text-wrap: balance`; longer ones carry a width

@@ -42,10 +42,14 @@ const isHome = Astro.url.pathname === '/';
 const hasNotes = (await publishedNotes(locale)).length > 0;
 const origin = Astro.site ?? new URL('https://kozel.red');
 const canonical = new URL(Astro.url.pathname, origin).href;
-const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis Management'];
 ---
 <!doctype html>
-<html lang={locale} dir={dirFor(locale)} data-hues={WEEKDAY_HUES.join(',')}>
+<html
+  lang={locale}
+  dir={dirFor(locale)}
+  data-hues={WEEKDAY_HUES.join(',')}
+  data-ribbon-dismissible={site.ribbonDismissible ? 'true' : 'false'}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -81,25 +85,26 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#fa3600" />
     <script is:inline src="/accent.js"></script>
+    <script is:inline src="/ribbon.js"></script>
   </head>
   <body>
     <!-- Keyboard users reach the content before the ticker and the navigation. It stays out of
          sight until it is focused, which is the only time it is useful. -->
     <a class="skip-link mono" href="#main">Skip to content</a>
     <div class="mx-auto min-h-screen max-w-[1680px] hair-l hair-r">
-      <!-- ticker: decorative, and repeated so the loop has no seam — one copy for the eye, none for
-           a screen reader, which would otherwise hear the five words twice on every page. -->
-      <div class="marquee py-3" aria-hidden="true">
-        <div class="marquee__track mono text-muted">
-          {
-            [...ticker, ...ticker].map((word) => (
-              <span class="flex items-center gap-3 whitespace-nowrap">
-                <span class="inline-block h-1 w-1 rounded-full bg-brand" />
-                {word}
-              </span>
-            ))
-          }
-        </div>
+      <!-- The masthead quote. It does not move, so there is nothing to pause; the dismiss control
+           exists but is switched off in site.js until this space carries an announcement. -->
+      <div class="ribbon" data-ribbon>
+        <p class="mono text-balance tracking-[0.02em] text-muted">{t('ribbon.quote')}</p>
+        {
+          site.ribbonDismissible && (
+            <button type="button" class="icon-btn shrink-0 p-1" data-ribbon-close aria-label={t('ribbon.dismiss')}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          )
+        }
       </div>
 
       <!-- header -->
@@ -237,6 +242,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
             <span>© {site.previousName}</span>
             <span>| {site.bornYear} – {site.renameYear}</span>
           </div>
+          <p class="mt-3">{t('footer.credit')}</p>
         </div>
       </footer>
     </div>

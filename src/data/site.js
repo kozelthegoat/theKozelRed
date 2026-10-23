@@ -27,6 +27,9 @@ export const site = {
   offClock: ['Meditation', 'Mind–body discipline', 'Volunteering', 'Vibe Coding'],
   // Floating "Donate" button target (external). Empty = button hidden.
   donateUrl: '',
+  // The masthead quote can be dismissed (public/ribbon.js), but a motto is not an announcement:
+  // switch this on the day the ribbon carries news, and the X appears with it.
+  ribbonDismissible: false,
   // Where a confirmed 1:1 actually happens. Empty = nothing promises a link and no email sends
   // one. Set it and the confirmation email, the .ics (LOCATION + URL) and the dialog copy all
   // follow. This one is a Whereby room, and a vanity room is guessable by design — the access

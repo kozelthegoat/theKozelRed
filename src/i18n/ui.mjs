@@ -9,6 +9,10 @@ export const ui = {
     'nav.expertise': 'Expertise',
     'nav.experience': 'Experience',
     'nav.notes': 'Notes',
+    // The masthead line is a quote from Kung Fu Panda (2008): the Russian line is the quoted
+    // one, the English and Belarusian are translations of it. The footer credits it.
+    'ribbon.quote': 'Kung fu masters aren’t born. They’re made.',
+    'ribbon.dismiss': 'Dismiss',
     'a11y.language': 'Language',
 
     'cta.schedule': 'Schedule 1:1',
@@ -27,6 +31,7 @@ export const ui = {
     'footer.privacy': 'View Privacy',
     'footer.recommendations': 'Recommendations',
     'footer.notes': 'Notes',
+    'footer.credit': 'Masthead quote from Kung Fu Panda (2008).',
 
     'notes.eyebrow': 'Notes',
     'notes.title': 'Notes',
@@ -154,6 +159,8 @@ export const ui = {
     'nav.expertise': 'Экспертиза',
     'nav.experience': 'Опыт',
     'nav.notes': 'Заметки',
+    'ribbon.quote': 'Мастерами кунг-фу не рождаются. Мастерами кунг-фу становятся.',
+    'ribbon.dismiss': 'Закрыть',
     'a11y.language': 'Язык',
 
     'cta.schedule': 'Записаться на 1:1',
@@ -171,6 +178,7 @@ export const ui = {
     'footer.privacy': 'Политика конфиденциальности',
     'footer.recommendations': 'Рекомендации',
     'footer.notes': 'Заметки',
+    'footer.credit': 'Цитата в шапке — из «Кунг-фу Панды» (2008).',
 
     'notes.eyebrow': 'Заметки',
     'notes.title': 'Заметки',
@@ -289,6 +297,8 @@ export const ui = {
     'nav.expertise': 'Экспертыза',
     'nav.experience': 'Вопыт',
     'nav.notes': 'Нататкі',
+    'ribbon.quote': 'Майстрамі кунг-фу не нараджаюцца. Майстрамі кунг-фу становяцца.',
+    'ribbon.dismiss': 'Закрыць',
     'a11y.language': 'Мова',
 
     'cta.schedule': 'Запісацца на 1:1',
@@ -306,6 +316,7 @@ export const ui = {
     'footer.privacy': 'Палітыка прыватнасці',
     'footer.recommendations': 'Рэкамендацыі',
     'footer.notes': 'Нататкі',
+    'footer.credit': 'Цытата ў шапцы — з «Кунг-фу Панды» (2008).',
 
     'notes.eyebrow': 'Нататкі',
     'notes.title': 'Нататкі',
