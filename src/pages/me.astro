@@ -1,11 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import { env } from 'cloudflare:workers';
-import { listParams, listSql, listHref, parsePast } from '../lib/requests.js';
+import { listParams, listSql, listHref, parsePast, detailHref } from '../lib/requests.js';
 import { availability, sessionTypes } from '../data/sessions.js';
 import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel, nowInTz } from '../lib/tz.js';
-import StatusForm from '../components/StatusForm.astro';
-import DeleteForm from '../components/DeleteForm.astro';
 import { linkify } from '../lib/linkify.js';
 import { lastRetentionRun, isStale } from '../lib/retention.js';
 import { statusLabel } from '../lib/requests.js';
@@ -213,7 +211,7 @@ const statusTone = (s) =>
                       {typeName(r.type)}
                     </p>
                     <p class="text-lg font-medium">
-                      {r.name}
+                      <a class="hover:text-brand" href={detailHref(r.id, list)}>{r.name}</a>
                       {Number(r.email_count) > 1 && (
                         <span
                           class="mono ml-2 align-middle text-brand"
@@ -230,22 +228,9 @@ const statusTone = (s) =>
                     </p>
                     <p class={`mono mt-1 ${statusTone(r.status)}`}>{statusLabel(r.status)}</p>
                     {r.note && <p class="mt-1 text-sm text-secondary" set:html={linkify(r.note)} />}
-                  </div>
-                  <div class="flex items-center justify-between gap-3">
-                    <StatusForm
-                      request={r}
-                      sort={list.sort}
-                      dir={list.dir}
-                      page={list.page}
-                      past={list.past}
-                    />
-                    <DeleteForm
-                      request={r}
-                      sort={list.sort}
-                      dir={list.dir}
-                      page={list.page}
-                      past={list.past}
-                    />
+                    {r.status === 'new' && (
+                      <a class="mono mt-2 text-brand" href={detailHref(r.id, list)}>Review →</a>
+                    )}
                   </div>
                 </article>
               ))}
@@ -280,7 +265,7 @@ const statusTone = (s) =>
                       scope="col"
                       aria-sort={ariaSort('status')}
                       class="mono py-3 font-normal text-muted"
-                      style="width:8rem;"
+                      style="width:7rem;"
                     >
                       <a class="relative whitespace-nowrap hover:text-brand" href={sortHref('status')}>
                         Status
@@ -303,18 +288,20 @@ const statusTone = (s) =>
                         <span class="block text-muted">{r.slot_time}</span>
                       </td>
                       <td class="py-4 pr-4 text-sm text-secondary" title={r.name}>
-                        <span class="flex items-baseline gap-1.5">
-                          <span class="truncate">{r.nameParts.first}</span>
-                          {Number(r.email_count) > 1 && (
-                            <span
-                              class="mono shrink-0 text-brand"
-                              title={`${r.email_count} requests from this address`}
-                            >
-                              ×{r.email_count}
-                            </span>
-                          )}
-                        </span>
-                        {r.nameParts.rest && <span class="block truncate">{r.nameParts.rest}</span>}
+                        <a class="hover:text-brand" href={detailHref(r.id, list)}>
+                          <span class="flex items-baseline gap-1.5">
+                            <span class="truncate">{r.nameParts.first}</span>
+                            {Number(r.email_count) > 1 && (
+                              <span
+                                class="mono shrink-0 text-brand"
+                                title={`${r.email_count} requests from this address`}
+                              >
+                                ×{r.email_count}
+                              </span>
+                            )}
+                          </span>
+                          {r.nameParts.rest && <span class="block truncate">{r.nameParts.rest}</span>}
+                        </a>
                       </td>
                       <td class="truncate py-4 pr-4 text-sm" title={r.email}>
                         <a class="text-secondary hover:text-brand" href={`mailto:${r.email}`}>
@@ -346,24 +333,13 @@ const statusTone = (s) =>
                         <span class="block">{r.requested.time}</span>
                       </td>
                       <td class="py-4 whitespace-nowrap">
-                        <div class="flex items-center justify-end gap-2">
-                          <StatusForm
-                            request={r}
-                            sort={list.sort}
-                            dir={list.dir}
-                            page={list.page}
-                            past={list.past}
-                            variant="icon"
-                          />
-                          <DeleteForm
-                            request={r}
-                            sort={list.sort}
-                            dir={list.dir}
-                            page={list.page}
-                            past={list.past}
-                            variant="icon"
-                          />
-                        </div>
+                        {r.status === 'new' ? (
+                          <a class="mono text-brand hover:underline" href={detailHref(r.id, list)}>
+                            Review →
+                          </a>
+                        ) : (
+                          <span class={`mono ${statusTone(r.status)}`}>{statusLabel(r.status)}</span>
+                        )}
                       </td>
                     </tr>
                   ))}

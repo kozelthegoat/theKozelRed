@@ -58,6 +58,14 @@ export function listHref({ sort, dir, page, past }, overrides = {}) {
   return `/me?${params}`;
 }
 
+// The detail page needs the list's view to redirect back to it after an action, so the state
+// travels in the URL rather than in a session.
+export function detailHref(id, { sort, dir, page, past }) {
+  const params = new URLSearchParams({ sort, dir, page: String(page) });
+  if (past) params.set('past', '1');
+  return `/me/requests/${id}?${params}`;
+}
+
 // The three states the table knows, written as a person reads them. `new` next to `confirmed`
 // reads like a database field, which is exactly what it is; the page is not a database.
 const STATUS_LABELS = { new: 'Pending', confirmed: 'Confirmed', declined: 'Declined' };

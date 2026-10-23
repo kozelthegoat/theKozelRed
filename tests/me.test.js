@@ -10,6 +10,7 @@ import {
   shouldSendDecline,
   shouldSendConfirm,
   statusLabel,
+  detailHref,
   SORTABLE
 } from '../src/lib/requests.js';
 
@@ -209,5 +210,19 @@ describe('statusLabel', () => {
   it('does not invent a word for a status it has never seen', () => {
     expect(statusLabel('archived')).toBe('archived');
     expect(statusLabel(undefined)).toBe('');
+  });
+});
+
+describe('detailHref', () => {
+  it('keeps the list state so the detail page can come back to the same view', () => {
+    expect(detailHref(7, { sort: 'name', dir: 'desc', page: 2, past: true })).toBe(
+      '/me/requests/7?sort=name&dir=desc&page=2&past=1'
+    );
+  });
+
+  it('omits the past marker when the list is not filtered', () => {
+    expect(detailHref(7, { sort: 'slot_date', dir: 'asc', page: 1, past: false })).toBe(
+      '/me/requests/7?sort=slot_date&dir=asc&page=1'
+    );
   });
 });
