@@ -44,7 +44,7 @@ const chosen = BUTTONS.find((b) => b.value === request.status);
         compact
           ? 'flex-nowrap justify-end'
           : inline
-            ? 'w-full flex-nowrap sm:w-auto'
+            ? 'w-full flex-nowrap'
             : 'flex-wrap'
       ]}
     >
@@ -56,7 +56,7 @@ const chosen = BUTTONS.find((b) => b.value === request.status);
 
       {BUTTONS.map((button) => (
         <button
-          class:list={['btn', compact ? 'btn--icon' : inline ? 'btn--inline mono flex-1 sm:flex-none' : 'mono']}
+          class:list={['btn', compact ? 'btn--icon' : inline ? 'btn--inline mono flex-1 sm:w-28 sm:flex-none' : 'mono']}
           name="status"
           value={button.value}
           aria-label={compact ? button.label : undefined}

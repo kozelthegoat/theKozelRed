@@ -11,7 +11,7 @@ const label = `Delete the request from ${request.name} on ${request.slot_date}`;
   method="post"
   action="/api/me/delete"
   data-confirm="Delete this request for good? This cannot be undone."
-  class="inline-flex"
+  class:list={['inline-flex', compact ? '' : 'w-[calc((100%-0.5rem)/2)] sm:w-28']}
 >
   <input type="hidden" name="id" value={request.id} />
   <input type="hidden" name="sort" value={sort} />
@@ -21,7 +21,7 @@ const label = `Delete the request from ${request.name} on ${request.slot_date}`;
 
   <button
     type="submit"
-    class:list={['btn btn--danger', compact ? 'btn--icon' : 'btn--inline mono gap-1']}
+    class:list={['btn btn--danger', compact ? 'btn--icon' : 'btn--inline mono w-full gap-1']}
     aria-label={label}
     title={label}
   >
