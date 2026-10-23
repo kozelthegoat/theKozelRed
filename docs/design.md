@@ -91,8 +91,8 @@ pause. The X stores one local preference (`public/ribbon.js`) and is switched on
 - The base is the browser default (**16px**), not a percentage of it: the site is text-first, and
   body copy is the thing people read.
 - `.mono` micro-labels are **12px** (uppercase, tracked). Buttons take **14px**, because an action
-  is not a label. All caps belongs to headings and mono labels; body copy and list items keep
-  their sentence case.
+  is not a label. Headings, mono labels and the expertise list's display lines are uppercase;
+  running prose is not.
 - Display sizes keep their old rendered sizes: when the base rose from 87% to 100%, every
   `clamp()` rem bound was trimmed by 0.87, so headlines did not grow with the copy.
 - Fields are 14px on desktop and **16px under 768px**, because iOS zooms the page whenever a
