@@ -438,10 +438,11 @@ dialog.req-done[open] {
   overflow: hidden;
 }
 /* Thin, so a long message doesn't summon a chrome-heavy bar beside the words. Neither the tz
-   search nor a single-line field ever scrolls, so this only shows up where it is wanted. */
+   search nor a single-line field ever scrolls, so this only shows up where it is wanted. The
+   thumb keeps the weekday hue, like the page scrollbar, so the field belongs to the day. */
 .field {
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: var(--brand) transparent;
 }
 .hair-t { border-top: var(--hair) solid var(--border); }
 .hair-b { border-bottom: var(--hair) solid var(--border); }
@@ -542,6 +543,13 @@ main > article:last-of-type {
   min-width: 0;
   padding: 0;
   gap: 0;
+}
+
+/* A labelled row action that has to sit beside other buttons on a phone: content width,
+   not .btn's 12rem. */
+.btn--inline {
+  min-width: 0;
+  padding: 0.55rem 0.85rem;
 }
 
 /* Marquee (subtle, non-interactive) */

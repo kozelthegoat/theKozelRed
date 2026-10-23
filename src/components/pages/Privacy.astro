@@ -7,7 +7,8 @@ import { RETENTION_DAYS, BACKUP_DAYS } from '../../lib/retention.js';
 // passed to it and one file serves all three routes.
 const t = translator(localeFromPath(Astro.url.pathname));
 // The numbers come from the rule, not from the copy: change the retention and the sentence follows.
-const retention = fill(t('privacy.retention.body'), { days: RETENTION_DAYS, backup: BACKUP_DAYS });
+const retention = fill(t('privacy.retention.body'), { days: RETENTION_DAYS });
+const backup = fill(t('privacy.retention.backup'), { backup: BACKUP_DAYS });
 ---
 
 <!--
@@ -48,7 +49,16 @@ const retention = fill(t('privacy.retention.body'), { days: RETENTION_DAYS, back
     </div>
     <div>
       <p class="mono text-muted">{t('privacy.retention')}</p>
-      <p class="mt-3 text-secondary">{retention}</p>
+      <ul class="mt-3 grid gap-1 text-secondary">
+        <li class="flex gap-3">
+          <span class="text-brand">–</span>
+          <span>{retention}</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="text-brand">–</span>
+          <span>{backup}</span>
+        </li>
+      </ul>
     </div>
     <div>
       <p class="mono text-muted">{t('privacy.removal')}</p>

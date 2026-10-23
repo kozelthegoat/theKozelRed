@@ -29,7 +29,8 @@ describe('the dictionary', () => {
   it('leaves the retention numbers for the code to fill', () => {
     for (const locale of locales) {
       const body = ui[locale]['privacy.retention.body'];
-      expect({ locale, days: body.includes('{days}'), backup: body.includes('{backup}') }).toEqual({
+      const backup = ui[locale]['privacy.retention.backup'];
+      expect({ locale, days: body.includes('{days}'), backup: backup.includes('{backup}') }).toEqual({
         locale,
         days: true,
         backup: true
