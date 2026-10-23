@@ -115,7 +115,8 @@ export const ui = {
 
     // Home. The section eyebrows reuse the nav's words; the fact labels reuse the footer's.
     'home.eyebrow': 'Independent operator',
-    'home.title': 'Strategy · Operations · Production — from scope to ship',
+    'home.roles': 'Strategy · Operations · Production',
+    'home.clause': 'from scope to ship',
     'home.motto':
       'All products will remain a mirror, a reflection of the values of their creators, and will attract an audience that resonates with these values, whether explicit or implicit.',
     'home.expertise.title': 'What the work involves',
@@ -248,7 +249,8 @@ export const ui = {
     'sched.done.join': ' Ссылка для подключения придёт вместе с ним.',
 
     'home.eyebrow': 'Независимый оператор',
-    'home.title': 'Стратегия · Операции · Производство — от замысла до выпуска',
+    'home.roles': 'Стратегия · Операции · Производство',
+    'home.clause': 'от замысла до выпуска',
     'home.motto':
       'Любой продукт остаётся зеркалом — отражением ценностей своих создателей, и притягивает аудиторию, которой эти ценности откликаются, явно или неявно.',
     'home.expertise.title': 'Из чего состоит работа',
@@ -382,7 +384,8 @@ export const ui = {
     'sched.done.join': ' Спасылка для далучэння прыйдзе разам з ім.',
 
     'home.eyebrow': 'Незалежны аператар',
-    'home.title': 'Стратэгія · Аперацыі · Вытворчасць — ад задумы да выпуску',
+    'home.roles': 'Стратэгія · Аперацыі · Вытворчасць',
+    'home.clause': 'ад задумы да выпуску',
     'home.motto':
       'Любы прадукт застаецца люстэркам — адлюстраваннем каштоўнасцей сваіх стваральнікаў, і прыцягвае аўдыторыю, якой гэтыя каштоўнасці адгукаюцца, яўна ці няяўна.',
     'home.expertise.title': 'З чаго складаецца праца',
