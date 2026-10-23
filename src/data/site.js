@@ -10,7 +10,7 @@ export const site = {
   previousName: 'Aliaksei Pashkel',
   bornYear: 1987,
   renameYear: 2026,
-  role: 'Strategy / Operations / Production',
+  role: 'Strategy · Operations · Production',
   location: 'Minsk, Belarus — right now\nwhere next can be your call',
   // Read as facts beside the location, not as a pitch. No link of their own: the hero's résumé
   // button is the action, and a second call to action in the same block would compete. An array

@@ -38,8 +38,8 @@ export const ui = {
 
     // Titles and descriptions, named once per page per language. Base resolves them from the path,
     // so the route files stay free of copy instead of each carrying their own English title.
-    'page.home': 'Aliaksei Kozel — Strategy / Operations / Production',
-    'page.home.description': 'Aliaksei Kozel — Strategy / Operations / Production.',
+    'page.home': 'Aliaksei Kozel — Strategy · Operations · Production',
+    'page.home.description': 'Aliaksei Kozel — Strategy · Operations · Production.',
     'page.schedule': 'Aliaksei Kozel — 1:1 / Schedule',
     'page.schedule.description':
       'Book a free 30-minute 1:1 with Aliaksei Kozel — strategy, operations and production, from scope to ship.',
@@ -115,7 +115,7 @@ export const ui = {
 
     // Home. The section eyebrows reuse the nav's words; the fact labels reuse the footer's.
     'home.eyebrow': 'Independent operator',
-    'home.title': 'Strategy / Operations / Production — from scope to ship',
+    'home.title': 'Strategy · Operations · Production — from scope to ship',
     'home.motto':
       'All products will remain a mirror, a reflection of the values of their creators, and will attract an audience that resonates with these values, whether explicit or implicit.',
     'home.expertise.title': 'What the work involves',
@@ -179,8 +179,8 @@ export const ui = {
     'notes.empty': 'Пока ничего не опубликовано.',
     'notes.back': '← Все заметки',
 
-    'page.home': 'Алексей Козел — Стратегия / Операции / Производство',
-    'page.home.description': 'Алексей Козел — Стратегия / Операции / Производство.',
+    'page.home': 'Алексей Козел — Стратегия · Операции · Производство',
+    'page.home.description': 'Алексей Козел — Стратегия · Операции · Производство.',
     'page.schedule': 'Алексей Козел — 1:1 / Schedule',
     'page.schedule.description':
       'Без оплаты: встреча 1:1 на 30 минут с Алексеем Козелом — стратегия, операции и производство, от замысла до выпуска.',
@@ -248,7 +248,7 @@ export const ui = {
     'sched.done.join': ' Ссылка для подключения придёт вместе с ним.',
 
     'home.eyebrow': 'Независимый оператор',
-    'home.title': 'Стратегия / Операции / Производство — от замысла до выпуска',
+    'home.title': 'Стратегия · Операции · Производство — от замысла до выпуска',
     'home.motto':
       'Любой продукт остаётся зеркалом — отражением ценностей своих создателей, и притягивает аудиторию, которой эти ценности откликаются, явно или неявно.',
     'home.expertise.title': 'Из чего состоит работа',
@@ -313,8 +313,8 @@ export const ui = {
     'notes.empty': 'Пакуль нічога не апублікавана.',
     'notes.back': '← Усе нататкі',
 
-    'page.home': 'Аляксей Козел — Стратэгія / Аперацыі / Вытворчасць',
-    'page.home.description': 'Аляксей Козел — Стратэгія / Аперацыі / Вытворчасць.',
+    'page.home': 'Аляксей Козел — Стратэгія · Аперацыі · Вытворчасць',
+    'page.home.description': 'Аляксей Козел — Стратэгія · Аперацыі · Вытворчасць.',
     'page.schedule': 'Аляксей Козел — 1:1 / Schedule',
     'page.schedule.description':
       'Без аплаты: 30-хвілінная сустрэча 1:1 з Аляксеем Козелам — стратэгія, аперацыі і вытворчасць, ад задумы да выпуску.',
@@ -382,7 +382,7 @@ export const ui = {
     'sched.done.join': ' Спасылка для далучэння прыйдзе разам з ім.',
 
     'home.eyebrow': 'Незалежны аператар',
-    'home.title': 'Стратэгія / Аперацыі / Вытворчасць — ад задумы да выпуску',
+    'home.title': 'Стратэгія · Аперацыі · Вытворчасць — ад задумы да выпуску',
     'home.motto':
       'Любы прадукт застаецца люстэркам — адлюстраваннем каштоўнасцей сваіх стваральнікаў, і прыцягвае аўдыторыю, якой гэтыя каштоўнасці адгукаюцца, яўна ці няяўна.',
     'home.expertise.title': 'З чаго складаецца праца',
