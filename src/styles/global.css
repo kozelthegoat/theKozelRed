@@ -30,6 +30,9 @@
   --on-brand: #ffffff;
   /* The accent at 10% — every selected/hovered chip, tile and button uses this. */
   --brand-tint: color-mix(in srgb, var(--brand) 10%, transparent);
+  /* Destruction is not the weekday hue: the brand changes colour by day, and a delete control
+     must not mean something different on Tuesday. */
+  --danger: #b42318;
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
   --hair: max(1px, 0.0625rem);
   --pad: clamp(1rem, 3vw, 2.5rem);
@@ -511,6 +514,17 @@ main > article:last-of-type {
 /* On hover the button goes light: the fill slides the page colour up over the accent, and the
    label and border keep the raw accent. Deepening them was tried and read worse — leave it. */
 .btn--solid::after { background: var(--background); }
+
+/* The one destructive action: same geometry as its neighbours, different ink. The hover fill
+   follows the ink rather than the weekday brand. */
+.btn--danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.btn--danger::after { background: var(--danger); }
+@media (hover: hover) {
+  .btn--danger:hover { color: var(--on-brand); border-color: var(--danger); }
+}
 
 .arrow { transition: transform 0.45s var(--ease); }
 

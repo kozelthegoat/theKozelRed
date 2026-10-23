@@ -149,7 +149,10 @@ const language = row?.locale ? labelFor(row.locale) : null;
               past={past}
               variant="inline"
             />
-            <div class="mt-4">
+            <div class="hair-t mt-1 grid gap-3 pt-5">
+              <p class="text-sm text-secondary">
+                Deleting removes the request and its note. It cannot be undone.
+              </p>
               <DeleteForm request={row} sort={sort} dir={dir} page={page} past={past} />
             </div>
           </aside>
