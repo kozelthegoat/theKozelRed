@@ -16,7 +16,7 @@ Personal site and 1:1 booking for **Aliaksei Kozel** — strategy / operations /
 
 Booking is **request-based and free**: pick a slot, send a request, and I answer either way. Every session is **30 minutes** — `RE: Anything`, `RE: Career`, `RE: Business`. What separates the three is what each sets out to do, not how long it takes.
 
-The public endpoint behind the form is guarded three ways: a hidden honeypot field, a minimum fill time, and one live request per email address. The first two are answered with a silent success — the request is dropped and stored nowhere — so a script learns nothing from the response.
+The public endpoint behind the form is guarded three ways: a hidden honeypot field, a minimum fill time, and one request awaiting an answer per email address. The first two are answered with a silent success — the request is dropped and stored nowhere — so a script learns nothing from the response.
 
 ## Where this sits — the `kozel.red` umbrella
 

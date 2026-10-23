@@ -5,10 +5,11 @@
 // fixed. The third is a real refusal, for a person, and it says so.
 export const MIN_FILL_MS = 2000;
 
-// One live request per address; declining frees it again, exactly like the slot index does.
+// One request awaiting an answer per address. Confirming or declining frees it again, so a
+// returning visitor can book another session — only an unanswered request blocks.
 // COLLATE NOCASE so a second request in a different case is still caught.
 export const ACTIVE_REQUEST_SQL =
-  "SELECT id FROM requests WHERE email = ? COLLATE NOCASE AND status != 'declined' LIMIT 1";
+  "SELECT id FROM requests WHERE email = ? COLLATE NOCASE AND status = 'new' LIMIT 1";
 
 export function rejectReason({ website, elapsed, active = false } = {}) {
   // A field only a form-filler fills. Whitespace does not count, so an autofill quirk cannot lock

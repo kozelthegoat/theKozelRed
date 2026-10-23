@@ -52,8 +52,8 @@ export const POST = async ({ request, locals }) => {
   if (name.length < 2 || name.length > 120) return jsonError('invalid_name', 'Please add your name.');
   if (!EMAIL_RE.test(email)) return jsonError('invalid_email', 'Please add a valid email.');
 
-  // One live request per address. Declining frees it again, so this never blocks a returning
-  // visitor permanently — it stops a flood and an accidental double-submit alike.
+  // One unanswered request per address. Confirming or declining frees it again, so this never
+  // blocks a returning visitor — it stops a flood and an accidental double-submit alike.
   const live = await db.prepare(ACTIVE_REQUEST_SQL).bind(email).first();
   const duplicate = rejectReason({
     website: body.website,

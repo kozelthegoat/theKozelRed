@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { rejectReason, MIN_FILL_MS } from '../src/lib/abuse.js';
+import { rejectReason, ACTIVE_REQUEST_SQL, MIN_FILL_MS } from '../src/lib/abuse.js';
 
 const clean = { website: '', elapsed: 5000, active: false };
 
@@ -46,5 +46,18 @@ describe('rejectReason', () => {
 
   it('survives being called with nothing', () => {
     expect(rejectReason()).toBe('too_fast');
+  });
+});
+
+describe('ACTIVE_REQUEST_SQL', () => {
+  // The rule as agreed: one request *waiting for an answer* per address. Confirming or declining
+  // frees it again, so a returning visitor can book again — only an unanswered one blocks.
+  it('counts a pending request, not a confirmed or declined one', () => {
+    expect(ACTIVE_REQUEST_SQL).toMatch(/status = 'new'/);
+    expect(ACTIVE_REQUEST_SQL).not.toMatch(/declined/);
+  });
+
+  it('matches the address case-insensitively, so the same person cannot book twice with A@ and a@', () => {
+    expect(ACTIVE_REQUEST_SQL).toMatch(/COLLATE NOCASE/);
   });
 });
