@@ -60,15 +60,15 @@ console.log('\n→ build');
 run('npm run build');
 
 console.log('\n→ local migrations');
-run('npx wrangler d1 migrations apply kozel-red --local -c wrangler.json', { cwd: DIR });
+run('npx wrangler d1 migrations apply kozel-red --local -c wrangler.jsonc', { cwd: DIR });
 
 console.log('\n→ seed');
-run(`npx wrangler d1 execute kozel-red --local -c wrangler.json --command ${JSON.stringify(SEED)}`, {
+run(`npx wrangler d1 execute kozel-red --local -c wrangler.jsonc --command ${JSON.stringify(SEED)}`, {
   cwd: DIR
 });
 
 console.log(`\n→ wrangler dev on http://127.0.0.1:${PORT}  (Ctrl-C to stop)`);
-const dev = spawn('npx', ['wrangler', 'dev', '-c', 'wrangler.json', '--port', PORT], {
+const dev = spawn('npx', ['wrangler', 'dev', '-c', 'wrangler.jsonc', '--port', PORT], {
   stdio: 'inherit',
   cwd: DIR
 });
