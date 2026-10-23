@@ -3,7 +3,10 @@
 	"name": "kozel-red",
 	"compatibility_date": "2026-10-12",
 	"compatibility_flags": ["global_fetch_strictly_public"],
-	"main": "@astrojs/cloudflare/entrypoints/server",
+	"main": "./src/worker.js",
+	"triggers": {
+		"crons": ["17 3 * * *"]
+	},
 	"assets": {
 		"directory": "./dist",
 		"binding": "ASSETS"

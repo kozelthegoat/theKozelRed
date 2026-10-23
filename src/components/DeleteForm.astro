@@ -1,0 +1,40 @@
+---
+// Delete one request, in both /me layouts. A separate form because a form cannot nest inside the
+// status form beside it — and because deleting is not a status.
+const { request, sort, dir, page, past = false, variant = 'label' } = Astro.props;
+const compact = variant === 'icon';
+---
+
+<form
+  method="post"
+  action="/api/me/delete"
+  data-confirm="Delete this request for good? This cannot be undone."
+  class="inline-flex"
+>
+  <input type="hidden" name="id" value={request.id} />
+  <input type="hidden" name="sort" value={sort} />
+  <input type="hidden" name="dir" value={dir} />
+  <input type="hidden" name="page" value={page} />
+  <input type="hidden" name="past" value={past ? '1' : ''} />
+
+  <button
+    class:list={['icon-btn text-muted hover:text-brand', compact ? 'p-1' : 'mono gap-1 p-1 text-xs']}
+    aria-label="Delete this request"
+    title="Delete this request"
+  >
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5"></path>
+    </svg>
+    {!compact && <span>Delete</span>}
+  </button>
+</form>

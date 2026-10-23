@@ -10,8 +10,8 @@ Personal site and 1:1 booking for **Aliaksei Kozel** — strategy / operations /
 - `/recommendations/` — the full set of quotes, each with an original / translation toggle
 - `/schedule/` — 1:1 booking: pick a session type → a time → leave a note
 - `/notes/` — writing, dated by when it was written
-- `/privacy/` — what's stored and why
-- `/me` — the requests table, where a request is confirmed or declined (behind Cloudflare Access in production)
+- `/privacy/` — what's stored, for how long, and how to have it removed
+- `/me` — the requests table, where a request is confirmed, declined, or deleted (behind Cloudflare Access in production)
 - `404` — styled not-found page (English only)
 
 Booking is **request-based and free**: pick a slot, send a request, and I answer either way. Every session is **30 minutes** — `RE: Anything`, `RE: Career`, `RE: Business`. What separates the three is what each sets out to do, not how long it takes.
@@ -73,6 +73,16 @@ That is what lets the schema land before the code without breaking the running W
 keeps a rollback a code-only operation. Wrangler backs up automatically before applying, and D1
 keeps 30 days of time travel; `db:backup` is the readable file for the destructive ones.
 
+## Retention
+
+A booking request is deleted **90 days after the session it was for**. Two things do it: a daily Cron Trigger
+(`src/worker.js` → `src/lib/retention.js`), and a purge whenever `/me` is loaded, so the page can never show a
+request the privacy page says has expired. `/me` also has a per-row delete for test data or an erasure request.
+
+The privacy page says a backup may hold a copy for **up to 30 days**. That is D1's time-travel window on the
+paid plan (7 days on Free), stated at its upper bound so a plan change does not quietly make the sentence false.
+Time travel cannot be disabled; our own `backups/` exports are local files and can be deleted on demand.
+
 ## Local development
 
 ```bash
@@ -117,7 +127,8 @@ src/components/ Cta, LocaleSwitcher, StatusForm, Recommendation, page bodies
 src/content/    notes (markdown)
 src/i18n/       locales, the page registry, the chrome dictionary, email copy
 src/data/       content (site, résumé, sessions, palette)
-src/lib/        slots, timezone, email, .ics, requests, headers, notes, sitemap, linkify, api
+src/lib/        slots, timezone, email, .ics, requests, headers, notes, sitemap, retention, linkify, api
+src/worker.js   the Worker entry: Astro's handler plus the daily retention cron
 src/assets/js/  client scripts (schedule, reveal, notes, recommendations, press)
 migrations/     D1 schema
 public/         fonts, images, résumé PDF, bimi logo, _headers, robots.txt, accent.js

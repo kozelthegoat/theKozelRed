@@ -5,7 +5,9 @@ import { listParams, listSql, listHref, parsePast } from '../lib/requests.js';
 import { availability, sessionTypes } from '../data/sessions.js';
 import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel, nowInTz } from '../lib/tz.js';
 import StatusForm from '../components/StatusForm.astro';
+import DeleteForm from '../components/DeleteForm.astro';
 import { linkify } from '../lib/linkify.js';
+import { purgeExpired } from '../lib/retention.js';
 
 export const prerender = false;
 
@@ -47,6 +49,11 @@ let pending = 0;
 let list = listParams(params, 0);
 
 if (db) {
+  // The cron does this daily; this is the safety net for a day it didn't run, and it means the
+  // page can never show a request the privacy page says has expired.
+  const purged = await purgeExpired(db, today);
+  if (purged) console.warn(`[me] purged ${purged} expired request(s)`);
+
   const counts = await db
     .prepare(
       `SELECT
@@ -215,13 +222,22 @@ const statusTone = (s) =>
                     <p class={`mono mt-1 ${statusTone(r.status)}`}>{r.status}</p>
                     {r.note && <p class="mt-1 text-sm text-secondary" set:html={linkify(r.note)} />}
                   </div>
-                  <StatusForm
-                    request={r}
-                    sort={list.sort}
-                    dir={list.dir}
-                    page={list.page}
-                    past={list.past}
-                  />
+                  <div class="flex items-center justify-between gap-3">
+                    <StatusForm
+                      request={r}
+                      sort={list.sort}
+                      dir={list.dir}
+                      page={list.page}
+                      past={list.past}
+                    />
+                    <DeleteForm
+                      request={r}
+                      sort={list.sort}
+                      dir={list.dir}
+                      page={list.page}
+                      past={list.past}
+                    />
+                  </div>
                 </article>
               ))}
             </div>
@@ -321,14 +337,24 @@ const statusTone = (s) =>
                         <span class="block">{r.requested.time}</span>
                       </td>
                       <td class="py-4 whitespace-nowrap">
-                        <StatusForm
-                          request={r}
-                          sort={list.sort}
-                          dir={list.dir}
-                          page={list.page}
-                          past={list.past}
-                          variant="icon"
-                        />
+                        <div class="flex items-center justify-end gap-2">
+                          <StatusForm
+                            request={r}
+                            sort={list.sort}
+                            dir={list.dir}
+                            page={list.page}
+                            past={list.past}
+                            variant="icon"
+                          />
+                          <DeleteForm
+                            request={r}
+                            sort={list.sort}
+                            dir={list.dir}
+                            page={list.page}
+                            past={list.past}
+                            variant="icon"
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -375,5 +401,6 @@ const statusTone = (s) =>
   </section>
   <script>
     import '../assets/js/notes.js';
+    import '../assets/js/requests.js';
   </script>
 </Base>

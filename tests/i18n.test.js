@@ -23,6 +23,19 @@ describe('the dictionary', () => {
       expect({ locale, missing, extra }).toEqual({ locale, missing: [], extra: [] });
     }
   });
+
+  // The retention sentence and the retention rule are one fact. A hardcoded "90" in three
+  // translations is three places to forget; these placeholders are filled from src/lib/retention.js.
+  it('leaves the retention numbers for the code to fill', () => {
+    for (const locale of locales) {
+      const body = ui[locale]['privacy.retention.body'];
+      expect({ locale, days: body.includes('{days}'), backup: body.includes('{backup}') }).toEqual({
+        locale,
+        days: true,
+        backup: true
+      });
+    }
+  });
 });
 
 describe('locale data', () => {

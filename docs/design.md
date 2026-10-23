@@ -63,6 +63,15 @@ instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md`
   for an answer from the same address (`409 already_pending`) until the first is confirmed or
   declined. The edge rate limit on `POST /api/requests` lives in the Cloudflare dashboard, not this
   repo.
+
+## Retention
+
+- A request is deleted **90 days after its `slot_date`** by a daily Cron Trigger (`src/worker.js` →
+  `src/lib/retention.js`), and again whenever `/me` is loaded, so the inbox cannot outlive the
+  promise. `/me` has a per-row delete for test data or an erasure request; neither logs the payload.
+- `/privacy/` states the backup window as **up to 30 days** — D1 time travel on the paid plan (7 on
+  Free) — as an upper bound, so a plan change cannot make the page false. Time travel is always on
+  and cannot be shortened; `backups/` exports are local and can be deleted on demand.
 - **Timezones:** the API returns raw `{date, time}` wall-clock in Minsk; the browser shows each
   slot in the **visitor's** timezone (auto-detected, switchable).
 

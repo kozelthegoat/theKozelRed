@@ -140,6 +140,12 @@ export const ui = {
     'privacy.where': 'Where it goes',
     'privacy.cloudflare': 'hosts this site and stores your request.',
     'privacy.resend': 'delivers the emails.',
+    'privacy.retention': 'How long',
+    'privacy.retention.body':
+      'A request is deleted {days} days after the session it was for. A point-in-time backup may hold a copy for up to {backup} days after that.',
+    'privacy.removal': 'Removal',
+    'privacy.removal.body':
+      'Write to hello@kozel.red and I will delete it sooner. Emails already sent to arrange a session remain in the mailboxes and cannot be recalled.',
     'privacy.cookies': 'Cookies & tracking',
     'privacy.cookies.body': 'No cookies. No analytics. No ads.'
   },
@@ -269,6 +275,12 @@ export const ui = {
     'privacy.where': 'Куда это уходит',
     'privacy.cloudflare': 'хранит этот сайт и ваш запрос.',
     'privacy.resend': 'доставляет письма.',
+    'privacy.retention': 'Как долго',
+    'privacy.retention.body':
+      'Заявка удаляется через {days} дней после встречи, для которой она была оставлена. Резервная копия базы может хранить её ещё до {backup} дней.',
+    'privacy.removal': 'Удаление',
+    'privacy.removal.body':
+      'Напишите на hello@kozel.red, и я удалю её раньше. Письма, уже отправленные для согласования встречи, остаются в почтовых ящиках — отозвать их нельзя.',
     'privacy.cookies': 'Cookies и отслеживание',
     'privacy.cookies.body': 'Ни cookies. Ни аналитики. Ни рекламы.'
   },
@@ -397,6 +409,12 @@ export const ui = {
     'privacy.where': 'Куды гэта трапляе',
     'privacy.cloudflare': 'трымае гэты сайт і ваш запыт.',
     'privacy.resend': 'дастаўляе лісты.',
+    'privacy.retention': 'Як доўга',
+    'privacy.retention.body':
+      'Заяўка выдаляецца праз {days} дзён пасля сустрэчы, для якой яна была пакінута. Рэзервовая копія базы можа захоўваць яе яшчэ да {backup} дзён.',
+    'privacy.removal': 'Выдаленне',
+    'privacy.removal.body':
+      'Напішыце на hello@kozel.red, і я выдалю яе раней. Лісты, ужо адпраўленыя для ўзгаднення сустрэчы, застаюцца ў паштовых скрынях — адазваць іх немагчыма.',
     'privacy.cookies': 'Cookies і адсочванне',
     'privacy.cookies.body': 'Ні cookies. Ні аналітыкі. Ні рэкламы.'
   }
