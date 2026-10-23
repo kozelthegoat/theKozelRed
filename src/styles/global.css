@@ -406,6 +406,24 @@ dialog.req-done[open] {
   border-color: var(--brand);
 }
 
+/* The skip link: the first thing a keyboard reaches, invisible until it has focus. Leaving it in
+   the layout would add a line above the ticker on every page; position:absolute keeps it out. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 50;
+  padding: 0.75rem 1rem;
+  background: var(--brand);
+  color: var(--on-brand);
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 0;
+  outline: 2px solid var(--on-brand);
+  outline-offset: 2px;
+}
+
 /* The booking form's honeypot: present for form-fillers, off-screen for people. Not
    display:none, which most bots skip. aria-hidden + tabindex="-1" keep it out of the
    accessibility tree and the tab order. */

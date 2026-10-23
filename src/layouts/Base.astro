@@ -83,9 +83,13 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
     <script is:inline src="/accent.js"></script>
   </head>
   <body>
+    <!-- Keyboard users reach the content before the ticker and the navigation. It stays out of
+         sight until it is focused, which is the only time it is useful. -->
+    <a class="skip-link mono" href="#main">Skip to content</a>
     <div class="mx-auto min-h-screen max-w-[1680px] hair-l hair-r">
-      <!-- ticker -->
-      <div class="marquee py-3">
+      <!-- ticker: decorative, and repeated so the loop has no seam — one copy for the eye, none for
+           a screen reader, which would otherwise hear the five words twice on every page. -->
+      <div class="marquee py-3" aria-hidden="true">
         <div class="marquee__track mono text-muted">
           {
             [...ticker, ...ticker].map((word) => (
@@ -144,7 +148,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
         </div>
       </header>
 
-      <main id="main">
+      <main id="main" tabindex="-1">
         <slot />
       </main>
 
