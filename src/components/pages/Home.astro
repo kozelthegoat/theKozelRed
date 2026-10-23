@@ -38,13 +38,13 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
 
   <!-- hero -->
   <section>
-    <div class="grid md:grid-cols-[1fr_auto]">
+    <div class="grid lg:grid-cols-[1fr_auto]">
       <div class="px-[var(--pad)] pt-20 pb-14">
         <p class="mono text-brand">{t('home.eyebrow')}</p>
         <h1 class="mt-6 max-w-[18ch] text-[clamp(2rem,6.7vw,5rem)] font-medium">
           {
             roles.map((role) => (
-              <span class="block">
+              <span class="block whitespace-nowrap">
                 <span aria-hidden="true">· </span>
                 {role}
               </span>
