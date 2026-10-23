@@ -37,7 +37,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
     <div class="grid md:grid-cols-[1fr_auto]">
       <div class="px-[var(--pad)] pt-20 pb-14">
         <p class="mono text-brand">{t('home.eyebrow')}</p>
-        <h1 class="mt-6 max-w-[18ch] text-[clamp(2.6rem,7.5vw,6.5rem)] font-medium">
+        <h1 class="mt-6 max-w-[18ch] text-[clamp(2.25rem,7.5vw,5.65rem)] font-medium">
           {t('home.title')}
         </h1>
         <div class="mt-12 flex flex-wrap gap-3">
@@ -108,7 +108,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
   <section id="expertise">
     <div class="px-[var(--pad)] pt-14">
       <p class="mono text-brand">{t('nav.expertise')}</p>
-      <h2 class="mt-4 max-w-[26ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+      <h2 class="mt-4 max-w-[26ch] text-[clamp(1.55rem,4vw,2.6rem)] font-medium">
         {t('home.expertise.title')}
       </h2>
     </div>
@@ -123,7 +123,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
               {String(i + 1).padStart(2, '0')}
             </span>
             <span
-              class="inline-block text-[clamp(1.2rem,1.9vw,1.6rem)] font-medium uppercase leading-[1.15] tracking-tight text-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-brand"
+              class="inline-block text-[clamp(1.05rem,1.9vw,1.4rem)] font-medium uppercase leading-[1.15] tracking-tight text-foreground transition-all duration-500 group-hover:translate-x-1 group-hover:text-brand"
             >
               {item}
             </span>
@@ -137,7 +137,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
   <section id="experience">
     <div class="px-[var(--pad)] pt-12">
       <p class="mono text-brand">{t('nav.experience')}</p>
-      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">{t('home.experience.title')}</h2>
+      <h2 class="mt-4 text-[clamp(1.55rem,4vw,2.8rem)] font-medium">{t('home.experience.title')}</h2>
     </div>
     {
       experience.map((job, i) => (
@@ -249,7 +249,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
   <section id="recommendations">
     <div class="px-[var(--pad)] pt-18">
       <p class="mono text-brand">{t('reco.eyebrow')}</p>
-      <h2 class="mt-4 text-[clamp(1.8rem,4vw,3.2rem)] font-medium">{t('home.recommendations.title')}</h2>
+      <h2 class="mt-4 text-[clamp(1.55rem,4vw,2.8rem)] font-medium">{t('home.recommendations.title')}</h2>
     </div>
     <div class="grid md:grid-cols-2">
       {
@@ -277,7 +277,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
   <section id="pro-bono" class="grid gap-8 px-[var(--pad)] pt-18 pb-16 md:grid-cols-[1fr_auto] md:items-end">
     <div>
       <p class="mono text-brand">{t('footer.proBono')}</p>
-      <h2 class="mt-4 max-w-[18ch] text-[clamp(1.8rem,4vw,3rem)] font-medium">
+      <h2 class="mt-4 max-w-[18ch] text-[clamp(1.55rem,4vw,2.6rem)] font-medium">
         {t('home.proBono.title')}
       </h2>
       <!-- What pro bono means here, in two lines: not a discount on a service, but time given. -->

@@ -38,7 +38,7 @@
 @layer base {
   html {
     @apply font-sans;
-    font-size: 87%;
+    font-size: 100%;
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
     -webkit-text-size-adjust: 100%;
@@ -153,14 +153,14 @@ dialog.req-done[open] {
 /* Page title — one size for every page h1, so they can't drift apart.
    The home hero keeps its own, much larger display size. */
 .page-title {
-  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-size: clamp(1.9rem, 6vw, 3.9rem);
   font-weight: 500;
 }
 
 /* Mono micro-label */
 .mono {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 1;
@@ -396,14 +396,17 @@ dialog.req-done[open] {
 .field {
   border: var(--hair) solid var(--border);
   background: transparent;
-  /* Matches the calendar's chips and the picker at every width, not just on phones; the
-     fields opt out of the 16px iOS-zoom guard, which is why iOS zooms on focus. */
+  /* Compact on desktop, matching the calendar's chips. On a phone it takes 16px below, because
+     iOS zooms the page whenever a control under 16px takes focus. */
   font-size: 0.875rem;
   transition: border-color 0.15s ease;
 }
 .field:focus {
   outline: none;
   border-color: var(--brand);
+}
+@media (max-width: 767px) {
+  .field { font-size: 16px; }
 }
 
 /* The skip link: the first thing a keyboard reaches, invisible until it has focus. Leaving it in
@@ -475,6 +478,7 @@ main > article:last-of-type {
   min-width: 12rem;
   padding: 0.85rem 1.15rem;
   border: var(--hair) solid var(--border);
+  font-size: 0.875rem;
   color: var(--foreground);
   overflow: hidden;
   isolation: isolate;
@@ -594,7 +598,7 @@ main > article:last-of-type {
 .slide.is-active { opacity: 1; pointer-events: auto; }
 
 .slide-glyph {
-  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-size: clamp(3.05rem, 9vw, 6.1rem);
   line-height: 0.5;
   color: var(--brand);
 }
@@ -607,7 +611,7 @@ main > article:last-of-type {
 }
 .slide-cite {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   /* <cite> is italic by default, which is not this site's voice. The list variant already carries
@@ -627,7 +631,7 @@ main > article:last-of-type {
 }
 .reco-bullet {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   min-width: 2.25rem;
   padding: 0.4rem 0.55rem;
@@ -648,7 +652,7 @@ main > article:last-of-type {
    so this is the whole affordance: no second page, no second quote on screen at once. */
 .reco-original {
   margin-top: 1rem;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);

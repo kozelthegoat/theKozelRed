@@ -78,6 +78,17 @@ instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md`
 - **Timezones:** the API returns raw `{date, time}` wall-clock in Minsk; the browser shows each
   slot in the **visitor's** timezone (auto-detected, switchable).
 
+## Type
+
+- The base is the browser default (**16px**), not a percentage of it: the site is text-first, and
+  body copy is the thing people read.
+- `.mono` micro-labels are **12px** (uppercase, tracked). Buttons take **14px**, because an action
+  is not a label.
+- Display sizes keep their old rendered sizes: when the base rose from 87% to 100%, every
+  `clamp()` rem bound was trimmed by 0.87, so headlines did not grow with the copy.
+- Fields are 14px on desktop and **16px under 768px**, because iOS zooms the page whenever a
+  focused control is smaller than that.
+
 ## Donations
 
 A **floating "Donate" button** → an **external link** (`site.donateUrl`), hidden while unset.
