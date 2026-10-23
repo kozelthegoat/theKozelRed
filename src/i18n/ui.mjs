@@ -9,7 +9,7 @@ export const ui = {
     'nav.expertise': 'Expertise',
     'nav.experience': 'Experience',
     'nav.notes': 'Notes',
-    'ribbon.line': 'Today is the 84th of August.',
+    'ribbon.line': 'Today is the {n}{suffix} of August.',
     'ribbon.dismiss': 'Dismiss',
     'a11y.language': 'Language',
 
@@ -156,7 +156,7 @@ export const ui = {
     'nav.expertise': 'Экспертиза',
     'nav.experience': 'Опыт',
     'nav.notes': 'Заметки',
-    'ribbon.line': 'Сегодня 84-е августа.',
+    'ribbon.line': 'Сегодня {n}-е августа.',
     'ribbon.dismiss': 'Закрыть',
     'a11y.language': 'Язык',
 
@@ -293,7 +293,7 @@ export const ui = {
     'nav.expertise': 'Экспертыза',
     'nav.experience': 'Вопыт',
     'nav.notes': 'Нататкі',
-    'ribbon.line': 'Сёння 84-е жніўня.',
+    'ribbon.line': 'Сёння {n}-е жніўня.',
     'ribbon.dismiss': 'Закрыць',
     'a11y.language': 'Мова',
 

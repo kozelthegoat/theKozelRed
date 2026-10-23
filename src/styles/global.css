@@ -438,6 +438,8 @@ dialog.req-done[open] {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  /* Bleed over the page frame's 1px hairlines, so the band has no pale edges. */
+  margin-inline: calc(-1 * var(--hair));
   padding: 0.65rem calc(var(--pad) + 1.75rem);
   /* White on the raw hue fails AA on Tue–Thu (3.2–3.8:1), so the band takes the day's colour at
      75% with black: the same hue, deep enough for white text every day. */

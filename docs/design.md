@@ -81,16 +81,18 @@ instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md`
 ## Ribbon
 
 The strip above the header is the weekday's colour with white-on-brand text, one dry line of mood
-copy (“Today is the 84th of August”). It is static, so there is nothing to pause. The X stores
-one local preference (`public/ribbon.js`) and is switched on by `site.ribbonDismissible`; there is
-no cookie and no identifier.
+copy (“Today is the 84th of August”). The number counts days since 1 August and refreshes in the
+browser, so it becomes the 85th tomorrow without a deploy. It is static, so there is nothing to
+pause. The X stores one local preference (`public/ribbon.js`) and is switched on by
+`site.ribbonDismissible`; there is no cookie and no identifier.
 
 ## Type
 
 - The base is the browser default (**16px**), not a percentage of it: the site is text-first, and
   body copy is the thing people read.
 - `.mono` micro-labels are **12px** (uppercase, tracked). Buttons take **14px**, because an action
-  is not a label.
+  is not a label. All caps belongs to headings and mono labels; body copy and list items keep
+  their sentence case.
 - Display sizes keep their old rendered sizes: when the base rose from 87% to 100%, every
   `clamp()` rem bound was trimmed by 0.87, so headlines did not grow with the copy.
 - Fields are 14px on desktop and **16px under 768px**, because iOS zooms the page whenever a
@@ -154,9 +156,10 @@ PNG icons (apple-touch / 192 / 512) stay one color — regenerate with `npm run 
 ### Ribbon
 
 The strip above the header is the weekday's colour with white-on-brand text, one dry line of mood
-copy (“Today is the 84th of August”). It is static, so there is nothing to pause. The X stores
-one local preference (`public/ribbon.js`) and is switched on by `site.ribbonDismissible`; there is
-no cookie and no identifier.
+copy (“Today is the 84th of August”). The number counts days since 1 August and refreshes in the
+browser, so it becomes the 85th tomorrow without a deploy. It is static, so there is nothing to
+pause. The X stores one local preference (`public/ribbon.js`) and is switched on by
+`site.ribbonDismissible`; there is no cookie and no identifier.
 
 ## Type & headings
 

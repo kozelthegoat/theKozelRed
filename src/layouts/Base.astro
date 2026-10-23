@@ -1,11 +1,13 @@
 ---
 import { site, nameFor } from '../data/site.js';
-import { sessionTypes } from '../data/sessions.js';
+import { availability, sessionTypes } from '../data/sessions.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
 import { dirFor, localeFromPath, pathInLocale, prefixFor } from '../i18n/config.mjs';
 import { alternatesForPath, pageKeyForPath } from '../i18n/pages.mjs';
-import { lookup, translator } from '../i18n/ui.mjs';
+import { fill, lookup, translator } from '../i18n/ui.mjs';
+import { augustDay, ordinal } from '../lib/august.js';
+import { nowInTz } from '../lib/tz.js';
 import Cta from '../components/Cta.astro';
 import LocaleSwitcher from '../components/LocaleSwitcher.astro';
 import '../styles/fonts.css';
@@ -25,6 +27,11 @@ const alternates = explicitAlternates ?? alternatesForPath(Astro.url.pathname);
 // locale is shareable and indexable and nothing has to be remembered between visits.
 const locale = localeFromPath(Astro.url.pathname);
 const t = translator(locale);
+// The line counts the days since 1 August. The build renders the site's Minsk day; the browser
+// script below refreshes it to the visitor's day without needing a deploy.
+const ribbonDay = augustDay(nowInTz(availability.timezone).date);
+const ribbonSuffix = locale === 'en' ? ordinal(ribbonDay) : '';
+const ribbonLine = fill(t('ribbon.line'), { n: ribbonDay, suffix: ribbonSuffix });
 
 // Named from the registry and the dictionary, not from the route file that renders the page. The
 // three wrappers that serve one page in three languages used to each carry the same English title,
@@ -95,7 +102,7 @@ const canonical = new URL(Astro.url.pathname, origin).href;
       <!-- The masthead quote. It does not move, so there is nothing to pause; the dismiss control
            exists but is switched off in site.js until this space carries an announcement. -->
       <div class="ribbon" data-ribbon>
-        <p class="mono text-balance tracking-[0.02em] text-muted">{t('ribbon.line')}</p>
+        <p class="mono text-balance tracking-[0.02em]" data-ribbon-line data-template={t('ribbon.line')}>{ribbonLine}</p>
         {
           site.ribbonDismissible && (
             <button type="button" class="ribbon-close" data-ribbon-close aria-label={t('ribbon.dismiss')}>
@@ -257,5 +264,17 @@ const canonical = new URL(Astro.url.pathname, origin).href;
       import '../assets/js/reveal.js';
       import '../assets/js/press.js';
     </script>
+  <script>
+    import { augustDay, ordinal } from '../lib/august.js';
+
+    const line = document.querySelector('[data-ribbon-line]');
+    if (line) {
+      const n = augustDay(new Date());
+      const suffix = document.documentElement.lang === 'en' ? ordinal(n) : '';
+      line.textContent = line.dataset.template
+        .replaceAll('{n}', String(n))
+        .replaceAll('{suffix}', suffix);
+    }
+  </script>
   </body>
 </html>
