@@ -95,10 +95,10 @@ const canonical = new URL(Astro.url.pathname, origin).href;
       <!-- The masthead quote. It does not move, so there is nothing to pause; the dismiss control
            exists but is switched off in site.js until this space carries an announcement. -->
       <div class="ribbon" data-ribbon>
-        <p class="mono text-balance tracking-[0.02em] text-muted">{t('ribbon.quote')}</p>
+        <p class="mono text-balance tracking-[0.02em] text-muted">{t('ribbon.line')}</p>
         {
           site.ribbonDismissible && (
-            <button type="button" class="icon-btn shrink-0 p-1" data-ribbon-close aria-label={t('ribbon.dismiss')}>
+            <button type="button" class="ribbon-close" data-ribbon-close aria-label={t('ribbon.dismiss')}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
@@ -242,7 +242,6 @@ const canonical = new URL(Astro.url.pathname, origin).href;
             <span>© {site.previousName}</span>
             <span>| {site.bornYear} – {site.renameYear}</span>
           </div>
-          <p class="mt-3">{t('footer.credit')}</p>
         </div>
       </footer>
     </div>

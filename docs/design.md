@@ -78,12 +78,12 @@ instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md`
 - **Timezones:** the API returns raw `{date, time}` wall-clock in Minsk; the browser shows each
   slot in the **visitor's** timezone (auto-detected, switchable).
 
-## Masthead
+## Ribbon
 
-The line above the header is a quote from *Kung Fu Panda* (2008), translated per locale; the
-footer credits it. It is static: a motto is not an announcement, so there is nothing to pause. The
-dismiss control and its local preference are built (`public/ribbon.js`) but switched off in
-`site.ribbonDismissible` until the ribbon carries news.
+The strip above the header is the weekday's colour with white-on-brand text, one dry line of mood
+copy (“Today is the 84th of August”). It is static, so there is nothing to pause. The X stores
+one local preference (`public/ribbon.js`) and is switched on by `site.ribbonDismissible`; there is
+no cookie and no identifier.
 
 ## Type
 
@@ -151,12 +151,12 @@ Tailwind maps these via `@theme` → `bg-background`, `text-foreground`, `text-b
 so the tab matches the day). `--brand-deep` derives from `--brand` via `color-mix`. The static
 PNG icons (apple-touch / 192 / 512) stay one color — regenerate with `npm run icons`.
 
-### Masthead
+### Ribbon
 
-The line above the header is a quote from *Kung Fu Panda* (2008), translated per locale; the
-footer credits it. It is static: a motto is not an announcement, so there is nothing to pause. The
-dismiss control and its local preference are built (`public/ribbon.js`) but switched off in
-`site.ribbonDismissible` until the ribbon carries news.
+The strip above the header is the weekday's colour with white-on-brand text, one dry line of mood
+copy (“Today is the 84th of August”). It is static, so there is nothing to pause. The X stores
+one local preference (`public/ribbon.js`) and is switched on by `site.ribbonDismissible`; there is
+no cookie and no identifier.
 
 ## Type & headings
 

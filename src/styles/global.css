@@ -430,17 +430,39 @@ dialog.req-done[open] {
   outline-offset: 2px;
 }
 
-/* The masthead quote: static on purpose — an announcement can move, a motto cannot. The
-   dismissal is built in public/ribbon.js and switched on from site.js. */
+/* The ribbon is the weekday's colour with the day's ink on it, like the solid button. It is
+   static; the dismissal is built in public/ribbon.js and switched on from site.js. */
 .ribbon {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
-  padding: 0.7rem var(--pad);
-  border-bottom: var(--hair) solid var(--border);
+  padding: 0.65rem calc(var(--pad) + 1.75rem);
+  /* White on the raw hue fails AA on Tue–Thu (3.2–3.8:1), so the band takes the day's colour at
+     75% with black: the same hue, deep enough for white text every day. */
+  background: color-mix(in srgb, var(--brand) 75%, #000);
+  color: var(--on-brand);
 }
-.ribbon p { line-height: 1.5; }
+.ribbon p { line-height: 1.4; }
+/* The close sits outside the centred line, on the day's ink like the text. */
+.ribbon-close {
+  position: absolute;
+  right: var(--pad);
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem;
+  transform: translateY(-50%);
+  color: var(--on-brand);
+  opacity: 0.8;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+.ribbon-close:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--on-brand) 18%, transparent);
+}
 html[data-ribbon='off'] [data-ribbon] { display: none; }
 
 /* The booking form's honeypot: present for form-fillers, off-screen for people. Not
