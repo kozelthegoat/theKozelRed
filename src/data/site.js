@@ -22,7 +22,7 @@ export const site = {
   // The address the site actually shows, in the footer. Published on purpose, and the one a
   // stranger should write to.
   contactEmail: 'hello@kozel.red',
-  resume: '/kozel-resume-2026-10-18.pdf',
+  resume: '/kozel-resume-2026-10-23.pdf',
   languages: ['English (C2)', 'Belarusian (C1)', 'Russian (native)'],
   offClock: ['Meditation', 'Mind–body discipline', 'Volunteering', 'Vibe Coding'],
   // Floating "Donate" button target (external). Empty = button hidden.
