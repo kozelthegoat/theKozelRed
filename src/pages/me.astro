@@ -7,7 +7,7 @@ import { wallClockInTz, instantFromSqliteUtc, zoneOffsetLabel, nowInTz } from '.
 import StatusForm from '../components/StatusForm.astro';
 import DeleteForm from '../components/DeleteForm.astro';
 import { linkify } from '../lib/linkify.js';
-import { purgeExpired } from '../lib/retention.js';
+import { lastRetentionRun, isStale } from '../lib/retention.js';
 
 export const prerender = false;
 
@@ -46,13 +46,14 @@ let rows = [];
 let total = 0;
 let pastCount = 0;
 let pending = 0;
+let retention = { lastRun: null, stale: false };
 let list = listParams(params, 0);
 
 if (db) {
-  // The cron does this daily; this is the safety net for a day it didn't run, and it means the
-  // page can never show a request the privacy page says has expired.
-  const purged = await purgeExpired(db, today);
-  if (purged) console.warn(`[me] purged ${purged} expired request(s)`);
+  // Report, never repair: if the cron has stopped, the page says so instead of quietly doing its
+  // job and hiding the failure.
+  const lastRun = await lastRetentionRun(db);
+  retention = { lastRun, stale: isStale(lastRun) };
 
   const counts = await db
     .prepare(
@@ -119,6 +120,11 @@ const statusTone = (s) =>
         </p>
       )}
       <p class="mono mt-2 text-muted">Times in {tzLabel}</p>
+      {retention.stale && (
+        <p class="mono mt-2 text-brand">
+          Retention last ran {retention.lastRun ? retention.lastRun.replace('T', ' ').replace('Z', ' UTC') : 'never'} — check the cron.
+        </p>
+      )}
     </div>
 
     <div class="px-[var(--pad)] pb-16">

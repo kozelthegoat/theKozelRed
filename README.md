@@ -75,9 +75,11 @@ keeps 30 days of time travel; `db:backup` is the readable file for the destructi
 
 ## Retention
 
-A booking request is deleted **90 days after the session it was for**. Two things do it: a daily Cron Trigger
-(`src/worker.js` → `src/lib/retention.js`), and a purge whenever `/me` is loaded, so the page can never show a
-request the privacy page says has expired. `/me` also has a per-row delete for test data or an erasure request.
+A booking request is deleted **90 days after the session it was for** by a daily Cron Trigger
+(`src/worker.js` → `src/lib/retention.js`). That is the only place it happens: a second cleanup on page
+load would hide a cron that had stopped, which is the failure worth seeing. Each run writes
+`last_retention_run` to the `meta` table, and `/me` warns when that marker is more than 26 hours old.
+`/me` also has a per-row delete for test data or an erasure request.
 
 The privacy page says a backup may hold a copy for **up to 30 days**. That is D1's time-travel window on the
 paid plan (7 days on Free), stated at its upper bound so a plan change does not quietly make the sentence false.

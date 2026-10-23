@@ -67,8 +67,11 @@ instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md`
 ## Retention
 
 - A request is deleted **90 days after its `slot_date`** by a daily Cron Trigger (`src/worker.js` →
-  `src/lib/retention.js`), and again whenever `/me` is loaded, so the inbox cannot outlive the
-  promise. `/me` has a per-row delete for test data or an erasure request; neither logs the payload.
+  `src/lib/retention.js`). That is the only enforcement point: a read-time purge would repair the
+  state and hide a cron that had stopped. Each run writes `last_retention_run` into `meta`, and
+  `/me` warns when the marker is older than 26 hours; the cron itself also logs when the previous
+  run was stale. `/me` has a per-row delete for test data or an erasure request; neither logs the
+  payload.
 - `/privacy/` states the backup window as **up to 30 days** — D1 time travel on the paid plan (7 on
   Free) — as an upper bound, so a plan change cannot make the page false. Time travel is always on
   and cannot be shortened; `backups/` exports are local and can be deleted on demand.

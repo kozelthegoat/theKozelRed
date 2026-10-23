@@ -1,5 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { RETENTION_DAYS, cutoffDate, purgeExpired, PURGE_SQL } from '../src/lib/retention.js';
+import {
+  RETENTION_DAYS,
+  STALE_AFTER_HOURS,
+  cutoffDate,
+  purgeExpired,
+  isStale,
+  lastRetentionRun,
+  recordRetentionRun,
+  PURGE_SQL
+} from '../src/lib/retention.js';
 
 describe('cutoffDate', () => {
   it('counts back the retention window in whole days', () => {
@@ -63,5 +72,53 @@ describe('purgeExpired', () => {
       prepare: () => ({ bind: () => ({ run: async () => ({}) }) })
     };
     await expect(purgeExpired(db, '2026-10-23')).resolves.toBe(0);
+  });
+});
+
+describe('isStale', () => {
+  const now = Date.parse('2026-10-23T12:00:00Z');
+
+  it('is true when nothing has ever run', () => {
+    expect(isStale(null, now)).toBe(true);
+  });
+
+  it('is true when the marker is unreadable', () => {
+    expect(isStale('yesterday', now)).toBe(true);
+  });
+
+  it('treats a run inside the window as healthy', () => {
+    expect(isStale('2026-10-23T06:17:00Z', now)).toBe(false);
+    expect(isStale('2026-10-22T10:00:01Z', now)).toBe(false);
+  });
+
+  it('treats a run older than the window as a missed cron', () => {
+    expect(isStale('2026-10-22T09:00:00Z', now)).toBe(true);
+    expect(STALE_AFTER_HOURS).toBe(26);
+  });
+});
+
+describe('the heartbeat', () => {
+  it('reads the marker, and null when it is missing', async () => {
+    const withRow = { prepare: () => ({ bind: () => ({ first: async () => ({ value: '2026-10-23T06:17:00Z' }) }) }) };
+    const empty = { prepare: () => ({ bind: () => ({ first: async () => null }) }) };
+    await expect(lastRetentionRun(withRow)).resolves.toBe('2026-10-23T06:17:00Z');
+    await expect(lastRetentionRun(empty)).resolves.toBeNull();
+  });
+
+  it('writes the marker as an upsert, so the table keeps one row per key', async () => {
+    const calls = [];
+    const db = {
+      prepare(sql) {
+        return {
+          bind(...args) {
+            return { run: async () => calls.push({ sql, args }) };
+          }
+        };
+      }
+    };
+    await recordRetentionRun(db, '2026-10-23T06:17:00Z');
+    expect(calls).toHaveLength(1);
+    expect(calls[0].args).toEqual(['last_retention_run', '2026-10-23T06:17:00Z']);
+    expect(calls[0].sql).toMatch(/ON CONFLICT/i);
   });
 });
