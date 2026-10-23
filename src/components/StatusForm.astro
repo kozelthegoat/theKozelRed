@@ -4,6 +4,9 @@
 // the POST lands back on the same page and sort.
 const { request, sort, dir, page, past = false, variant = 'label' } = Astro.props;
 const compact = variant === 'icon';
+// The detail page wants both decisions on one line at every width, so its buttons take their
+// content width instead of .btn's 12rem.
+const inline = variant === 'inline';
 
 const BUTTONS = [
   { value: 'confirmed', label: 'Confirm', icon: 'M4 10.5l4 4 8-9.5' },
@@ -38,7 +41,7 @@ const chosen = BUTTONS.find((b) => b.value === request.status);
       action="/api/me/status"
       class:list={[
         'status-form flex items-center gap-2',
-        compact ? 'flex-nowrap justify-end' : 'flex-wrap'
+        compact ? 'flex-nowrap justify-end' : inline ? 'flex-nowrap' : 'flex-wrap'
       ]}
     >
       <input type="hidden" name="id" value={request.id} />
@@ -49,7 +52,7 @@ const chosen = BUTTONS.find((b) => b.value === request.status);
 
       {BUTTONS.map((button) => (
         <button
-          class:list={['btn', compact ? 'btn--icon' : 'mono']}
+          class:list={['btn', compact ? 'btn--icon' : inline ? 'btn--inline mono' : 'mono']}
           name="status"
           value={button.value}
           aria-label={compact ? button.label : undefined}

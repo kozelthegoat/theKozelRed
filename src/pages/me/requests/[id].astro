@@ -130,10 +130,19 @@ const language = row?.locale ? labelFor(row.locale) : null;
             </div>
           </div>
 
-          <aside class="hair grid content-start gap-5 self-start p-5">
+          <aside class="grid content-start gap-6 self-start">
             <p class="mono text-muted">Actions</p>
-            <StatusForm request={row} sort={sort} dir={dir} page={page} past={past} />
-            <DeleteForm request={row} sort={sort} dir={dir} page={page} past={past} />
+            <StatusForm
+              request={row}
+              sort={sort}
+              dir={dir}
+              page={page}
+              past={past}
+              variant="inline"
+            />
+            <div class="mt-4">
+              <DeleteForm request={row} sort={sort} dir={dir} page={page} past={past} />
+            </div>
           </aside>
         </div>
       </section>
