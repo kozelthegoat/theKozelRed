@@ -1,5 +1,5 @@
 ---
-import { site, nameFor } from '../data/site.js';
+import { site, nameFor, locationFor, availabilityFor } from '../data/site.js';
 import { availability, sessionTypes } from '../data/sessions.js';
 import { WEEKDAY_HUES } from '../data/palette.js';
 import { publishedNotes } from '../lib/note-source.js';
@@ -202,12 +202,12 @@ const canonical = new URL(Astro.url.pathname, origin).href;
           <div>
             <p class="mono text-muted">{t('footer.location')}</p>
             <ul class="mt-4 grid gap-2 text-sm">
-              <li class="whitespace-pre-line text-muted">{site.location}</li>
+              <li class="whitespace-pre-line text-muted">{locationFor(locale)}</li>
             </ul>
             <p class="mono mt-6 text-muted">{t('footer.availability')}</p>
             <ul class="mt-4 grid gap-2 text-sm">
               {
-                site.availability.map((item) => (
+                availabilityFor(locale).map((item) => (
                   <li class="flex gap-2 text-muted">
                     <span class="text-brand">–</span>
                     <span>{item}</span>

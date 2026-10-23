@@ -108,7 +108,7 @@ Email is skipped without secrets, which is the normal state locally — to exerc
 
 ## Editing content
 
-- `src/data/site.js` — name, location, availability, links, room URL
+- `src/data/site.js` — name, location, availability, links, room URL; the location, availability, languages and off-clock facts are written per language
 - `src/data/resume.js` — expertise, experience, recommendations
 - `src/data/sessions.js` — session types + weekly availability
 - `src/content/notes/` — markdown notes; `name.ru.md` / `name.be.md` are the translations

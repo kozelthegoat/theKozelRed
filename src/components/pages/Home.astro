@@ -1,7 +1,7 @@
 ---
 import Cta from '../../components/Cta.astro';
 import Recommendation from '../../components/Recommendation.astro';
-import { site } from '../../data/site.js';
+import { site, locationFor, availabilityFor, languagesFor, offClockFor } from '../../data/site.js';
 import { sessionTypesFor } from '../../data/sessions.js';
 import {
   recommendationsFor,
@@ -30,6 +30,10 @@ const translationLabel = t('reco.seeTranslation');
 // translator chooses the words, not the separator the layout depends on.
 const roles = t('home.roles').split(' · ');
 const clause = t('home.clause');
+const location = locationFor(locale);
+const availability = availabilityFor(locale);
+const languages = languagesFor(locale);
+const offClock = offClockFor(locale);
 
 // Two here, the rest at /recommendations/. Order follows the source array, so Mike comes first —
 // the employer-side sentence is the one worth reading before the others.
@@ -64,12 +68,12 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
       </div>
       <div class="px-[var(--pad)] pb-14 pt-10 lg:w-[22rem] lg:pt-20">
         <dl class="mono grid gap-x-10 gap-y-6 text-muted md:grid-cols-2 lg:grid-cols-1">
-          <div><dt>{t('footer.location')}</dt><dd class="mt-2 whitespace-pre-line text-foreground">{site.location}</dd></div>
+          <div><dt>{t('footer.location')}</dt><dd class="mt-2 whitespace-pre-line text-foreground">{location}</dd></div>
           <div>
             <dt>{t('footer.availability')}</dt>
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
-                {site.availability.map((item) => (
+                {availability.map((item) => (
                   <li>{item}</li>
                 ))}
               </ul>
@@ -79,7 +83,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
             <dt>{t('fact.languages')}</dt>
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
-                {site.languages.map((lang) => (
+                {languages.map((lang) => (
                   <li>{lang}</li>
                 ))}
               </ul>
@@ -89,7 +93,7 @@ const featured = recommendationsFor(locale).filter((r) => homeRecommendations.in
             <dt>{t('fact.offClock')}</dt>
             <dd class="mt-2 text-foreground">
               <ul class="grid gap-1">
-                {site.offClock.map((item) => (
+                {offClock.map((item) => (
                   <li>{item}</li>
                 ))}
               </ul>

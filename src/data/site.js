@@ -40,5 +40,31 @@ export const site = {
   ]
 };
 
+// The facts that are sentences rather than names: each language writes its own. English stays on
+// the site object, where the emails and anything not locale-aware read it.
+const localized = {
+  location: {
+    ru: 'Минск, Беларусь — сейчас\nкуда дальше — решать вам',
+    be: 'Мінск, Беларусь — зараз\nкуды далей — вырашаць вам'
+  },
+  availability: {
+    ru: ['Частичная занятость и контракты', 'Полная занятость с релокацией'],
+    be: ['Частковая занятасць і кантракты', 'Поўная занятасць з рэлакацыяй']
+  },
+  languages: {
+    ru: ['Английский (C2)', 'Белорусский (C1)', 'Русский (родной)'],
+    be: ['Англійская (C2)', 'Беларуская (C1)', 'Руская (родная)']
+  },
+  offClock: {
+    ru: ['Медитация', 'Практика ума и тела', 'Волонтёрство', 'Вайб-кодинг'],
+    be: ['Медытацыя', 'Практыка розуму і цела', 'Валанцёрства', 'Вайб-кодзінг']
+  }
+};
+
+export const locationFor = (locale) => localized.location[locale] ?? site.location;
+export const availabilityFor = (locale) => localized.availability[locale] ?? site.availability;
+export const languagesFor = (locale) => localized.languages[locale] ?? site.languages;
+export const offClockFor = (locale) => localized.offClock[locale] ?? site.offClock;
+
 // The name in one language, falling back to the default spelling.
 export const nameFor = (locale) => site.names?.[locale] ?? site.name;
