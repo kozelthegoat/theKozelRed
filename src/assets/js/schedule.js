@@ -8,6 +8,10 @@ const root = document.querySelector('[data-schedule]');
 
 if (cfgEl && root) {
   const cfg = JSON.parse(cfgEl.textContent);
+  // How long the page has been open, sent with the request. The server drops anything that
+  // arrives faster than a person could fill the form; measuring from load makes browsing the
+  // calendar harmless, since the number only grows.
+  const startedAt = Date.now();
   const $ = (sel) => root.querySelector(sel);
   const pad = (n) => String(n).padStart(2, '0');
   // The words this script writes, and the language it writes dates in, arrive with the config: the
@@ -436,7 +440,10 @@ if (cfgEl && root) {
       // So the confirmation can quote the time back in the clock they booked in …
       tz: state.tz,
       // … and so the emails it triggers can answer in the language this page is in.
-      locale: cfg.locale || 'en'
+      locale: cfg.locale || 'en',
+      // The honeypot (empty for a person) and the fill time, both checked server-side.
+      website: String(data.get('website') || ''),
+      elapsed: Date.now() - startedAt
     };
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;

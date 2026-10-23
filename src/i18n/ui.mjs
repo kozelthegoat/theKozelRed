@@ -106,6 +106,7 @@ export const ui = {
     // visitor's language rather than in the API's.
     'sched.err.slotTaken': 'Please pick another time — that one was just taken.',
     'sched.err.slotUnavailable': 'Please pick another time — that one is no longer available.',
+    'sched.err.alreadyPending': 'You already have a request waiting — I’ll answer that one first.',
     'sched.err.unavailable': 'Please come back later — booking is not available right now.',
     'sched.done.heading': 'Requested',
     'sched.done.thanks': 'Thank you for asking. It means more than the request suggests.',
@@ -234,6 +235,7 @@ export const ui = {
     'sched.err.generic': 'Попробуйте ещё раз — что-то не так.',
     'sched.err.slotTaken': 'Пожалуйста, выберите другое время — это только что заняли.',
     'sched.err.slotUnavailable': 'Пожалуйста, выберите другое время — оно больше недоступно.',
+    'sched.err.alreadyPending': 'У вас уже есть заявка в ожидании — сначала отвечу на неё.',
     'sched.err.unavailable': 'Пожалуйста, заходите позже — запись сейчас недоступна.',
     'sched.done.heading': 'Заявка отправлена',
     'sched.done.thanks': 'Спасибо, что спрашиваете. Это значит больше, чем кажется по заявке.',
@@ -362,6 +364,7 @@ export const ui = {
     'sched.err.generic': 'Паспрабуйце яшчэ раз — нешта не так.',
     'sched.err.slotTaken': 'Калі ласка, выберыце іншы час — гэты толькі што занялі.',
     'sched.err.slotUnavailable': 'Калі ласка, выберыце іншы час — ён больш недасяжны.',
+    'sched.err.alreadyPending': 'У вас ужо ёсць заяўка ў чаканні — спачатку адкажу на яе.',
     'sched.err.unavailable': 'Калі ласка, заходзьце пазней — запіс зараз недаступны.',
     'sched.done.heading': 'Заяўка адпраўлена',
     'sched.done.thanks': 'Дзякуй, што пытаеце. Гэта значыць больш, чым выглядае па заяўцы.',

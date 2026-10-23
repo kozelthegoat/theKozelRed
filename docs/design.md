@@ -58,6 +58,10 @@ instances (`NNN.go.kozel.red`) are the sibling codebase, whose `docs/routing.md`
   get an email; a confirm attaches the `.ics`, a decline closes the thread — same subject either way.
 - **Data (D1):** one `requests` table. A partial unique index keeps one active request per slot,
   and a declined row frees the slot again. The visitor's timezone and locale are stored with the row.
+- **Abuse guards:** the endpoint drops a filled honeypot field and anything submitted faster than a
+  person could fill the form, both with a silent success, and refuses a second live request from the
+  same address (`409 already_pending`) until the first is answered. The edge rate limit on
+  `POST /api/requests` lives in the Cloudflare dashboard, not this repo.
 - **Timezones:** the API returns raw `{date, time}` wall-clock in Minsk; the browser shows each
   slot in the **visitor's** timezone (auto-detected, switchable).
 

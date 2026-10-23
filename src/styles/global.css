@@ -405,6 +405,17 @@ dialog.req-done[open] {
   outline: none;
   border-color: var(--brand);
 }
+
+/* The booking form's honeypot: present for form-fillers, off-screen for people. Not
+   display:none, which most bots skip. aria-hidden + tabindex="-1" keep it out of the
+   accessibility tree and the tab order. */
+.trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 /* Thin, so a long message doesn't summon a chrome-heavy bar beside the words. Neither the tz
    search nor a single-line field ever scrolls, so this only shows up where it is wanted. */
 .field {

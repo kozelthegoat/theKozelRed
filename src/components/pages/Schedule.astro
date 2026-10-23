@@ -194,6 +194,11 @@ const sessionTypes = sessionTypesFor(locale);
       -->
       <div class="flex flex-col">
         <form id="request" data-step="form" class="flex flex-1 flex-col gap-4" novalidate>
+          <!-- A person never sees this; a naive form-filler completes every input it finds. It is
+               off-screen rather than hidden with display:none, which most bots skip. -->
+          <div class="trap" aria-hidden="true">
+            <label>Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+          </div>
           <!--
             One line each, chosen here where the booking is made. The descriptions above say what
             each one involves; this says which one you're asking for, as the last thing before your
@@ -326,6 +331,7 @@ const sessionTypes = sessionTypesFor(locale);
         // visitor's language like every other message on the page.
         slot_taken: t('sched.err.slotTaken'),
         slot_unavailable: t('sched.err.slotUnavailable'),
+        already_pending: t('sched.err.alreadyPending'),
         unavailable: t('sched.err.unavailable')
       }
     })}

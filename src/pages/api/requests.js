@@ -3,6 +3,7 @@ import { computeSlots, minBookable } from '../../lib/slots.js';
 import { json, jsonError } from '../../lib/api.js';
 import { sendBookingEmails } from '../../lib/email.js';
 import { isValidZone } from '../../lib/tz.js';
+import { rejectReason, ACTIVE_REQUEST_SQL } from '../../lib/abuse.js';
 import { locales } from '../../i18n/config.mjs';
 import { env } from 'cloudflare:workers';
 
@@ -20,6 +21,14 @@ export const POST = async ({ request, locals }) => {
     body = await request.json();
   } catch {
     return jsonError('bad_request', 'Invalid request body.');
+  }
+
+  // The two silent checks run before anything is validated or written, so a bot cannot tell a
+  // rejection from a success — and neither check costs a query.
+  const early = rejectReason({ website: body.website, elapsed: body.elapsed });
+  if (early) {
+    console.warn(`[requests] dropped automated submission (${early})`);
+    return json({ ok: true });
   }
 
   const type = findSessionType(String(body.type || ''));
@@ -42,6 +51,22 @@ export const POST = async ({ request, locals }) => {
 
   if (name.length < 2 || name.length > 120) return jsonError('invalid_name', 'Please add your name.');
   if (!EMAIL_RE.test(email)) return jsonError('invalid_email', 'Please add a valid email.');
+
+  // One live request per address. Declining frees it again, so this never blocks a returning
+  // visitor permanently — it stops a flood and an accidental double-submit alike.
+  const live = await db.prepare(ACTIVE_REQUEST_SQL).bind(email).first();
+  const duplicate = rejectReason({
+    website: body.website,
+    elapsed: body.elapsed,
+    active: Boolean(live)
+  });
+  if (duplicate === 'already_pending') {
+    return jsonError(
+      'already_pending',
+      'You already have a request waiting — I will answer that one first.',
+      409
+    );
+  }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
     return jsonError('invalid_slot', 'Pick a time.');
   }

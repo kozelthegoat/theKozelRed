@@ -9,6 +9,21 @@ import {
   pathInLocale,
   prefixFor
 } from '../src/i18n/config.mjs';
+import { ui } from '../src/i18n/ui.mjs';
+
+describe('the dictionary', () => {
+  // Every language is a first-class language: a key that exists in one and not another is a
+  // sentence that silently disappears when someone switches. This is cheaper than discovering it
+  // on a page in Belarusian.
+  it('has the same keys in every language', () => {
+    const keys = Object.fromEntries(locales.map((locale) => [locale, new Set(Object.keys(ui[locale]))]));
+    for (const locale of locales) {
+      const missing = [...keys[locales[0]]].filter((key) => !keys[locale].has(key));
+      const extra = [...keys[locale]].filter((key) => !keys[locales[0]].has(key));
+      expect({ locale, missing, extra }).toEqual({ locale, missing: [], extra: [] });
+    }
+  });
+});
 
 describe('locale data', () => {
   it('gives every locale a name, a direction and a date tag, so nothing downstream special-cases one', () => {
