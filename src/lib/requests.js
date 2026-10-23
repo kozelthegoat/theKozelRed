@@ -58,6 +58,11 @@ export function listHref({ sort, dir, page, past }, overrides = {}) {
   return `/me?${params}`;
 }
 
+// The three states the table knows, written as a person reads them. `new` next to `confirmed`
+// reads like a database field, which is exactly what it is; the page is not a database.
+const STATUS_LABELS = { new: 'Pending', confirmed: 'Confirmed', declined: 'Declined' };
+export const statusLabel = (status) => STATUS_LABELS[status] ?? String(status ?? '');
+
 // The decline notice goes out on the transition only. Without this, declining an
 // already-declined request emails the requester again — and the buttons used to allow
 // confirm/decline toggling, so a few clicks meant a few emails.

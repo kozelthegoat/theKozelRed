@@ -9,6 +9,7 @@ import {
   listHref,
   shouldSendDecline,
   shouldSendConfirm,
+  statusLabel,
   SORTABLE
 } from '../src/lib/requests.js';
 
@@ -195,5 +196,18 @@ describe('shouldSendConfirm', () => {
     expect(shouldSendConfirm('confirmed', 'confirmed')).toBe(false);
     expect(shouldSendConfirm('new', 'declined')).toBe(false);
     expect(shouldSendConfirm('confirmed', 'declined')).toBe(false);
+  });
+});
+
+describe('statusLabel', () => {
+  it('names a status the way a person reads it', () => {
+    expect(statusLabel('new')).toBe('Pending');
+    expect(statusLabel('confirmed')).toBe('Confirmed');
+    expect(statusLabel('declined')).toBe('Declined');
+  });
+
+  it('does not invent a word for a status it has never seen', () => {
+    expect(statusLabel('archived')).toBe('archived');
+    expect(statusLabel(undefined)).toBe('');
   });
 });

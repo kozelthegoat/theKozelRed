@@ -8,6 +8,7 @@ import StatusForm from '../components/StatusForm.astro';
 import DeleteForm from '../components/DeleteForm.astro';
 import { linkify } from '../lib/linkify.js';
 import { lastRetentionRun, isStale } from '../lib/retention.js';
+import { statusLabel } from '../lib/requests.js';
 
 export const prerender = false;
 
@@ -92,6 +93,12 @@ if (db) {
 // Derived, not hardcoded: follows Europe/Minsk if its rules ever change.
 const tzLabel = `${availability.timezone} (${zoneOffsetLabel(availability.timezone)})`;
 
+// The marker is stored in UTC; every other time on the page is Minsk. The warning quotes both,
+// because showing one without the other is how a timestamp gets misread.
+const runWall = retention.lastRun
+  ? wallClockInTz(new Date(retention.lastRun), availability.timezone)
+  : null;
+
 const typeName = (id) => TYPE_NAMES[id] || id;
 const isPast = (d) => d < today;
 
@@ -122,7 +129,9 @@ const statusTone = (s) =>
       <p class="mono mt-2 text-muted">Times in {tzLabel}</p>
       {retention.stale && (
         <p class="mono mt-2 text-brand">
-          Retention last ran {retention.lastRun ? retention.lastRun.replace('T', ' ').replace('Z', ' UTC') : 'never'} — check the cron.
+          {retention.lastRun
+            ? `Cleanup last ran ${retention.lastRun.slice(0, 16).replace('T', ' ')} UTC (${runWall.time} in Minsk) — requests may be kept longer than 90 days.`
+            : 'Cleanup has never run — requests may be kept longer than 90 days.'}
         </p>
       )}
     </div>
@@ -225,7 +234,7 @@ const statusTone = (s) =>
                         {r.email}
                       </a>
                     </p>
-                    <p class={`mono mt-1 ${statusTone(r.status)}`}>{r.status}</p>
+                    <p class={`mono mt-1 ${statusTone(r.status)}`}>{statusLabel(r.status)}</p>
                     {r.note && <p class="mt-1 text-sm text-secondary" set:html={linkify(r.note)} />}
                   </div>
                   <div class="flex items-center justify-between gap-3">
@@ -277,7 +286,7 @@ const statusTone = (s) =>
                       scope="col"
                       aria-sort={ariaSort('status')}
                       class="mono py-3 font-normal text-muted"
-                      style="width:5rem;"
+                      style="width:7.5rem;"
                     >
                       <a class="relative whitespace-nowrap hover:text-brand" href={sortHref('status')}>
                         Status
