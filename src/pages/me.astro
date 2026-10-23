@@ -93,12 +93,6 @@ if (db) {
 // Derived, not hardcoded: follows Europe/Minsk if its rules ever change.
 const tzLabel = `${availability.timezone} (${zoneOffsetLabel(availability.timezone)})`;
 
-// The marker is stored in UTC; every other time on the page is Minsk. The warning quotes both,
-// because showing one without the other is how a timestamp gets misread.
-const runWall = retention.lastRun
-  ? wallClockInTz(new Date(retention.lastRun), availability.timezone)
-  : null;
-
 const typeName = (id) => TYPE_NAMES[id] || id;
 const isPast = (d) => d < today;
 
@@ -130,7 +124,7 @@ const statusTone = (s) =>
       {retention.stale && (
         <p class="mono mt-2 text-brand">
           {retention.lastRun
-            ? `Cleanup last ran ${retention.lastRun.slice(0, 16).replace('T', ' ')} UTC (${runWall.time} in Minsk) — requests may be kept longer than 90 days.`
+            ? `Cleanup last ran ${retention.lastRun.slice(0, 16).replace('T', ' ')} UTC — requests may be kept longer than 90 days.`
             : 'Cleanup has never run — requests may be kept longer than 90 days.'}
         </p>
       )}

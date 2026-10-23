@@ -20,6 +20,12 @@ Parked, decided-against, or not yet built.
 - **Donation provider integration** — the button links out; no payment code lives here (see
   `donations.md`).
 
+## Parked for later
+
+- **Social preview image** — `og:title`, `og:description` and `og:type` are set, but there is no
+  `og:image` and no `twitter:card`, so a shared link renders without a picture. The sitemap and
+  hreflang are done; this is the missing half of link presentation. Parked 2026-10-23 — not now.
+
 ## Open questions
 
 - **The umbrella, in public.** The apex is the person and `go.kozel.red` is the product
