@@ -34,7 +34,7 @@ The apex is deliberately the *person*; the product sits under `go.`. **KozelGo's
 
 Three go to the requester — request received, confirmed, declined — and all three carry the **same subject**, so they thread and the change of state is read in the body. Confirming attaches an `.ics` built from the same timezone conversion the slots use, with the room link in `LOCATION` so the calendar entry itself can be joined. A fourth, separate email is your own notification, laid out as a labelled record of the request.
 
-Sent through **Resend**, best-effort: with no key the request is still stored and nothing is sent. Secrets are `RESEND_API_KEY`, `BOOKING_TO` and `BOOKING_FROM`; the room itself is `site.meetingUrl` in `src/data/site.js`.
+Sent through **Resend**, best-effort: with no key the request is still stored and nothing is sent. A failed send never undoes the request — it stays in `/me` — but it is no longer silent: the reason Resend gives (rejected key, unverified domain) is written to the Workers log. Secrets are `RESEND_API_KEY`, `BOOKING_TO` and `BOOKING_FROM`; the room itself is `site.meetingUrl` in `src/data/site.js`.
 
 ## Languages
 

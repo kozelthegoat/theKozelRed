@@ -56,7 +56,9 @@ export const POST = async ({ request }) => {
   };
 
   if (shouldSendDecline(row.status, status)) {
-    await sendDeclineEmail(env, { name: row.name, email: row.email, ...when }).catch(() => {});
+    await sendDeclineEmail(env, { name: row.name, email: row.email, ...when }).catch((error) =>
+      console.error('[status] the decline email failed:', error)
+    );
   }
 
   if (shouldSendConfirm(row.status, status)) {
@@ -69,7 +71,7 @@ export const POST = async ({ request }) => {
       visitorTz: row.visitor_tz,
       locale: row.locale || 'en',
       type
-    }).catch(() => {});
+    }).catch((error) => console.error('[status] the confirmation email failed:', error));
   }
 
   // Send the browser back to the view it came from (validated, so a crafted form can't

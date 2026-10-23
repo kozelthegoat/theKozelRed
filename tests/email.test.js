@@ -1,11 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   declineCopy,
   confirmedCopy,
   requesterSubject,
   hostSubject,
   sendBookingEmails,
-  sendConfirmEmail
+  sendConfirmEmail,
+  sendDeclineEmail
 } from '../src/lib/email.js';
 import { site } from '../src/data/site.js';
 
@@ -359,5 +360,72 @@ describe('the requester emails in the language the request was made in', () => {
   it('stays English for a language it does not speak, and when none was given', () => {
     expect(declineCopy({ ...args, locale: 'de' }).subject).toContain('Aliaksei Kozel');
     expect(declineCopy(args).subject).toContain('Aliaksei Kozel');
+  });
+});
+
+describe('a send that fails', () => {
+  // Best-effort is not the same as silent: with a bad key or an unverified domain, Resend says so
+  // in the response body, and that is the line an operator needs in the Workers log.
+  const env = {
+    RESEND_API_KEY: 'test-key',
+    BOOKING_TO: 'host@example.test',
+    BOOKING_FROM: 'Aliaksei <aliaksei@kozel.red>'
+  };
+  const to = { name: 'Alex', email: 'alex@example.test', date: '2026-10-17', time: '16:00', visitorTz: 'Europe/Berlin', typeName: 'Working Session', locale: 'en' };
+
+  const withFetch = async (impl, run) => {
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = impl;
+    try {
+      return await run();
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  };
+
+  it('reports the refusal and puts Resend’s own reason in the log', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const result = await withFetch(
+      async () => ({ ok: false, status: 422, text: async () => 'domain is not verified' }),
+      () => sendDeclineEmail(env, to)
+    );
+    expect(result).toEqual({ sent: false });
+    expect(error).toHaveBeenCalledWith(expect.stringContaining('422'));
+    expect(error).toHaveBeenCalledWith(expect.stringContaining('domain is not verified'));
+    error.mockRestore();
+  });
+
+  it('reports a network failure rather than throwing into a caller that ignores it', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const result = await withFetch(
+      async () => {
+        throw new Error('connection reset');
+      },
+      () => sendDeclineEmail(env, to)
+    );
+    expect(result).toEqual({ sent: false });
+    expect(error).toHaveBeenCalledWith(expect.stringContaining('unreachable'), expect.anything());
+    error.mockRestore();
+  });
+
+  it('does not pretend the pair went out when only one did', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    let call = 0;
+    const result = await withFetch(
+      async () => {
+        call += 1;
+        return call === 1 ? { ok: true } : { ok: false, status: 500, text: async () => 'boom' };
+      },
+      () =>
+        sendBookingEmails(env, {
+          ...to,
+          id: 1,
+          requestedAt: Date.UTC(2026, 9, 17, 13, 0),
+          type: { id: 'intro', name: 'RE: Anything', minutes: 30 },
+          note: ''
+        })
+    );
+    expect(result).toEqual({ sent: false });
+    error.mockRestore();
   });
 });

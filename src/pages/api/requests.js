@@ -113,7 +113,7 @@ export const POST = async ({ request, locals }) => {
     note,
     visitorTz,
     locale
-  }).catch(() => {});
+  }).catch((error) => console.error('[requests] the email step failed:', error));
 
   return json({ ok: true });
 };

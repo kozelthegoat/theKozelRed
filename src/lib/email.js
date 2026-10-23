@@ -103,12 +103,26 @@ const momentHtml = ({ typeName, m }) =>
 // The close, in the visitor's language and under the spelling of the name their language uses.
 const signoff = (copy, host) => `<p style="margin:8px 0 0;">${esc(copy.signoff)}<br>${esc(host)}</p>`;
 
-const send = (key, payload) =>
-  fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).then((r) => r.ok);
+// Best-effort, but never silent. A failed send leaves the request in /me, and the reason belongs
+// in the Workers log (`observability` already collects it). Resend explains a rejected key or an
+// unverified domain in the response body rather than the status code, so the body goes in too.
+const send = async (key, payload) => {
+  const subject = payload?.subject ?? 'email';
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) return true;
+    const detail = await res.text().catch(() => '');
+    console.error(`[email] Resend refused "${subject}" (${res.status}): ${String(detail).slice(0, 300)}`);
+    return false;
+  } catch (error) {
+    console.error(`[email] Resend unreachable for "${subject}":`, error);
+    return false;
+  }
+};
 
 // Resend wants base64, and btoa() chokes on anything past Latin-1 — Armenian names, em dashes.
 const toBase64 = (s) => {
@@ -155,7 +169,7 @@ export async function sendBookingEmails(env, req) {
     )
     .join('');
 
-  await send(key, {
+  const hostSent = await send(key, {
     from,
     to,
     reply_to: req.email,
@@ -181,7 +195,7 @@ ${
   const host = nameFor(req.locale);
   const greet = fill(copy.greet, { name: firstName(req.name) });
 
-  await send(key, {
+  const requesterSent = await send(key, {
     from: env.BOOKING_FROM || `${host} <aliaksei@kozel.red>`,
     to: req.email,
     subject: requesterSubject({ date: req.date, time: req.time, visitorTz: req.visitorTz, typeName, host }),
@@ -197,7 +211,7 @@ ${signoff(copy, host)}`,
     )
   });
 
-  return { sent: true };
+  return { sent: hostSent && requesterSent };
 }
 
 // Copy for the decline notice. Same subject as the request, so it lands in the existing
@@ -258,9 +272,9 @@ export async function sendDeclineEmail(env, { name, email, date, time, visitorTz
 
   const { subject, text, html } = declineCopy({ name, date, time, visitorTz, typeName, locale });
 
-  await send(key, { from, to: email, subject, text, html });
+  const sent = await send(key, { from, to: email, subject, text, html });
 
-  return { sent: true };
+  return { sent };
 }
 
 // Confirmation notice with the calendar invite. Sent on the transition into confirmed.
@@ -275,7 +289,7 @@ export async function sendConfirmEmail(env, { id, name, email, date, time, visit
   const { subject, text, html } = confirmedCopy({ name, date, time, visitorTz, typeName, minutes, meetingUrl, locale });
   const ics = buildIcs({ date, time, minutes, typeName, meetingUrl, uid: `request-${id}@kozel.red` });
 
-  await send(key, {
+  const sent = await send(key, {
     from,
     to: email,
     subject,
@@ -284,5 +298,5 @@ export async function sendConfirmEmail(env, { id, name, email, date, time, visit
     attachments: [{ filename: icsFilename({ date, typeName }), content: toBase64(ics) }]
   });
 
-  return { sent: true };
+  return { sent };
 }
