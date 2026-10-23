@@ -9,7 +9,6 @@ export const ui = {
     'nav.expertise': 'Expertise',
     'nav.experience': 'Experience',
     'nav.notes': 'Notes',
-    'nav.contacts': 'Contacts',
     'a11y.language': 'Language',
 
     'cta.schedule': 'Schedule 1:1',
@@ -154,7 +153,6 @@ export const ui = {
     'nav.expertise': 'Экспертиза',
     'nav.experience': 'Опыт',
     'nav.notes': 'Заметки',
-    'nav.contacts': 'Связаться',
     'a11y.language': 'Язык',
 
     'cta.schedule': 'Записаться на 1:1',
@@ -289,7 +287,6 @@ export const ui = {
     'nav.expertise': 'Экспертыза',
     'nav.experience': 'Вопыт',
     'nav.notes': 'Нататкі',
-    'nav.contacts': 'Сувязь',
     'a11y.language': 'Мова',
 
     'cta.schedule': 'Запісацца на 1:1',

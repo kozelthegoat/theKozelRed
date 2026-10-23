@@ -113,10 +113,10 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
           </a>
 
           <!--
-            Expertise, Experience and Contacts point at sections of the home page, which exist
-            there and nowhere else — the footer's Navigation block is home-only for the same reason.
-            They were on every page, so on /schedule/ they offered anchors that were not on the page
-            under the pointer. Notes is a page of its own, so it stays wherever it is published.
+            Expertise, Experience and Pro Bono point at sections of the home page, which exist
+            there and nowhere else. The header offers them only on the home page, where the links
+            land; the footer's Navigation column is on every page, and its absolute /#… links
+            navigate home first.
           -->
           {
             (isHome || hasNotes) && (
@@ -138,7 +138,7 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
                   )
                 }
                 {isHome && (
-                  <a class="transition-colors hover:text-foreground" href="/#contacts">{t('nav.contacts')}</a>
+                  <a class="transition-colors hover:text-foreground" href="/#pro-bono">{t('footer.proBono')}</a>
                 )}
               </nav>
             )
@@ -154,30 +154,21 @@ const ticker = ['Strategy', 'Operations', 'Production', 'Team building', 'Crisis
 
       <!-- footer -->
       <footer>
-        <div
-          class:list={[
-            'grid gap-8 p-[var(--pad)] sm:grid-cols-2',
-            isHome ? 'md:grid-cols-4' : 'md:grid-cols-3'
-          ]}
-        >
-          {
-            isHome && (
-              <div>
-                <p class="mono text-muted">{t('footer.navigation')}</p>
-                <ul class="mt-4 grid gap-2 text-sm">
-                  <li><a class="hover:text-brand" href="/#expertise">{t('nav.expertise')}</a></li>
-                  <li><a class="hover:text-brand" href="/#experience">{t('nav.experience')}</a></li>
-                  <li><a class="hover:text-brand" href="/#recommendations">{t('footer.recommendations')}</a></li>
-                  <li><a class="hover:text-brand" href="/#contacts">{t('footer.proBono')}</a></li>
-                  {
-                    hasNotes && (
-                      <li><a class="hover:text-brand" href={`${prefixFor(locale)}/notes/`}>{t('footer.notes')}</a></li>
-                    )
-                  }
-                </ul>
-              </div>
-            )
-          }
+        <div class="grid gap-8 p-[var(--pad)] sm:grid-cols-2 md:grid-cols-4">
+          <div>
+            <p class="mono text-muted">{t('footer.navigation')}</p>
+            <ul class="mt-4 grid gap-2 text-sm">
+              <li><a class="hover:text-brand" href="/#expertise">{t('nav.expertise')}</a></li>
+              <li><a class="hover:text-brand" href="/#experience">{t('nav.experience')}</a></li>
+              <li><a class="hover:text-brand" href="/#recommendations">{t('footer.recommendations')}</a></li>
+              <li><a class="hover:text-brand" href="/#pro-bono">{t('footer.proBono')}</a></li>
+              {
+                hasNotes && (
+                  <li><a class="hover:text-brand" href={`${prefixFor(locale)}/notes/`}>{t('footer.notes')}</a></li>
+                )
+              }
+            </ul>
+          </div>
           <div>
             <p class="mono text-muted">{t('footer.proBono')}</p>
             <ul class="mt-4 grid gap-2 text-sm">
