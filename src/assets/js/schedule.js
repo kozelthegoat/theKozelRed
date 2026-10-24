@@ -195,7 +195,7 @@ if (cfgEl && root) {
     if (state.layout === 'month') {
       shiftMonth(delta);
     } else {
-      const step = 7;
+      const step = 4;
       state.days = Math.max(0, state.days + delta * step);
       render();
     }
@@ -305,12 +305,12 @@ if (cfgEl && root) {
   }
 
   function renderList() {
-    listEl.className = state.layout === 'week' ? 'grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7' : 'grid gap-5';
+    listEl.className = state.layout === 'four' ? 'grid grid-cols-2 gap-5 sm:grid-cols-4' : 'grid gap-5';
     const from = addDays(dateInTz(state.tz, new Date()), state.days);
     const days = [...state.byDate.keys()]
       .filter((d) => d >= from)
       .sort()
-      .slice(0, 7);
+      .slice(0, 4);
     listEl.innerHTML = days.map(dayBlock).join('') || `<p class="mono text-muted">${s.noTimes}</p>`;
     monthLabel.textContent = days.length ? rangeLabel(days) : s.noTimes;
     updateNav();

@@ -118,10 +118,12 @@ const sessionTypes = sessionTypesFor(locale);
                     <path d="M3 9h18M8 2v4M16 2v4"></path>
                   </svg>
                 </button>
-                <button type="button" class="seg-btn p-1.5" data-layout="week" aria-pressed="false" aria-label={t('sched.view.week')} title={t('sched.view.week')}>
+                <button type="button" class="seg-btn p-1.5" data-layout="four" aria-pressed="false" aria-label={t('sched.view.four')} title={t('sched.view.four')}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-                    <rect x="3" y="4" width="18" height="17" rx="2"></rect>
-                    <path d="M3 9h18M9 9v12M15 9v12"></path>
+                    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
                   </svg>
                 </button>
                 <button type="button" class="seg-btn p-1.5" data-layout="list" aria-pressed="false" aria-label={t('sched.view.list')} title={t('sched.view.list')}>
